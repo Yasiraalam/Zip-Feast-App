@@ -1,5 +1,6 @@
 package com.zip_feast.screens
 
+import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,11 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.util.PatternsCompat
 import com.zip_feast.R
 import com.zip_feast.ui.theme.Black
 import com.zip_feast.ui.theme.Roboto
@@ -134,28 +139,51 @@ private fun LoginSection() {
     var password by rememberSaveable {
         mutableStateOf("")
     }
-    LoginTextField(
-        label = "Email",
-        value = email,
-        onValueChange = { email = it },
-        trailing = Icons.Default.Face,
-        modifier = Modifier.fillMaxWidth()
-    )
+    var emailError by rememberSaveable { mutableStateOf("") }
+    var passwordError by rememberSaveable { mutableStateOf("") }
+    EmailTextField(label = "Email", value = email, onValueChange = {
+        email = it
+        emailError = if (email.matches("^[A-Za-z0-9+_.-]+@(gmail|hotmail|yahoo|outlook)\\.com$".toRegex())) {
+            ""
+        } else {
+            "Invalid email address"
+        }
+    })
+    if (emailError.isNotEmpty()) {
+        Text(
+            text = emailError,
+            color = Color.Red,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+        )
+    }
     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-    LoginTextField(
-        modifier = Modifier.fillMaxWidth(),
-        label = "Password",
-        trailing =Icons.Default.Face,
-        value = password,
-        onValueChange = {password = it}
-    )
+    PasswordTextField(label = "Password", value = password, onValueChange = {
+        password = it
+        passwordError = when {
+            password.length < 8 -> "Password must be at least 8 characters"
+            !password.contains("[A-Z]".toRegex()) -> "Password must contain at least one uppercase letter"
+            !password.contains("[^a-zA-Z0-9]".toRegex()) -> "Password must contain at least one special character"
+            else -> ""
+        }
+    })
+    if (passwordError.isNotEmpty()) {
+        Text(
+            text = passwordError,
+            color = Color.Red,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+        )
+    }
     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .height(MaterialTheme.dimens.buttonHeight),
         onClick = {
-            //TODO:handle login here
+            if (emailError.isEmpty() && passwordError.isEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+                //TODO Handle login here
+            }
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSystemInDarkTheme()) blueGray else Black,
@@ -164,10 +192,10 @@ private fun LoginSection() {
         shape = RoundedCornerShape(size = 4.dp)
     ) {
         Text(
+            fontSize = 12.sp,
             text = stringResource(id = R.string.loginIn),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
         )
-
     }
 }
 
