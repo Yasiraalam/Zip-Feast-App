@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.zip_feast.screens.LoginScreen
+import com.zip_feast.screens.RegistrationScreen
 import com.zip_feast.ui.theme.ZipFeastTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +14,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ZipFeastTheme {
-                LoginScreen()
+//                LoginScreen()
+                RegistrationScreen()
             }
         }
     }
