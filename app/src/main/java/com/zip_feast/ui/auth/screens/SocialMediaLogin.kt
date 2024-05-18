@@ -1,4 +1,4 @@
-package com.zip_feast.screens
+package com.zip_feast.ui.auth.screens
 
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes

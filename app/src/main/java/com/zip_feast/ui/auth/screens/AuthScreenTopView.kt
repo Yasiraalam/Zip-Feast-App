@@ -1,4 +1,4 @@
-package com.zip_feast.screens
+package com.zip_feast.ui.auth.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme

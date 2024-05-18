@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.dagger.hilt.android)
 }
 
 android {
@@ -66,5 +68,23 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //viewmodel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation (libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    //hilt
+    implementation(libs.hilt.android)
+    ksp (libs.hilt.compiler)
+
+    //window size all device size
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
+
 }
