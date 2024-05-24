@@ -1,6 +1,7 @@
 package com.zip_feast.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -16,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -32,15 +34,22 @@ fun EmailTextField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
+    leadingIcon: ImageVector
 ) {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
     TextField(
-        modifier = modifier.padding(start = 15.dp),
+        modifier = modifier.padding(start = 12.dp).fillMaxWidth(),
         label = {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
                 color = uiColor
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = leadingIcon,
+                contentDescription = null
             )
         },
         singleLine = true,
@@ -65,6 +74,7 @@ fun PasswordTextField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
+    leadingIcon: ImageVector
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
@@ -75,12 +85,18 @@ fun PasswordTextField(
     }
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
     TextField(
-        modifier = modifier.padding(start = 15.dp),
+        modifier = modifier.padding(start = 12.dp).fillMaxWidth(),
         label = {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
                 color = uiColor
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = leadingIcon,
+                contentDescription = null
             )
         },
         singleLine = true,
