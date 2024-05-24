@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.zip_feast.ui.auth.screens.RegistrationScreen
 import com.zip_feast.ui.theme.ZipFeastTheme
+import com.zip_feast.utils.authnavigation.AuthNavigation
 
 class ZipFeastActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,8 +14,7 @@ class ZipFeastActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ZipFeastTheme {
-//                LoginScreen()
-                RegistrationScreen()
+               AuthNavigation()
             }
         }
     }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -36,17 +37,23 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.zip_feast.R
 import com.zip_feast.ui.theme.Black
 import com.zip_feast.ui.theme.Roboto
 import com.zip_feast.ui.theme.blueGray
 import com.zip_feast.ui.theme.dimens
+import com.zip_feast.utils.authnavigation.Screen
+
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController
+) {
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
             TopSection("Login")
@@ -59,7 +66,7 @@ fun LoginScreen() {
                 LoginSection()
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
                 SocialMediaSection()
-                CreateAccountSection()
+                CreateAccountSection(navController)
             }
         }
     }
@@ -124,36 +131,46 @@ fun TopSection(
 }
 
 @Composable
-private fun CreateAccountSection() {
+private fun CreateAccountSection(navController: NavController) {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+    val annotatedText = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                color = Color(0xFF94A3B8),
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            )
+        ) {
+            append("Don't have an account? ")
+        }
+        pushStringAnnotation(tag = "create_account", annotation = "create_account")
+        withStyle(
+            style = SpanStyle(
+                color = uiColor,
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            )
+        ) {
+            append("Create now")
+        }
+        pop()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxHeight(fraction = 0.4f)
             .fillMaxWidth(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = Color(0xFF94A3B8),
-                        fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal
-                    )
-                ) {
-                    append("Don't have an account? ")
-                }
-                withStyle(
-                    style = SpanStyle(
-                        color = uiColor,
-                        fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal
-                    )
-                ) {
-                    append("Create now")
-                }
+        ClickableText(
+            text = annotatedText,
+            onClick = { offset ->
+                annotatedText.getStringAnnotations(tag = "create_account", start = offset, end = offset)
+                    .firstOrNull()?.let {
+                        navController.navigate(Screen.Register.route)
+                    }
             }
         )
     }
