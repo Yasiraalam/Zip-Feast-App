@@ -44,7 +44,7 @@ fun SocialMediaLogin(
             .socialMedia()
             .clickable { onclick() }
             .height(40.dp)
-            .background(color = Color(0xBFEDEEF1)),
+            .background(color = Color(0xFFE9ECF3)),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ){

@@ -1,6 +1,5 @@
 package com.zip_feast.screens
 
-import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -39,17 +39,20 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.util.PatternsCompat
 import com.zip_feast.R
 import com.zip_feast.ui.theme.Black
 import com.zip_feast.ui.theme.Roboto
 import com.zip_feast.ui.theme.blueGray
 import com.zip_feast.ui.theme.dimens
 
+@Preview(showBackground = true)
+@Composable
+private fun PreviewLogin() {
+    LoginScreen()
+}
 
 @Composable
 fun LoginScreen() {
@@ -117,7 +120,7 @@ private fun SocialMediaSection() {
             text = "Or continue with",
             style = MaterialTheme.typography.labelMedium.copy(color = Color(0xFF64749B))
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(15.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -141,14 +144,19 @@ private fun LoginSection() {
     }
     var emailError by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf("") }
-    EmailTextField(label = "Email", value = email, onValueChange = {
-        email = it
-        emailError = if (email.matches("^[A-Za-z0-9+_.-]+@(gmail|hotmail|yahoo|outlook)\\.com$".toRegex())) {
-            ""
-        } else {
-            "Invalid email address"
-        }
-    })
+    EmailTextField(
+        label = "Email",
+        leadingIcon = Icons.Default.Email,
+        value = email,
+        onValueChange = {
+            email = it
+            emailError =
+                if (email.matches("^[A-Za-z0-9+_.-]+@(gmail|hotmail|yahoo|outlook)\\.com$".toRegex())) {
+                    ""
+                } else {
+                    "Invalid email address"
+                }
+        })
     if (emailError.isNotEmpty()) {
         Text(
             text = emailError,
@@ -158,7 +166,11 @@ private fun LoginSection() {
         )
     }
     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-    PasswordTextField(label = "Password", value = password, onValueChange = {
+    PasswordTextField(
+        label = "Password",
+        value = password,
+        leadingIcon = Icons.Default.Lock,
+        onValueChange = {
         password = it
         passwordError = when {
             password.length < 8 -> "Password must be at least 8 characters"
@@ -201,7 +213,7 @@ private fun LoginSection() {
 
 @Composable
 fun TopSection() {
-    val uiColor = if(isSystemInDarkTheme()) Color.White else Color.Black
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
     Box(
         contentAlignment = Alignment.TopCenter
@@ -209,7 +221,7 @@ fun TopSection() {
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(fraction = 0.46f),
+                .fillMaxHeight(fraction = 0.40f),
             painter = painterResource(id = R.drawable.background),
             contentDescription = null,
             contentScale = ContentScale.FillBounds
@@ -227,7 +239,7 @@ fun TopSection() {
                 tint = uiColor
             )
             Spacer(modifier = Modifier.width(15.dp))
-            Column{
+            Column {
                 Text(
                     text = stringResource(id = R.string.zipfeast),
                     style = MaterialTheme.typography.headlineMedium,
@@ -251,7 +263,7 @@ fun TopSection() {
         )
 
     }
-    
+
 }
 
 

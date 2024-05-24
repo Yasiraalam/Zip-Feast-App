@@ -8,7 +8,7 @@ data class Dimens(
     val small1: Dp = 0.dp,
     val small2: Dp = 0.dp,
     val small3: Dp = 0.dp,
-    val medium1: Dp = 8.dp,
+    val medium1: Dp = 5.dp,
     val medium2: Dp = 8.dp,
     val medium3: Dp = 8.dp,
     val large: Dp = 16.dp,
