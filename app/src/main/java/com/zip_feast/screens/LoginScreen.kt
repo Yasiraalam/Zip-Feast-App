@@ -48,11 +48,6 @@ import com.zip_feast.ui.theme.Roboto
 import com.zip_feast.ui.theme.blueGray
 import com.zip_feast.ui.theme.dimens
 
-@Preview(showBackground = true)
-@Composable
-private fun PreviewLogin() {
-    LoginScreen()
-}
 
 @Composable
 fun LoginScreen() {
