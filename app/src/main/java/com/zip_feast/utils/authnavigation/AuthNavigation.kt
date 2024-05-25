@@ -15,7 +15,7 @@ fun AuthNavigation() {
             LoginScreen(navController = navController)
         }
         composable(Screen.Register.route) {
-            RegistrationScreen(navController)
+            RegistrationScreen(navController = navController)
         }
     }
 }

@@ -2,21 +2,27 @@ package com.zip_feast.ui.auth.screens
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,18 +41,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.zip_feast.R
+import com.zip_feast.ui.theme.Black
+import com.zip_feast.ui.theme.Roboto
+import com.zip_feast.ui.theme.blueGray
+import com.zip_feast.ui.theme.dimens
+import com.zip_feast.utils.authnavigation.Screen
+import com.zip_feast.viewmodels.auth.AuthViewModel
 
 
 @Composable
-fun RegistrationScreen(navController: NavHostController) {
+fun RegistrationScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController
+) {
 
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -58,8 +78,8 @@ fun RegistrationScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopRegSection()
-            Spacer(modifier = Modifier.height(16.dp))
-            RegistrationSection()
+            Spacer(modifier = Modifier.height(6.dp))
+            RegistrationSection(authViewModel, navController)
         }
     }
 }
@@ -91,7 +111,8 @@ fun TopRegSection() {
 }
 
 @Composable
-private fun RegistrationSection() {
+private fun RegistrationSection(authViewModel: AuthViewModel, navController: NavController) {
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -235,10 +256,66 @@ private fun RegistrationSection() {
 
     Button(
         onClick = { /* Handle registration logic */ },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (isSystemInDarkTheme()) blueGray else Black,
+            contentColor = Color.White
+        ),
     ) {
         Text(text = "Register")
     }
+    Spacer(modifier = Modifier.height(20.dp))
+    alreadyHaveAccount(navController)
 }
+
+@Composable
+fun alreadyHaveAccount(navController: NavController) {
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+    val annotatedText = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                color = Color(0xFF94A3B8),
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            )
+        ) {
+            append("Already have an account? ")
+        }
+        pushStringAnnotation(tag = "Login", annotation = "Login")
+        withStyle(
+            style = SpanStyle(
+                color = uiColor,
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            )
+        ) {
+            append("Login")
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxHeight(fraction = 0.4f)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        ClickableText(
+            text = annotatedText,
+            onClick = { offset ->
+                annotatedText.getStringAnnotations(tag = "Login", start = offset, end = offset)
+                    .firstOrNull()?.let {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
+                        }
+                    }
+            }
+        )
+    }
+}
+
 
 
