@@ -2,12 +2,9 @@ package com.zip_feast.ui.auth.screens
 
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,12 +49,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.zip_feast.R
+import com.zip_feast.data.remote.models.UserRequest
 import com.zip_feast.ui.theme.Black
 import com.zip_feast.ui.theme.Roboto
 import com.zip_feast.ui.theme.blueGray
-import com.zip_feast.ui.theme.dimens
 import com.zip_feast.utils.authnavigation.Screen
 import com.zip_feast.viewmodels.auth.AuthViewModel
 
@@ -124,6 +120,11 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
     var emailError by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf("") }
     var confirmPasswordError by rememberSaveable { mutableStateOf("") }
+
+    // Check if all fields are filled
+    val allFieldsFilled = username.isNotBlank() && emailError.isBlank() &&
+            passwordError.isBlank() && confirmPasswordError.isBlank()
+
     OutlinedTextField(
         value = username,
         onValueChange = { username = it },
@@ -255,7 +256,22 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
     Spacer(modifier = Modifier.height(16.dp))
 
     Button(
-        onClick = { /* Handle registration logic */ },
+        onClick = {
+            if (emailError.isEmpty() && passwordError.isEmpty() && confirmPasswordError.isEmpty()) {
+                authViewModel.registerUser(
+                    userRequest = UserRequest(
+                        name = username,
+                        email = email,
+                        password = password,
+                        confirmPassword = confirmPassword,
+                        null
+                    )
+                )
+            }else{
+
+            }
+        },
+        enabled = allFieldsFilled,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSystemInDarkTheme()) blueGray else Black,
