@@ -1,4 +1,4 @@
-package com.zip_feast.screens
+package com.zip_feast.ui.auth.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+<<<<<<< HEAD:app/src/main/java/com/zip_feast/screens/LoginScreen.kt
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+=======
+import androidx.compose.foundation.text.ClickableText
+>>>>>>> Api#9:app/src/main/java/com/zip_feast/ui/auth/screens/LoginScreen.kt
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -39,18 +43,27 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+<<<<<<< HEAD:app/src/main/java/com/zip_feast/screens/LoginScreen.kt
 import androidx.core.util.PatternsCompat
+=======
+import androidx.navigation.NavController
+>>>>>>> Api#9:app/src/main/java/com/zip_feast/ui/auth/screens/LoginScreen.kt
 import com.zip_feast.R
 import com.zip_feast.ui.theme.Black
 import com.zip_feast.ui.theme.Roboto
 import com.zip_feast.ui.theme.blueGray
 import com.zip_feast.ui.theme.dimens
+import com.zip_feast.utils.authnavigation.Screen
+
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController
+) {
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
             TopSection()
@@ -63,43 +76,110 @@ fun LoginScreen() {
                 LoginSection()
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
                 SocialMediaSection()
-                CreateAccountSection()
+                CreateAccountSection(navController)
             }
         }
     }
 }
 
 @Composable
-private fun CreateAccountSection() {
+fun TopSection(
+    label: String
+) {
+
+    val uiColor = if(isSystemInDarkTheme()) Color.White else Color.Black
+
+    Box(
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(fraction = 0.46f),
+            painter = painterResource(id = R.drawable.background),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds
+        )
+
+        Row(
+            modifier = Modifier
+                .padding(top = MaterialTheme.dimens.large),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(MaterialTheme.dimens.logoSize),
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                tint = uiColor
+            )
+            Spacer(modifier = Modifier.width(15.dp))
+            Column{
+                Text(
+                    text = stringResource(id = R.string.zipfeast),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = uiColor
+                )
+                Text(
+                    text = stringResource(id = R.string.zipfeast_dec),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = uiColor
+                )
+
+            }
+        }
+        Text(
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .align(alignment = Alignment.BottomCenter),
+            text = label,
+            style = MaterialTheme.typography.headlineLarge,
+            color = uiColor
+        )
+
+    }
+
+}
+
+@Composable
+private fun CreateAccountSection(navController: NavController) {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+    val annotatedText = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                color = Color(0xFF94A3B8),
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            )
+        ) {
+            append("Don't have an account? ")
+        }
+        pushStringAnnotation(tag = "create_account", annotation = "create_account")
+        withStyle(
+            style = SpanStyle(
+                color = uiColor,
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            )
+        ) {
+            append("Create now")
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxHeight(fraction = 0.4f)
             .fillMaxWidth(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = Color(0xFF94A3B8),
-                        fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal
-                    )
-                ) {
-                    append("Don't have an account? ")
-                }
-                withStyle(
-                    style = SpanStyle(
-                        color = uiColor,
-                        fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal
-                    )
-                ) {
-                    append("Create now")
-                }
+        ClickableText(
+            text = annotatedText,
+            onClick = { offset ->
+                annotatedText.getStringAnnotations(tag = "create_account", start = offset, end = offset)
+                    .firstOrNull()?.let {
+                        navController.navigate(Screen.Register.route)
+                    }
             }
         )
     }
