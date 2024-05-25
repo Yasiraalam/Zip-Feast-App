@@ -1,4 +1,4 @@
-package com.zip_feast.application
+package com.zip_feast
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import com.zip_feast.ui.auth.screens.RegistrationScreen
 import com.zip_feast.ui.theme.ZipFeastTheme
 import com.zip_feast.utils.authnavigation.AuthNavigation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ZipFeastActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

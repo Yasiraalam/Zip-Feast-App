@@ -1,6 +1,7 @@
 [versions]
 agp = "8.4.0"
-kotlin = "1.9.0"
+hiltNavigationCompose = "1.2.0"
+kotlin = "1.9.24"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -15,8 +16,8 @@ lifecycleLivedataKtx = "2.8.0"
 lifecycleRuntimeCompose = "2.8.0"
 converterGson = "2.9.0"
 loggingInterceptor = "4.9.0"
-hiltCompiler = "2.48"
-hiltAndroid = "2.44"
+hiltCompiler = "2.49"
+hiltAndroid = "2.49"
 kspkotlin ="1.9.24-1.0.20"
 composeNavigation="2.8.0-beta01"
 serialization = "1.6.3"
@@ -49,6 +50,7 @@ logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", ver
 #hilt
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 # compose navigations
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }

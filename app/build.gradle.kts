@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.kotlin.serialization)
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -43,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -83,6 +84,7 @@ dependencies {
 
     //hilt
     implementation(libs.hilt.android)
+    implementation (libs.androidx.hilt.navigation.compose)
     ksp (libs.hilt.compiler)
 
     //window size all device size

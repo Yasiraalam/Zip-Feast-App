@@ -155,7 +155,6 @@ private fun CreateAccountSection(navController: NavController) {
         ) {
             append("Create now")
         }
-        pop()
     }
 
     Box(
