@@ -1,4 +1,4 @@
-package com.zip_feast.ui.theme
+package com.zip_feast.presentation.theme
 
 import android.app.Activity
 import android.os.Build

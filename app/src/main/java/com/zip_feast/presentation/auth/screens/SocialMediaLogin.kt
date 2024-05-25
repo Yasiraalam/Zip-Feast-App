@@ -1,4 +1,4 @@
-package com.zip_feast.ui.auth.screens
+package com.zip_feast.presentation.auth.screens
 
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +25,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.zip_feast.R
-import com.zip_feast.ui.theme.LightBlueWhite
-import com.zip_feast.ui.theme.blueGray
+import com.zip_feast.presentation.theme.LightBlueWhite
+import com.zip_feast.presentation.theme.blueGray
 
 @Composable
 fun SocialMediaLogin(

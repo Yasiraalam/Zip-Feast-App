@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
-import com.zip_feast.ui.theme.CompactDimens
-import com.zip_feast.ui.theme.Dimens
+import com.zip_feast.presentation.theme.CompactDimens
+import com.zip_feast.presentation.theme.Dimens
 
 @Composable
 fun AppDimens(

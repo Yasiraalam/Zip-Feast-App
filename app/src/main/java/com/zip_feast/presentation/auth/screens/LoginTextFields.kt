@@ -1,4 +1,4 @@
-package com.zip_feast.ui.auth.screens
+package com.zip_feast.presentation.auth.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +24,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.zip_feast.R
-import com.zip_feast.ui.theme.focusTextFieldText
-import com.zip_feast.ui.theme.textFieldContainer
-import com.zip_feast.ui.theme.unfocusTextFieldText
+import com.zip_feast.presentation.theme.focusTextFieldText
+import com.zip_feast.presentation.theme.textFieldContainer
+import com.zip_feast.presentation.theme.unfocusTextFieldText
 
 @Composable
 fun EmailTextField(

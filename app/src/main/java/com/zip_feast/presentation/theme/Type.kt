@@ -1,4 +1,4 @@
-package com.zip_feast.ui.theme
+package com.zip_feast.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
