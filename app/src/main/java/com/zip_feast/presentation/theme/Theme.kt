@@ -1,4 +1,4 @@
-package com.zip_feast.ui.theme
+package com.zip_feast.presentation.theme
 
 import android.app.Activity
 import android.os.Build
@@ -19,7 +19,7 @@ import com.zip_feast.utils.apputils.AppDimens
 import com.zip_feast.utils.apputils.LocalAppDimens
 
 private val DarkColorScheme = darkColorScheme(
-    primary = blueGray,
+    primary = BlueGray,
     surface = Black
 )
 

@@ -1,4 +1,4 @@
-package com.zip_feast.ui.auth.screens
+package com.zip_feast.presentation.auth.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -15,13 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-<<<<<<< HEAD:app/src/main/java/com/zip_feast/screens/LoginScreen.kt
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-=======
-import androidx.compose.foundation.text.ClickableText
->>>>>>> Api#9:app/src/main/java/com/zip_feast/ui/auth/screens/LoginScreen.kt
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -43,20 +40,14 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-<<<<<<< HEAD:app/src/main/java/com/zip_feast/screens/LoginScreen.kt
-import androidx.core.util.PatternsCompat
-=======
 import androidx.navigation.NavController
->>>>>>> Api#9:app/src/main/java/com/zip_feast/ui/auth/screens/LoginScreen.kt
 import com.zip_feast.R
-import com.zip_feast.ui.theme.Black
-import com.zip_feast.ui.theme.Roboto
-import com.zip_feast.ui.theme.blueGray
-import com.zip_feast.ui.theme.dimens
+import com.zip_feast.presentation.theme.Roboto
+import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.utils.authnavigation.Screen
+
 
 
 
@@ -273,7 +264,7 @@ private fun LoginSection() {
             }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) blueGray else Black,
+            containerColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
             contentColor = Color.White
         ),
         shape = RoundedCornerShape(size = 4.dp)

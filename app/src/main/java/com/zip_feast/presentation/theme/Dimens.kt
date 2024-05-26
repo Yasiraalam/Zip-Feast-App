@@ -1,4 +1,4 @@
-package com.zip_feast.ui.theme
+package com.zip_feast.presentation.theme
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

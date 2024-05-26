@@ -1,4 +1,4 @@
-package com.zip_feast.ui.theme
+package com.zip_feast.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -14,7 +14,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 val Black = Color(0xFF000113)
 val LightBlueWhite = Color(0xFFF1F5F9)
-val blueGray = Color(0xFFF334155)
+val BlueGray = Color(0xFFF334155)
 
 val ColorScheme.focusTextFieldText
       @Composable
@@ -26,4 +26,4 @@ val ColorScheme.unfocusTextFieldText
 
 val ColorScheme.textFieldContainer
     @Composable
-    get() = if (isSystemInDarkTheme()) blueGray.copy(alpha = 0.6f) else LightBlueWhite
+    get() = if (isSystemInDarkTheme()) BlueGray.copy(alpha = 0.6f) else LightBlueWhite
