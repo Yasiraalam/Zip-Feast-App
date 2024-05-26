@@ -52,8 +52,8 @@ import androidx.navigation.NavController
 import com.zip_feast.R
 import com.zip_feast.data.remote.models.UserRequest
 import com.zip_feast.presentation.theme.Black
+import com.zip_feast.presentation.theme.BlueGray
 import com.zip_feast.presentation.theme.Roboto
-import com.zip_feast.presentation.theme.blueGray
 import com.zip_feast.utils.authnavigation.Screen
 import com.zip_feast.viewmodels.auth.AuthViewModel
 
@@ -274,7 +274,7 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
         enabled = allFieldsFilled,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) blueGray else Black,
+            containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
             contentColor = Color.White
         ),
     ) {

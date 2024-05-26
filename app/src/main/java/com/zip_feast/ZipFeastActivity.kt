@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.zip_feast.presentation.dashboard.HomeScreen
 import com.zip_feast.presentation.theme.ZipFeastTheme
 import com.zip_feast.utils.authnavigation.AuthNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +16,8 @@ class ZipFeastActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ZipFeastTheme {
-               AuthNavigation()
+                HomeScreen()
+//               AuthNavigation()
             }
         }
     }

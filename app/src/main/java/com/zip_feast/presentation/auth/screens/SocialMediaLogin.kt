@@ -25,9 +25,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.zip_feast.presentation.theme.BlueGray
 import com.zip_feast.presentation.theme.LightBlueWhite
-import com.zip_feast.presentation.theme.blueGray
-
 @Composable
 fun SocialMediaLogin(
     @DrawableRes icon:Int,
@@ -67,7 +66,7 @@ fun Modifier.socialMedia():Modifier =composed {
     if (isSystemInDarkTheme()){
         background(Color.Transparent).border(
             width = 1.dp,
-            color = blueGray,
+            color = BlueGray,
             shape = RoundedCornerShape(4.dp)
         )
     }else{
