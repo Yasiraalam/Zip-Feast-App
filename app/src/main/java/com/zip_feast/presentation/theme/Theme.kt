@@ -19,7 +19,7 @@ import com.zip_feast.utils.apputils.AppDimens
 import com.zip_feast.utils.apputils.LocalAppDimens
 
 private val DarkColorScheme = darkColorScheme(
-    primary = blueGray,
+    primary = BlueGray,
     surface = Black
 )
 
