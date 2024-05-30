@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.zip_feast.presentation.dashboard
+package com.zip_feast.presentation.dashboard.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,19 +45,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.zip_feast.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Box {
         Scaffold(
             topBar = { topAppBar() },
             containerColor = Color.White,
+
         ) { paddingValues ->
             Content(paddingValues)
         }
@@ -78,7 +77,7 @@ fun Content(paddingValues: PaddingValues) {
 fun Promotions() {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val itemCount = 2 // Number of items in the LazyRow
+    val itemCount = 4 // Number of items in the LazyRow
     var currentIndex by remember { mutableStateOf(0) }
 
     LaunchedEffect(key1 = currentIndex) {
@@ -106,11 +105,29 @@ fun Promotions() {
         }
         item {
             PromotionsItem(
+                title = "food",
+                subtitle = "Offer",
+                header = "$5",
+                backgroundColor = Color(0xFF764DC7),
+                imagePainter = painterResource(id = R.drawable.banner4),
+            )
+        }
+        item {
+            PromotionsItem(
                 title = "Fashion",
                 subtitle = "Discount",
                 header = "20%",
                 backgroundColor = Color(color = 0xFFC2D8E8),
                 imagePainter = painterResource(id = R.drawable.banner2),
+            )
+        }
+        item {
+            PromotionsItem(
+                title = "food",
+                subtitle = "Offer",
+                header = "$5",
+                backgroundColor = Color(0xFF764DC7),
+                imagePainter = painterResource(id = R.drawable.banner3),
             )
         }
     }
@@ -205,6 +222,7 @@ fun topAppBar() {
                 ),
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
+                    .padding(start = 8.dp)
                     .weight(1f)
                     .fillMaxHeight()
             )

@@ -19,7 +19,7 @@ loggingInterceptor = "4.9.0"
 hiltCompiler = "2.49"
 hiltAndroid = "2.49"
 kspkotlin ="1.9.24-1.0.20"
-composeNavigation="2.8.0-beta01"
+composeNavigation="2.7.7"
 serialization = "1.6.3"
 
 [libraries]
@@ -54,7 +54,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 
 # compose navigations
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+#kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
