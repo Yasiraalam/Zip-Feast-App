@@ -92,6 +92,6 @@ dependencies {
 
     //compose navigation
     implementation(libs.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
+//    implementation(libs.kotlinx.serialization.json)
 
 }
