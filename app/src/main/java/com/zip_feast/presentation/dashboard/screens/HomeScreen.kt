@@ -2,6 +2,7 @@
 
 package com.zip_feast.presentation.dashboard.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,7 +60,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen() {
     Box {
         Scaffold(
             topBar = { topAppBar() },
@@ -98,7 +99,7 @@ fun categoriesSection() {
             )
             Text(
                 text = "More Category..",
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 color = SkyBlue,
                 modifier = Modifier.clickable {
@@ -115,7 +116,7 @@ fun categoriesSection() {
 fun Promotions() {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val itemCount = 4 // Number of items in the LazyRow
+    val itemCount = 4
     var currentIndex by remember { mutableStateOf(0) }
 
     LaunchedEffect(key1 = currentIndex) {
@@ -296,7 +297,7 @@ fun CategoriesList() {
         R.drawable.tshirt to "T-Shirt",
     )
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(26.dp),
+        horizontalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         items(iconsAndTitles) { iconResId ->
             IconCategories(
@@ -320,7 +321,7 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
                 .size(38.dp),
             painter = painterResource(id = iconResId),
             contentDescription = title,
-            tint = Color(android.graphics.Color.parseColor("#40BFFF"))
+            tint = SkyBlue
         )
         Text(
             text = title,
@@ -347,7 +348,7 @@ fun flashSaleSection() {
             )
             Text(
                 text = "See More..",
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 color = SkyBlue,
                 modifier = Modifier.clickable {

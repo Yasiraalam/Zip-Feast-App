@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 
 @Composable
-fun AccountScreen(navController: NavHostController ) {
+fun AccountScreen() {
     Box (
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

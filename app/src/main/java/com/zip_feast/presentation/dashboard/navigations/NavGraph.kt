@@ -23,7 +23,7 @@ fun NavGraph(
         modifier = Modifier.fillMaxSize()
     ) {
         composable(route = Routes.HomeScreen.routes) {
-            HomeScreen(navController)
+            HomeScreen()
         }
         composable(route = Routes.ExploreScreen.routes) {
             ExploreScreen()
@@ -32,7 +32,7 @@ fun NavGraph(
             CartScreen()
         }
         composable(route = Routes.AccountScreen.routes) {
-            AccountScreen(navController)
+            AccountScreen()
         }
     }
 }
