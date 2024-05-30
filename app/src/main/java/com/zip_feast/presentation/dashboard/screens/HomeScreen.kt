@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.zip_feast.presentation.dashboard.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -45,10 +48,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.zip_feast.R
+import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -59,7 +65,7 @@ fun HomeScreen(navController: NavHostController) {
             topBar = { topAppBar() },
             containerColor = Color.White,
 
-        ) { paddingValues ->
+            ) { paddingValues ->
             Content(paddingValues)
         }
     }
@@ -70,6 +76,38 @@ fun Content(paddingValues: PaddingValues) {
     Column(Modifier.padding(paddingValues)) {
         Spacer(modifier = Modifier.height(20.dp))
         Promotions()
+        Spacer(modifier = Modifier.height(20.dp))
+        categoriesSection()
+        Spacer(modifier = Modifier.height(20.dp))
+        flashSaleSection()
+    }
+}
+
+@Composable
+fun categoriesSection() {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Category",
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "More Category..",
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp,
+                color = SkyBlue,
+                modifier = Modifier.clickable {
+                    // TODO: show all categories in seperate screen full
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        CategoriesList()
     }
 }
 
@@ -179,70 +217,147 @@ fun PromotionsItem(
 //                    color = Color.White
 //                )
 //            }
-                Image(
-                    painter = imagePainter,
-                    contentDescription = "banner1",
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
-                    alignment = Alignment.CenterEnd,
-                    contentScale = ContentScale.Crop
-                )
-            }
+            Image(
+                painter = imagePainter,
+                contentDescription = "banner1",
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+                alignment = Alignment.CenterEnd,
+                contentScale = ContentScale.Crop
+            )
         }
+    }
 }
 
 
 @Composable
 fun topAppBar() {
-        var searchText by rememberSaveable { mutableStateOf("") }
+    var searchText by rememberSaveable { mutableStateOf("") }
 
-        Row(
+    Row(
+        modifier = Modifier
+            .padding(top = 50.dp, start = 10.dp, end = 10.dp)
+            .height(60.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        TextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            placeholder = {
+                Text(text = "Search Food, grocery etc.", fontSize = 12.sp)
+            },
+            singleLine = true,
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Search, contentDescription = null)
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
-                .padding(top = 50.dp, start = 10.dp, end = 10.dp)
-                .height(60.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                placeholder = {
-                    Text(text = "Search Food, grocery etc.", fontSize = 12.sp)
-                },
-                singleLine = true,
-                leadingIcon = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .weight(1f)
-                    .fillMaxHeight()
+                .padding(start = 8.dp)
+                .weight(1f)
+                .fillMaxHeight()
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(
+                imageVector = Icons.Outlined.FavoriteBorder,
+                contentDescription = "Favorite",
+                tint = Color.Black
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorite",
-                    tint = Color.Black
-                )
-            }
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Notifications",
-                    tint = Color.Black
-                )
-            }
+        }
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(
+                imageVector = Icons.Outlined.Notifications,
+                contentDescription = "Notifications",
+                tint = Color.Black
+            )
         }
     }
+}
+
+@Composable
+fun CategoriesList() {
+    val iconsAndTitles = listOf(
+        R.drawable.electronics_gadgets to "Electronics",
+        R.drawable.dress to "Dress",
+        R.drawable.health to "Health",
+        R.drawable.pet_supplies to "Pet Supplies",
+        R.drawable.restaurant to "Restaurant",
+        R.drawable.school_bag to "School Bag",
+        R.drawable.sports to "Sports",
+        R.drawable.toys to "Toys",
+        R.drawable.tshirt to "T-Shirt",
+    )
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(26.dp),
+    ) {
+        items(iconsAndTitles) { iconResId ->
+            IconCategories(
+                iconResId =iconResId.first,
+                title =iconResId.second,
+                onClick = {
+                    // TODO: handle here if user click any category navigate
+                }
+            )
+        }
+    }
+}
+@Composable
+fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier.clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            modifier = Modifier
+                .size(38.dp),
+            painter = painterResource(id = iconResId),
+            contentDescription = title,
+            tint = Color(android.graphics.Color.parseColor("#40BFFF"))
+        )
+        Text(
+            text = title,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+    }
+}
+
+@Composable
+fun flashSaleSection() {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Flash Sale",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+            )
+            Text(
+                text = "See More..",
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp,
+                color = SkyBlue,
+                modifier = Modifier.clickable {
+                    // TODO:  show here a screen where all product shown fully
+                }
+            )
+        }
+    }
+}
+
 
 
 
