@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.dashboard.BottomNav
+package com.zip_feast.models.BottomNav
 
 
 import androidx.compose.ui.graphics.vector.ImageVector

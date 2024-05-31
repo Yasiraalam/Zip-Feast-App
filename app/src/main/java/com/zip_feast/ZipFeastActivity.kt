@@ -16,7 +16,7 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.rememberNavController
-import com.zip_feast.presentation.dashboard.BottomNav.BottomNavItem
+import com.zip_feast.models.BottomNav.BottomNavItem
 import com.zip_feast.presentation.dashboard.navigations.MyBottomBar
 import com.zip_feast.presentation.dashboard.navigations.NavGraph
 import com.zip_feast.presentation.dashboard.navigations.Routes
