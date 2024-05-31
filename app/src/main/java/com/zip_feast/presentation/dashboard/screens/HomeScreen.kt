@@ -103,7 +103,7 @@ fun Content(paddingValues: PaddingValues) {
             Spacer(modifier = Modifier.height(20.dp))
         }
         item{
-
+            MegaSaleSection()
         }
 
     }
@@ -443,7 +443,90 @@ fun FlashSaleCard(item: FlashSaleItem) {
     }
 }
 
+@Composable
+fun MegaSaleSection() {
+    Column(
+        modifier = Modifier.padding(horizontal = 5.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Mega Sale",
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "See More ",
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                color = SkyBlue,
+                modifier = Modifier.clickable {
+                    // TODO: show all categories in seperate screen full
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        MegaSaleList(items = sampleMegaSaleItems)
+    }
+}
 
+@Composable
+fun MegaSaleList(items: List<FlashSaleItem>) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(items) { item ->
+            MegaSaleCard(item = item)
+        }
+    }
+}
+
+@Composable
+fun MegaSaleCard(item: FlashSaleItem) {
+    Card(
+        modifier = Modifier
+            .width(160.dp)
+            .height(240.dp)
+            .padding(horizontal = 8.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painterResource(id = item.imageResId),
+                contentDescription = item.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(130.dp)
+            )
+            Text(
+                text = item.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = item.price,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                color = SkyBlue,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = item.discount,
+                fontSize = 7.sp,
+                color = Color.Red,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+    }
+}
 
 
 
