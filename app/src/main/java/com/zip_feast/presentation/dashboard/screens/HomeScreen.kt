@@ -2,7 +2,7 @@
 
 package com.zip_feast.presentation.dashboard.screens
 
-import androidx.compose.foundation.BorderStroke
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,8 +55,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.zip_feast.R
+import com.zip_feast.models.FlashSaleItem
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -74,13 +76,36 @@ fun HomeScreen() {
 
 @Composable
 fun Content(paddingValues: PaddingValues) {
-    Column(Modifier.padding(paddingValues)) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Promotions()
-        Spacer(modifier = Modifier.height(20.dp))
-        categoriesSection()
-        Spacer(modifier = Modifier.height(20.dp))
-        flashSaleSection()
+    LazyColumn(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            Promotions()
+        }
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            categoriesSection()
+        }
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            flashSaleSection()
+        }
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item{
+
+        }
+
     }
 }
 
@@ -335,7 +360,7 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
 @Composable
 fun flashSaleSection() {
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier.padding(horizontal = 5.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -354,6 +379,65 @@ fun flashSaleSection() {
                 modifier = Modifier.clickable {
                     // TODO:  show here a screen where all product shown fully
                 }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        FlashSaleList(items = sampleFlashSaleItems)
+    }
+}
+
+@Composable
+fun FlashSaleList(items: List<FlashSaleItem>) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(items) { item ->
+            FlashSaleCard(item = item)
+        }
+    }
+}
+
+@Composable
+fun FlashSaleCard(item: FlashSaleItem) {
+    Card(
+        modifier = Modifier
+            .width(160.dp)
+            .height(240.dp)
+            .padding(horizontal = 8.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painterResource(id = item.imageResId),
+                contentDescription = item.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(130.dp)
+            )
+            Text(
+                text = item.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = item.price,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                color = SkyBlue,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = item.discount,
+                fontSize = 7.sp,
+                color = Color.Red,
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
     }
