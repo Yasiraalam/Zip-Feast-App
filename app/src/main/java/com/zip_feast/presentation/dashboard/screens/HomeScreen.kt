@@ -176,17 +176,26 @@ fun Promotions() {
             PromotionsItem(
                 title = "Shoes",
                 subtitle = "start@",
-                header = "$15",
+                header = "MPR 1500",
                 backgroundColor = Color(0xFF764DC7),
                 imagePainter = painterResource(id = R.drawable.banner1),
 
                 )
         }
+        item{
+            PromotionsItem(
+                title = "Fresh Vegetables",
+                subtitle = "Fresh",
+                header = "MPR 100",
+                backgroundColor = Color(0xFF764DC7),
+                imagePainter = painterResource(id = R.drawable.vegs),
+            )
+        }
         item {
             PromotionsItem(
                 title = "food",
                 subtitle = "Offer",
-                header = "$5",
+                header = "MPR 554",
                 backgroundColor = Color(0xFF764DC7),
                 imagePainter = painterResource(id = R.drawable.banner4),
             )
@@ -204,9 +213,19 @@ fun Promotions() {
             PromotionsItem(
                 title = "food",
                 subtitle = "Offer",
-                header = "$5",
+                header = "MPR 5",
                 backgroundColor = Color(0xFF764DC7),
                 imagePainter = painterResource(id = R.drawable.banner3),
+            )
+        }
+
+        item {
+            PromotionsItem(
+                title = "Pizza",
+                subtitle = "Just at",
+                header = "MPR 540",
+                backgroundColor = Color(0xFF764DC7),
+                imagePainter = painterResource(id = R.drawable.pizza),
             )
         }
     }
@@ -334,7 +353,7 @@ fun CategoriesList() {
         R.drawable.school_bag to "School Bag",
         R.drawable.sports to "Sports",
         R.drawable.toys to "Toys",
-        R.drawable.tshirt to "T-Shirt",
+        R.drawable.boys_tshirt to "T-Shirt",
     )
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
@@ -426,38 +445,46 @@ fun FlashSaleCard(item: FlashSaleItem) {
         )
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(id = item.imageResId),
-                contentDescription = item.name,
-                contentScale = ContentScale.Crop,
+
+            Box(
                 modifier = Modifier
-                    .width(150.dp)
                     .height(130.dp)
-            )
-            Text(
-                text = item.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 10.sp,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-            )
-            Text(
-                text = item.price,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                color = SkyBlue,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-            )
-            Text(
-                text = item.discount,
-                fontSize = 7.sp,
-                color = Color.Red,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-            )
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = item.imageResId),
+                    contentDescription = item.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                Text(
+                    text = item.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 10.sp,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = item.price,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = SkyBlue
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = item.discount,
+                    fontSize = 10.sp,
+                    color = Color.Red,
+                )
+            }
         }
     }
 }
@@ -533,14 +560,14 @@ fun MegaSaleCard(item: FlashSaleItem) {
             )
             Text(
                 text = item.price,
-                fontSize = 10.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = SkyBlue,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             Text(
                 text = item.discount,
-                fontSize = 7.sp,
+                fontSize = 9.sp,
                 color = Color.Red,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
