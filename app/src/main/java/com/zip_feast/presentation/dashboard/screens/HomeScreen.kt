@@ -465,6 +465,7 @@ fun FlashSaleCard(item: FlashSaleItem) {
                         .fillMaxSize()
                 )
             }
+            FeedbackStars(rating = item.rating)
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {
                 Text(
                     text = item.name,
@@ -552,6 +553,7 @@ fun MegaSaleCard(item: FlashSaleItem) {
                     .width(150.dp)
                     .height(130.dp)
             )
+            FeedbackStars(rating = item.rating)
             Text(
                 text = item.name,
                 fontWeight = FontWeight.Bold,
