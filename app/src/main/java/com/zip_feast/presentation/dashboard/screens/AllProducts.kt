@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,7 @@ import com.zip_feast.presentation.theme.SkyBlue
 fun AllProducts(modifier: Modifier = Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
             .fillMaxWidth()
@@ -67,7 +69,8 @@ fun AllProductsItems(item: FlashSaleItem) {
             Box(
                 modifier = Modifier
                     .height(130.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -78,6 +81,7 @@ fun AllProductsItems(item: FlashSaleItem) {
                         .fillMaxSize()
                 )
             }
+            FeedbackStars(rating = item.rating)
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {
                 Text(
                     text = item.name,
