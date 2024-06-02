@@ -351,7 +351,7 @@ fun CategoriesList() {
         R.drawable.school_bag to "School Bag",
         R.drawable.sports to "Sports",
         R.drawable.toys to "Toys",
-        R.drawable.boys_tshirt to "T-Shirt",
+        R.drawable.menstshirt to "T-Shirt",
     )
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
