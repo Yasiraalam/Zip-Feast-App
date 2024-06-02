@@ -1,9 +1,12 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.zip_feast.presentation.dashboard.screens
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -104,6 +107,18 @@ fun Content(paddingValues: PaddingValues) {
         }
         item{
             MegaSaleSection()
+        }
+        item{
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item{
+            Promotions()
+        }
+        item{
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            AllProducts()
         }
 
     }
@@ -404,7 +419,8 @@ fun FlashSaleCard(item: FlashSaleItem) {
         modifier = Modifier
             .width(160.dp)
             .height(240.dp)
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .background(Color.White),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
@@ -424,20 +440,23 @@ fun FlashSaleCard(item: FlashSaleItem) {
                 text = item.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.sp,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
             )
             Text(
                 text = item.price,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = SkyBlue,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
             )
             Text(
                 text = item.discount,
                 fontSize = 7.sp,
                 color = Color.Red,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
             )
         }
     }
@@ -489,7 +508,8 @@ fun MegaSaleCard(item: FlashSaleItem) {
         modifier = Modifier
             .width(160.dp)
             .height(240.dp)
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .background(Color.White),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
@@ -527,6 +547,8 @@ fun MegaSaleCard(item: FlashSaleItem) {
         }
     }
 }
+
+
 
 
 
