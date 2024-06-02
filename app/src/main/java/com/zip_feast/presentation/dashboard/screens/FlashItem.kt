@@ -11,6 +11,7 @@ val sampleFlashSaleItems = listOf(
     FlashSaleItem(imageResId = R.drawable.shoes2, name = "Asics Gel-Kayano", price = "MRP 1159", discount = "12% Off"),
     FlashSaleItem(imageResId = R.drawable.shoes3, name = "Reebok Classic", price = "MRP 860", discount = "40% Off")
 )
+
 val sampleMegaSaleItems = listOf(
     FlashSaleItem(imageResId = R.drawable.n1, name = "Nike Air Max", price = "MRP 12,099", discount = "10% Off"),
     FlashSaleItem(imageResId = R.drawable.n2, name = "Adidas Ultraboost", price = "MRP 13,034", discount = "15% Off"),

@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.zip_feast.presentation.dashboard.screens
 
@@ -351,7 +353,7 @@ fun CategoriesList() {
         R.drawable.school_bag to "School Bag",
         R.drawable.sports to "Sports",
         R.drawable.toys to "Toys",
-        R.drawable.menstshirt to "T-Shirt",
+
     )
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
