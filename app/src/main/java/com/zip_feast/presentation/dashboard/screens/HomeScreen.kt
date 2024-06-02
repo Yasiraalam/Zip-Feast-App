@@ -4,6 +4,7 @@ package com.zip_feast.presentation.dashboard.screens
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -103,7 +104,19 @@ fun Content(paddingValues: PaddingValues) {
             Spacer(modifier = Modifier.height(20.dp))
         }
         item{
-
+            MegaSaleSection()
+        }
+        item{
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item{
+            Promotions()
+        }
+        item{
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        item {
+            AllProducts()
         }
 
     }
@@ -161,17 +174,26 @@ fun Promotions() {
             PromotionsItem(
                 title = "Shoes",
                 subtitle = "start@",
-                header = "$15",
+                header = "MPR 1500",
                 backgroundColor = Color(0xFF764DC7),
                 imagePainter = painterResource(id = R.drawable.banner1),
 
                 )
         }
+        item{
+            PromotionsItem(
+                title = "Fresh Vegetables",
+                subtitle = "Fresh",
+                header = "MPR 100",
+                backgroundColor = Color(0xFF764DC7),
+                imagePainter = painterResource(id = R.drawable.vegs),
+            )
+        }
         item {
             PromotionsItem(
                 title = "food",
                 subtitle = "Offer",
-                header = "$5",
+                header = "MPR 554",
                 backgroundColor = Color(0xFF764DC7),
                 imagePainter = painterResource(id = R.drawable.banner4),
             )
@@ -189,9 +211,19 @@ fun Promotions() {
             PromotionsItem(
                 title = "food",
                 subtitle = "Offer",
-                header = "$5",
+                header = "MPR 5",
                 backgroundColor = Color(0xFF764DC7),
                 imagePainter = painterResource(id = R.drawable.banner3),
+            )
+        }
+
+        item {
+            PromotionsItem(
+                title = "Pizza",
+                subtitle = "Just at",
+                header = "MPR 540",
+                backgroundColor = Color(0xFF764DC7),
+                imagePainter = painterResource(id = R.drawable.pizza),
             )
         }
     }
@@ -319,7 +351,7 @@ fun CategoriesList() {
         R.drawable.school_bag to "School Bag",
         R.drawable.sports to "Sports",
         R.drawable.toys to "Toys",
-        R.drawable.tshirt to "T-Shirt",
+        R.drawable.boys_tshirt to "T-Shirt",
     )
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
@@ -404,7 +436,105 @@ fun FlashSaleCard(item: FlashSaleItem) {
         modifier = Modifier
             .width(160.dp)
             .height(240.dp)
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .background(Color.White),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .height(130.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = item.imageResId),
+                    contentDescription = item.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                Text(
+                    text = item.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 10.sp,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = item.price,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = SkyBlue
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = item.discount,
+                    fontSize = 10.sp,
+                    color = Color.Red,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MegaSaleSection() {
+    Column(
+        modifier = Modifier.padding(horizontal = 5.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Mega Sale",
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "See More ",
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                color = SkyBlue,
+                modifier = Modifier.clickable {
+                    // TODO: show all categories in seperate screen full
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        MegaSaleList(items = sampleMegaSaleItems)
+    }
+}
+
+@Composable
+fun MegaSaleList(items: List<FlashSaleItem>) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        items(items) { item ->
+            MegaSaleCard(item = item)
+        }
+    }
+}
+
+@Composable
+fun MegaSaleCard(item: FlashSaleItem) {
+    Card(
+        modifier = Modifier
+            .width(160.dp)
+            .height(240.dp)
+            .padding(horizontal = 8.dp)
+            .background(Color.White),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
@@ -428,14 +558,14 @@ fun FlashSaleCard(item: FlashSaleItem) {
             )
             Text(
                 text = item.price,
-                fontSize = 10.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = SkyBlue,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             Text(
                 text = item.discount,
-                fontSize = 7.sp,
+                fontSize = 9.sp,
                 color = Color.Red,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
