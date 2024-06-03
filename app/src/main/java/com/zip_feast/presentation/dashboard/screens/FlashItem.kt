@@ -4,12 +4,12 @@ import com.zip_feast.R
 import com.zip_feast.models.FlashSaleItem
 
 val sampleFlashSaleItems = listOf(
+    FlashSaleItem(imageResId = R.drawable.shoes1, name = "Reebok Classic", price = "MRP 12,599", discount = "30% Off",rating = 4),
+    FlashSaleItem(imageResId = R.drawable.shoes2, name = "Asics Gel-Kayano", price = "MRP 1159", discount = "12% Off",rating = 2),
+    FlashSaleItem(imageResId = R.drawable.shoes3, name = "Reebok Classic", price = "MRP 860", discount = "40% Off",rating = 3),
     FlashSaleItem(imageResId = R.drawable.n1, name = "Nike Air Max", price = "MRP 12,099", discount = "10% Off",rating = 4),
     FlashSaleItem(imageResId = R.drawable.n2, name = "Adidas Ultraboost", price = "MRP 13,050", discount = "15% Off",rating = 3),
     FlashSaleItem(imageResId = R.drawable.n3, name = "Puma RS-X", price = "MRP 2250", discount = "25% Off",rating = 5),
-    FlashSaleItem(imageResId = R.drawable.shoes1, name = "Reebok Classic", price = "MRP 12,599", discount = "30% Off",rating = 4),
-    FlashSaleItem(imageResId = R.drawable.shoes2, name = "Asics Gel-Kayano", price = "MRP 1159", discount = "12% Off",rating = 2),
-    FlashSaleItem(imageResId = R.drawable.shoes3, name = "Reebok Classic", price = "MRP 860", discount = "40% Off",rating = 3)
 )
 
 val sampleMegaSaleItems = listOf(
