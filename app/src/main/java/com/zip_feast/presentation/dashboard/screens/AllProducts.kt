@@ -27,36 +27,57 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.zip_feast.models.FlashSaleItem
+import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
+import com.zip_feast.presentation.dummyData.sampleProducts
 import com.zip_feast.presentation.theme.SkyBlue
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
-fun AllProducts(modifier: Modifier = Modifier) {
+fun AllProducts(navController: NavHostController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(500.dp)
     ) {
         items(sampleProducts) { item ->
-            AllProductsItems(item = item)
+            AllProductsItems(item = item){
+                val productDetail = ProductDetail(
+                    imageResId = item.imageResId,
+                    name = item.name,
+                    price = item.price,
+                    discount = item.discount,
+                    rating = item.rating
+                )
+                val productJson = Json.encodeToString(productDetail)
+                navController.navigate("productDetail/$productJson")
+            }
         }
     }
 }
 
 @Composable
-fun AllProductsItems(item: FlashSaleItem) {
+fun AllProductsItems(item: FlashSaleItem,onClick: ()-> Unit ){
 
     Card(
         modifier = Modifier
             .width(160.dp)
             .height(240.dp)
-            .padding(horizontal = 8.dp)
-            .background(Color.White),
+            .padding(horizontal = 8.dp),
+        onClick = {
+                  onClick()
+        },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
         )
     ) {
         Column(

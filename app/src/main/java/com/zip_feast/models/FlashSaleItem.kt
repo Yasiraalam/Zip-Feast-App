@@ -1,5 +1,6 @@
 package com.zip_feast.models
 
+
 data class FlashSaleItem(
     val imageResId: Int,
     val name: String,
