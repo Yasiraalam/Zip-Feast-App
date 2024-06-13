@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class
 )
 
@@ -6,7 +7,6 @@ package com.zip_feast.presentation.dashboard.screens
 
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +35,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -58,27 +57,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.zip_feast.R
 import com.zip_feast.models.FlashSaleItem
+import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
+import com.zip_feast.presentation.dummyData.sampleFlashSaleItems
+import com.zip_feast.presentation.dummyData.sampleMegaSaleItems
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavHostController
+) {
     Box {
         Scaffold(
             topBar = { topAppBar() },
             containerColor = Color.White,
 
             ) { paddingValues ->
-            Content(paddingValues)
+            Content(paddingValues, navController)
         }
     }
 }
 
 @Composable
-fun Content(paddingValues: PaddingValues) {
+fun Content(paddingValues: PaddingValues, navController: NavHostController) {
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
@@ -100,25 +107,30 @@ fun Content(paddingValues: PaddingValues) {
             Spacer(modifier = Modifier.height(20.dp))
         }
         item {
-            flashSaleSection()
+            flashSaleSection(navController)
         }
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }
         item{
-            MegaSaleSection()
-        }
-        item{
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-        item{
-            Promotions()
+            MegaSaleSection(navController)
         }
         item{
             Spacer(modifier = Modifier.height(20.dp))
         }
         item {
-            AllProducts()
+            Text(
+                text = "All Products",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 13.dp)
+            )
+        }
+        item {
+            AllProducts(navController)
         }
 
     }
@@ -293,8 +305,8 @@ fun PromotionsItem(
 
 @Composable
 fun topAppBar() {
-    var searchText by rememberSaveable { mutableStateOf("") }
 
+    var searchText by rememberSaveable { mutableStateOf("") }
     Row(
         modifier = Modifier
             .padding(top = 50.dp, start = 10.dp, end = 10.dp)
@@ -314,7 +326,7 @@ fun topAppBar() {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             },
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                containerColor = SkyBlue,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
@@ -392,7 +404,7 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun flashSaleSection() {
+fun flashSaleSection(navController: NavHostController) {
     Column(
         modifier = Modifier.padding(horizontal = 5.dp)
     ) {
@@ -416,32 +428,48 @@ fun flashSaleSection() {
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        FlashSaleList(items = sampleFlashSaleItems)
+        FlashSaleList(items = sampleFlashSaleItems, navController)
     }
 }
 
 @Composable
-fun FlashSaleList(items: List<FlashSaleItem>) {
+fun FlashSaleList(items: List<FlashSaleItem>, navController: NavHostController) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         items(items) { item ->
-            FlashSaleCard(item = item)
+            FlashSaleCard(item=item){
+                val productDetail = ProductDetail(
+                    imageResId = item.imageResId,
+                    name = item.name,
+                    price = item.price,
+                    discount = item.discount,
+                    rating = item.rating
+                )
+                val productJson = Json.encodeToString(productDetail)
+                navController.navigate("productDetail/$productJson")
+            }
         }
     }
 }
 
 @Composable
-fun FlashSaleCard(item: FlashSaleItem) {
+fun FlashSaleCard(item: FlashSaleItem,onClick: () -> Unit) {
     Card(
         modifier = Modifier
+            .clickable {
+                onClick()
+            }
             .width(160.dp)
             .height(240.dp)
-            .padding(horizontal = 8.dp)
-            .background(Color.White),
+            .padding(horizontal = 8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
         )
     ) {
         Column(
@@ -491,7 +519,7 @@ fun FlashSaleCard(item: FlashSaleItem) {
 }
 
 @Composable
-fun MegaSaleSection() {
+fun MegaSaleSection(navController: NavHostController) {
     Column(
         modifier = Modifier.padding(horizontal = 5.dp)
     ) {
@@ -514,32 +542,48 @@ fun MegaSaleSection() {
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        MegaSaleList(items = sampleMegaSaleItems)
+        MegaSaleList(items = sampleMegaSaleItems,navController)
     }
 }
 
 @Composable
-fun MegaSaleList(items: List<FlashSaleItem>) {
+fun MegaSaleList(items: List<FlashSaleItem>, navController: NavHostController) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         items(items) { item ->
-            MegaSaleCard(item = item)
+            MegaSaleCard(item = item){
+                    val productDetail = ProductDetail(
+                        imageResId = item.imageResId,
+                        name = item.name,
+                        price = item.price,
+                        discount = item.discount,
+                        rating = item.rating
+                    )
+                    val productJson = Json.encodeToString(productDetail)
+                    navController.navigate("productDetail/$productJson")
+            }
         }
     }
 }
 
 @Composable
-fun MegaSaleCard(item: FlashSaleItem) {
+fun MegaSaleCard(item: FlashSaleItem,onClick: () -> Unit) {
     Card(
         modifier = Modifier
+            .clickable {
+                onClick()
+            }
             .width(160.dp)
             .height(240.dp)
-            .padding(horizontal = 8.dp)
-            .background(Color.White),
+            .padding(horizontal = 8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
         )
     ) {
         Column(

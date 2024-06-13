@@ -21,6 +21,7 @@ hiltAndroid = "2.49"
 kspkotlin ="1.9.24-1.0.20"
 composeNavigation="2.7.7"
 serialization = "1.6.3"
+composeAnimation ="1.7.0-beta02"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,9 +53,10 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
-# compose navigations
+# compose navigations and animation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+androidx-compose-animation ={group ="androidx.compose.animation", name = "animation", version.ref ="composeAnimation"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
