@@ -1,7 +1,16 @@
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
@@ -10,11 +19,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -26,6 +36,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zip_feast.R
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
 import com.zip_feast.presentation.theme.SkyBlue
 
@@ -33,7 +44,7 @@ import com.zip_feast.presentation.theme.SkyBlue
 fun ProductDetailScreen(product: ProductDetail, onBackClick: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
-        topBar = { ProductTopAppBar(product.name,onBackClick) },
+        topBar = { ProductTopAppBar(product.name, onBackClick) },
         containerColor = Color.White
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -43,7 +54,7 @@ fun ProductDetailScreen(product: ProductDetail, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductTopAppBar(productName: String,onbackClick: () -> Unit) {
+fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
     var searchText by rememberSaveable { mutableStateOf("") }
 
     Row(
@@ -59,7 +70,7 @@ fun ProductTopAppBar(productName: String,onbackClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxHeight()
                 .width(40.dp)
-                .clickable { onbackClick() },
+                .clickable { onBackClick() },
             contentDescription = "back button"
         )
         Spacer(modifier = Modifier.width(4.dp))
@@ -121,7 +132,7 @@ fun ProductDetail(product: ProductDetail) {
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = product.discount,
             fontSize = 14.sp,
@@ -130,6 +141,7 @@ fun ProductDetail(product: ProductDetail) {
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
+        ItemQuentity(product)
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { /*TODO*/ },
@@ -161,7 +173,60 @@ fun ProductDetail(product: ProductDetail) {
                 fontSize = 13.sp,
                 fontStyle = FontStyle.Normal,
             )
-
         }
     }
+}
+
+@Composable
+fun ItemQuentity(product: ProductDetail) {
+    val quentity = rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 8.dp),
+    ) {
+        IconButton(
+            onClick = {
+                if (quentity.value > 0){
+                    quentity.value--
+                }
+            },
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp),
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = SkyBlue,
+                contentColor = Color.White
+            )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.minus),
+                contentDescription = "minus item"
+            )
+        }
+        Text(
+            text = quentity.value.toString(),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(start = 8.dp, end = 8.dp)
+        )
+        IconButton(
+            onClick = { quentity.value++ },
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp),
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = SkyBlue,
+                contentColor = Color.White
+            )
+        ) {
+            Icon(painter = painterResource(id = R.drawable.add), contentDescription = "add item")
+        }
+    }
+
 }
