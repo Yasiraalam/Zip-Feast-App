@@ -1,8 +1,17 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
@@ -14,7 +23,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +36,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zip_feast.R
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
 import com.zip_feast.presentation.theme.SkyBlue
-import com.zip_feast.R
 
 @Composable
 fun ProductDetailScreen(product: ProductDetail, onBackClick: () -> Unit) {
@@ -46,7 +54,7 @@ fun ProductDetailScreen(product: ProductDetail, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductTopAppBar(productName: String, onbackClick: () -> Unit) {
+fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
     var searchText by rememberSaveable { mutableStateOf("") }
 
     Row(
@@ -62,7 +70,7 @@ fun ProductTopAppBar(productName: String, onbackClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxHeight()
                 .width(40.dp)
-                .clickable { onbackClick() },
+                .clickable { onBackClick() },
             contentDescription = "back button"
         )
         Spacer(modifier = Modifier.width(4.dp))
@@ -165,7 +173,6 @@ fun ProductDetail(product: ProductDetail) {
                 fontSize = 13.sp,
                 fontStyle = FontStyle.Normal,
             )
-
         }
     }
 }
