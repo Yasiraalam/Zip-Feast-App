@@ -43,7 +43,6 @@ import com.zip_feast.presentation.theme.SkyBlue
 
 @Composable
 fun CartScreen() {
-//    val cartItems by cartViewModel.cartItems.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = {
@@ -84,7 +83,7 @@ fun CartScreen() {
 fun CartItemsSections(
     innerPadding: PaddingValues
 ) {
- val CartItems = 3
+ val CartItems = 123
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
