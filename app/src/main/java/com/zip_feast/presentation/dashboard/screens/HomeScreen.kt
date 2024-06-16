@@ -60,9 +60,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.zip_feast.R
 import com.zip_feast.models.FlashSaleItem
+import com.zip_feast.presentation.dashboard.dummyData.sampleFlashSaleItems
+import com.zip_feast.presentation.dashboard.dummyData.sampleMegaSaleItems
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.dummyData.sampleFlashSaleItems
-import com.zip_feast.presentation.dummyData.sampleMegaSaleItems
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

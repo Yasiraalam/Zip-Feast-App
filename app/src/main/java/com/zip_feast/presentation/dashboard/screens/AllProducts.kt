@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.zip_feast.models.FlashSaleItem
+import com.zip_feast.presentation.dashboard.dummyData.sampleProducts
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.dummyData.sampleProducts
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
