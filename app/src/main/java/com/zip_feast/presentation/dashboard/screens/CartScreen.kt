@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -83,7 +82,7 @@ fun CartScreen() {
 fun CartItemsSections(
     innerPadding: PaddingValues
 ) {
- val CartItems = 123
+ val CartItems = 1
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
