@@ -1,4 +1,5 @@
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +51,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ProductDetailScreen(
-    cartViewModel: CartViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel<CartViewModel>(),
     product: ProductDetail,
     onBackClick: () -> Unit
 ) {
@@ -113,6 +115,7 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 @Composable
 fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,7 +123,7 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = product.productId),
+            painter = painterResource(id = product.imageResId),
             contentDescription = null,
             modifier = Modifier
                 .aspectRatio(16 / 9f)
@@ -159,11 +162,15 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
                 coroutineScope.launch {
                     val cartItem = CartItem(
                         productId = product.productId,
-                        title = product.name,
+                        imageResId = product.imageResId,
+                        name = product.name,
                         price = product.price,
+                        discount = product.discount,
+                        rating = product.rating,
                         quantity = 1,
                     )
                     cartViewModel.insert(cartItem)
+                    Toast.makeText(context, "Item added in Cart", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier.fillMaxWidth(),

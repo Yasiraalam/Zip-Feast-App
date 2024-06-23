@@ -95,4 +95,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.animation)
 
+    //room db
+    implementation (libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
 }

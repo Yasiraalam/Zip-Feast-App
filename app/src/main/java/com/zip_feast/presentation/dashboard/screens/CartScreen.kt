@@ -1,5 +1,6 @@
 package com.zip_feast.presentation.dashboard.screens
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -28,6 +30,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,12 +40,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.zip_feast.R
+import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.presentation.theme.SkyBlue
-
+import com.zip_feast.viewmodels.cartViewmodel.CartViewModel
 
 @Composable
-fun CartScreen() {
+fun CartScreen(
+    viewModel: CartViewModel = hiltViewModel<CartViewModel>()
+) {
+    val cartItems by viewModel.allCartItems.observeAsState(emptyList())
+
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = {
@@ -74,27 +84,29 @@ fun CartScreen() {
             }
         }
     ) { innerPadding ->
-        CartItemsSections(innerPadding)
+        CartItemsSection(cartItems, innerPadding, onRemoveItem = { viewModel.delete(it) })
     }
 }
 
 @Composable
-fun CartItemsSections(
-    innerPadding: PaddingValues
+fun CartItemsSection(
+    cartItems: List<CartItem>,
+    innerPadding: PaddingValues,
+    onRemoveItem: (CartItem) -> Unit
 ) {
- val CartItems = 1
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        items(CartItems) { cartItem ->
-            CartItemCard(cartItem)
+        items(cartItems) { cartItem ->
+            CartItemCard(cartItem, onRemoveItem)
         }
     }
 }
+
 @Composable
-fun CartItemCard(cartItem: Int) {
+fun CartItemCard(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,11 +116,12 @@ fun CartItemCard(cartItem: Int) {
             .background(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        CartItem()
+        CartItem(cartItem, onRemoveItem)
     }
 }
+
 @Composable
-private fun CartItem() {
+private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -117,7 +130,7 @@ private fun CartItem() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
-            painter = painterResource(id = R.drawable.n1),
+            painter = painterResource(id = cartItem.imageResId),
             modifier = Modifier.size(60.dp),
             contentDescription = "item"
         )
@@ -126,12 +139,12 @@ private fun CartItem() {
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = "Item Name",
+                text = cartItem.name,
                 color = Color.Black,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "MRP 1200",
+                text = "MRP ${cartItem.price}",
                 color = SkyBlue,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -147,11 +160,11 @@ private fun CartItem() {
                     tint = Color.Red
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onRemoveItem(cartItem) }) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete",
-                    tint = Color.Black  // Assuming SkyBlue is a custom color
+                    tint = Color.Black
                 )
             }
         }

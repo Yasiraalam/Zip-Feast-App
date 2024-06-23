@@ -5,8 +5,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductDetail(
     val productId: Int,
+    val imageResId: Int,
     val name: String,
-    val price: Int,
+    val price: String,
     val discount: String,
-    val rating: Int
+    val rating: Int,
+    var quantity: Int,
 )

@@ -7,7 +7,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 @Database(entities = [CartItem::class], version = 1,exportSchema = false)
-@InstallIn(SingletonComponent::class)
 abstract class CartDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
 }
