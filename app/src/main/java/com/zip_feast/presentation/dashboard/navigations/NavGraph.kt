@@ -45,9 +45,12 @@ fun NavGraph(
             arguments = listOf(navArgument("productJson") { type = NavType.StringType })
         ) { backStackEntry ->
             val productJson = backStackEntry.arguments?.getString("productJson")
-            val product = Json.decodeFromString<ProductDetail>(productJson!!)
-            ProductDetailScreen(product = product, onBackClick = { navController.navigateUp() })
+            val product = productJson?.let { Json.decodeFromString<ProductDetail>(it) }
+            product?.let {
+                ProductDetailScreen(product = it, onBackClick = { navController.navigateUp() })
+            }
         }
+
     }
 }
 

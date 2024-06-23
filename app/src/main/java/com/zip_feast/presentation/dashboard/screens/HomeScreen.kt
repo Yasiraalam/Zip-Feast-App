@@ -1,4 +1,5 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class
 )
@@ -60,14 +61,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.zip_feast.R
 import com.zip_feast.models.FlashSaleItem
+import com.zip_feast.presentation.dashboard.dummyData.sampleFlashSaleItems
+import com.zip_feast.presentation.dashboard.dummyData.sampleMegaSaleItems
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.dummyData.sampleFlashSaleItems
-import com.zip_feast.presentation.dummyData.sampleMegaSaleItems
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun HomeScreen(
@@ -112,10 +115,10 @@ fun Content(paddingValues: PaddingValues, navController: NavHostController) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }
-        item{
+        item {
             MegaSaleSection(navController)
         }
-        item{
+        item {
             Spacer(modifier = Modifier.height(20.dp))
         }
         item {
@@ -194,7 +197,7 @@ fun Promotions() {
 
                 )
         }
-        item{
+        item {
             PromotionsItem(
                 title = "Fresh Vegetables",
                 subtitle = "Fresh",
@@ -366,14 +369,14 @@ fun CategoriesList() {
         R.drawable.sports to "Sports",
         R.drawable.toys to "Toys",
 
-    )
+        )
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         items(iconsAndTitles) { iconResId ->
             IconCategories(
-                iconResId =iconResId.first,
-                title =iconResId.second,
+                iconResId = iconResId.first,
+                title = iconResId.second,
                 onClick = {
                     // TODO: handle here if user click any category navigate
                 }
@@ -381,6 +384,7 @@ fun CategoriesList() {
         }
     }
 }
+
 @Composable
 fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
     Column(
@@ -439,23 +443,27 @@ fun FlashSaleList(items: List<FlashSaleItem>, navController: NavHostController) 
         modifier = Modifier.fillMaxWidth()
     ) {
         items(items) { item ->
-            FlashSaleCard(item=item){
+            FlashSaleCard(item = item) {
                 val productDetail = ProductDetail(
+                    productId = item.productId,
                     imageResId = item.imageResId,
                     name = item.name,
                     price = item.price,
                     discount = item.discount,
-                    rating = item.rating
+                    rating = item.rating,
+                    quantity = 1
                 )
                 val productJson = Json.encodeToString(productDetail)
-                navController.navigate("productDetail/$productJson")
+                val encodedProductJson =
+                    URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
+                navController.navigate("productDetail/$encodedProductJson")
             }
         }
     }
 }
 
 @Composable
-fun FlashSaleCard(item: FlashSaleItem,onClick: () -> Unit) {
+fun FlashSaleCard(item: FlashSaleItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .clickable {
@@ -542,7 +550,7 @@ fun MegaSaleSection(navController: NavHostController) {
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        MegaSaleList(items = sampleMegaSaleItems,navController)
+        MegaSaleList(items = sampleMegaSaleItems, navController)
     }
 }
 
@@ -553,23 +561,28 @@ fun MegaSaleList(items: List<FlashSaleItem>, navController: NavHostController) {
         modifier = Modifier.fillMaxWidth()
     ) {
         items(items) { item ->
-            MegaSaleCard(item = item){
-                    val productDetail = ProductDetail(
-                        imageResId = item.imageResId,
-                        name = item.name,
-                        price = item.price,
-                        discount = item.discount,
-                        rating = item.rating
-                    )
-                    val productJson = Json.encodeToString(productDetail)
-                    navController.navigate("productDetail/$productJson")
+            MegaSaleCard(item = item) {
+                val productDetail = ProductDetail(
+                    productId = item.productId,
+                    imageResId = item.imageResId,
+                    name = item.name,
+                    price = item.price,
+                    discount = item.discount,
+                    rating = item.rating,
+                    quantity = 1
+                )
+                val productJson = Json.encodeToString(productDetail)
+                val encodedProductJson =
+                    URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
+                navController.navigate("productDetail/$encodedProductJson")
             }
+
         }
     }
 }
 
 @Composable
-fun MegaSaleCard(item: FlashSaleItem,onClick: () -> Unit) {
+fun MegaSaleCard(item: FlashSaleItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .clickable {

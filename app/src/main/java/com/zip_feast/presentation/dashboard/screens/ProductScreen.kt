@@ -1,3 +1,5 @@
+
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,29 +28,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.zip_feast.R
+import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
 import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.viewmodels.cartViewmodel.CartViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun ProductDetailScreen(product: ProductDetail, onBackClick: () -> Unit) {
+fun ProductDetailScreen(
+    cartViewModel: CartViewModel = hiltViewModel<CartViewModel>(),
+    product: ProductDetail,
+    onBackClick: () -> Unit
+) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = { ProductTopAppBar(product.name, onBackClick) },
         containerColor = Color.White
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            ProductDetail(product)
+            ProductDetail(product, cartViewModel)
         }
     }
 }
@@ -100,7 +113,9 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductDetail(product: ProductDetail) {
+fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -125,7 +140,7 @@ fun ProductDetail(product: ProductDetail) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = product.price,
+            text = "product.price",
             fontSize = 16.sp,
             color = SkyBlue,
             modifier = Modifier
@@ -141,10 +156,23 @@ fun ProductDetail(product: ProductDetail) {
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
-        ItemQuentity(product)
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                coroutineScope.launch {
+                    val cartItem = CartItem(
+                        productId = product.productId,
+                        imageResId = product.imageResId,
+                        name = product.name,
+                        price = product.price,
+                        discount = product.discount,
+                        rating = product.rating,
+                        quantity = 1,
+                    )
+                    cartViewModel.insert(cartItem)
+                    Toast.makeText(context, "Item added in Cart", Toast.LENGTH_SHORT).show()
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SkyBlue,
@@ -177,56 +205,3 @@ fun ProductDetail(product: ProductDetail) {
     }
 }
 
-@Composable
-fun ItemQuentity(product: ProductDetail) {
-    val quentity = rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 8.dp),
-    ) {
-        IconButton(
-            onClick = {
-                if (quentity.value > 0){
-                    quentity.value--
-                }
-            },
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = SkyBlue,
-                contentColor = Color.White
-            )
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.minus),
-                contentDescription = "minus item"
-            )
-        }
-        Text(
-            text = quentity.value.toString(),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(start = 8.dp, end = 8.dp)
-        )
-        IconButton(
-            onClick = { quentity.value++ },
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = SkyBlue,
-                contentColor = Color.White
-            )
-        ) {
-            Icon(painter = painterResource(id = R.drawable.add), contentDescription = "add item")
-        }
-    }
-
-}

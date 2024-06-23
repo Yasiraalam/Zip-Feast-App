@@ -29,11 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.zip_feast.models.FlashSaleItem
+import com.zip_feast.presentation.dashboard.dummyData.sampleProducts
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.dummyData.sampleProducts
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun AllProducts(navController: NavHostController) {
@@ -48,14 +50,17 @@ fun AllProducts(navController: NavHostController) {
         items(sampleProducts) { item ->
             AllProductsItems(item = item){
                 val productDetail = ProductDetail(
+                    productId = item.productId,
                     imageResId = item.imageResId,
                     name = item.name,
                     price = item.price,
                     discount = item.discount,
-                    rating = item.rating
+                    rating = item.rating,
+                    quantity = 1
                 )
                 val productJson = Json.encodeToString(productDetail)
-                navController.navigate("productDetail/$productJson")
+                val encodedProductJson = URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
+                navController.navigate("productDetail/$encodedProductJson")
             }
         }
     }
