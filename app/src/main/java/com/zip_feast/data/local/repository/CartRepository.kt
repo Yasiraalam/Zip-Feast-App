@@ -20,4 +20,9 @@ class CartRepository @Inject constructor(private val cartItemDao: CartItemDao) {
     suspend fun deleteById(productId: Int) {
         cartItemDao.deleteCartItemById(productId)
     }
+
+    suspend fun updateCartItem(cartItem: CartItem) {
+        cartItemDao.update(cartItem)
+    }
+
 }

@@ -22,5 +22,8 @@ interface CartItemDao {
 
     @Query("DELETE FROM cart_items WHERE productId = :productId")
     suspend fun deleteCartItemById(productId:Int)
-    // TODO: may ne need to change the datatype of productid in future 
+    // TODO: may ne need to change the datatype of productid in future
+
+    @Update
+    suspend fun update(cartItem: CartItem)
 }

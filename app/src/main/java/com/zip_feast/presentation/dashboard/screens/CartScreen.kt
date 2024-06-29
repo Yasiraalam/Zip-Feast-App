@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -84,7 +85,7 @@ fun CartScreen(
             }
         }
     ) { innerPadding ->
-        CartItemsSection(cartItems, innerPadding, onRemoveItem = { viewModel.delete(it) })
+        CartItemsSection(cartItems, innerPadding,viewModel, onRemoveItem = { viewModel.delete(it) })
     }
 }
 
@@ -92,6 +93,7 @@ fun CartScreen(
 fun CartItemsSection(
     cartItems: List<CartItem>,
     innerPadding: PaddingValues,
+    viewModel: CartViewModel,
     onRemoveItem: (CartItem) -> Unit
 ) {
     LazyColumn(
@@ -100,13 +102,17 @@ fun CartItemsSection(
             .padding(innerPadding)
     ) {
         items(cartItems) { cartItem ->
-            CartItemCard(cartItem, onRemoveItem)
+            CartItemCard(cartItem,viewModel,onRemoveItem)
         }
     }
 }
 
 @Composable
-fun CartItemCard(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
+fun CartItemCard(
+    cartItem: CartItem,
+    viewModel: CartViewModel,
+    onRemoveItem: (CartItem) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,16 +122,16 @@ fun CartItemCard(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
             .background(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        CartItem(cartItem, onRemoveItem)
+        CartItem(cartItem,viewModel, onRemoveItem)
     }
 }
 
 @Composable
-private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
+private fun CartItem(cartItem: CartItem, viewModel: CartViewModel,onRemoveItem: (CartItem) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(top = 12.dp, start = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -150,16 +156,12 @@ private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.width(120.dp),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Outlined.Favorite,
-                    contentDescription = "Favorite",
-                    tint = Color.Red
-                )
-            }
+
             IconButton(onClick = { onRemoveItem(cartItem) }) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
@@ -167,6 +169,35 @@ private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
                     tint = Color.Black
                 )
             }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                IconButton(onClick = { viewModel.decreaseQuantity(cartItem)}) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_minus),
+                        contentDescription = "minus icon",
+                        tint = Color.Gray,
+                        modifier = Modifier.clip(CircleShape).background(Color.White)
+                    )
+                }
+                Text(
+                    text = "${cartItem.quantity}",
+                    color = Color.Black,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                IconButton(onClick = {viewModel.increaseQuantity(cartItem)  }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_plus),
+                        contentDescription = "plus icon",
+                        tint = Color.Gray,
+                        modifier = Modifier.clip(CircleShape).background(Color.White)
+                    )
+                }
+            }
         }
+
     }
 }

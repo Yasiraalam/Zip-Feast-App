@@ -25,4 +25,21 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
     fun deleteById(productId: Int) = viewModelScope.launch {
         repository.deleteById(productId)
     }
+
+    fun increaseQuantity(cartItem: CartItem) {
+        viewModelScope.launch {
+            val newQuantity = cartItem.quantity + 1
+            val updatedCartItem = cartItem.copy(quantity = newQuantity)
+            repository.updateCartItem(updatedCartItem)
+        }
+    }
+    fun decreaseQuantity(cartItem: CartItem) {
+        if (cartItem.quantity > 1) {
+            viewModelScope.launch {
+                val newQuantity = cartItem.quantity - 1
+                val updatedCartItem = cartItem.copy(quantity = newQuantity)
+                repository.updateCartItem(updatedCartItem)
+            }
+        }
+    }
 }
