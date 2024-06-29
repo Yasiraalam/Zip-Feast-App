@@ -1,5 +1,6 @@
 package com.zip_feast.presentation.dashboard.navigations
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,6 +19,7 @@ import com.zip_feast.presentation.theme.SkyBlue
 fun MyBottomBar(navController: NavHostController) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination?.route
+    val uiColor = if(isSystemInDarkTheme()) Color.White else Color.Black
     NavigationBar {
         bottomNavItems.forEach { item ->
             val selected = currentDestination == item.route
@@ -36,14 +38,14 @@ fun MyBottomBar(navController: NavHostController) {
                     Icon(
                         imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
                         contentDescription = item.title,
-                        tint = if (selected) SkyBlue else Color.Black
+                        tint = if (selected) SkyBlue else uiColor
                     )
                 },
                 label = {
                     Text(
                         fontSize = 10.sp,
                         text = item.title,
-                        color = if (selected) SkyBlue else Color.Black
+                        color = if (selected) SkyBlue else uiColor
                     )
                 }
             )

@@ -7,14 +7,18 @@
 package com.zip_feast.presentation.dashboard.screens
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,6 +60,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -76,14 +81,20 @@ import java.nio.charset.StandardCharsets
 fun HomeScreen(
     navController: NavHostController
 ) {
-    Box {
-        Scaffold(
-            topBar = { topAppBar() },
-            containerColor = Color.White,
+    Scaffold(
+        topBar = { topAppBar() },
+        containerColor = Color.White,
 
-            ) { paddingValues ->
-            Content(paddingValues, navController)
+        ) { paddingValues ->
+        val adjustedPadding = remember(paddingValues) {
+            PaddingValues(
+                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
+                top = paddingValues.calculateTopPadding() - 8.dp,
+                end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                bottom = paddingValues.calculateBottomPadding() - 16.dp
+            )
         }
+        Content(adjustedPadding, navController)
     }
 }
 
@@ -308,7 +319,7 @@ fun PromotionsItem(
 
 @Composable
 fun topAppBar() {
-
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
     var searchText by rememberSaveable { mutableStateOf("") }
     Row(
         modifier = Modifier
@@ -322,7 +333,11 @@ fun topAppBar() {
             value = searchText,
             onValueChange = { searchText = it },
             placeholder = {
-                Text(text = "Search Food, grocery etc.", fontSize = 12.sp)
+                Text(
+                    text = "Search Food, grocery etc.",
+                    fontSize = 12.sp,
+                    color = uiColor,
+                )
             },
             singleLine = true,
             leadingIcon = {
@@ -387,6 +402,7 @@ fun CategoriesList() {
 
 @Composable
 fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
+    val uiColor = if (isSystemInDarkTheme()) Color.White else SkyBlue
     Column(
         modifier = Modifier.clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally
@@ -396,7 +412,7 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
                 .size(38.dp),
             painter = painterResource(id = iconResId),
             contentDescription = title,
-            tint = SkyBlue
+            tint = uiColor
         )
         Text(
             text = title,

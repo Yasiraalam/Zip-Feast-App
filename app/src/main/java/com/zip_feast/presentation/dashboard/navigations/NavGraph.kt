@@ -1,31 +1,32 @@
 package com.zip_feast.presentation.dashboard.navigations
 
 import ProductDetailScreen
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
 import com.zip_feast.presentation.dashboard.screens.AccountScreen
 import com.zip_feast.presentation.dashboard.screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Composable
 fun NavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    paddingValues: PaddingValues,
 ) {
     NavHost(
         navController =navController,
         startDestination =  Routes.HomeScreen.routes,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(paddingValues)
     ) {
         composable(route = Routes.HomeScreen.routes) {
             HomeScreen(navController)
