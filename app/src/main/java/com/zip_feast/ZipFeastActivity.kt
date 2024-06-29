@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -15,6 +20,11 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.zip_feast.models.BottomNav.BottomNavItem
 import com.zip_feast.presentation.dashboard.navigations.MyBottomBar
@@ -31,15 +41,28 @@ class ZipFeastActivity : ComponentActivity() {
         setContent {
             ZipFeastTheme {
                 val navController = rememberNavController()
+                val backStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = backStackEntry?.destination?.route
+                val routesToHideBottomBar = listOf(
+                    Routes.ProductDetailScreen.routes
+                )
                 Scaffold(
                     bottomBar = {
-                        NavigationBar{
-                           MyBottomBar(navController = navController)
+                        if (currentRoute !in routesToHideBottomBar) {
+                            NavigationBar {
+                                MyBottomBar(navController = navController)
+                            }
                         }
+
                     }
-                ){
-                    val padding  = it
-                    NavGraph(navController = navController)
+                ) { innerPadding ->
+                    val adjustedPadding = PaddingValues(
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        top = innerPadding.calculateTopPadding() - 8.dp,
+                        end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+                        bottom = innerPadding.calculateBottomPadding() - 40.dp
+                    )
+                    NavGraph(navController = navController, paddingValues = adjustedPadding)
                 }
             }
         }
@@ -62,7 +85,7 @@ val bottomNavItems = listOf(
     BottomNavItem(
         title = "Cart",
         route = Routes.CartScreen.routes,
-        selectedIcon = Icons.Filled.ShoppingCart ,
+        selectedIcon = Icons.Filled.ShoppingCart,
         unselectedIcon = Icons.Outlined.ShoppingCart
     ),
     BottomNavItem(
