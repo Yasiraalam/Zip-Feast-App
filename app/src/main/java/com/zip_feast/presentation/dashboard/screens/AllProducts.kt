@@ -116,7 +116,7 @@ fun AllProductsItems(item: FlashSaleItem,onClick: ()-> Unit ){
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = item.price,
+                    text = item.price.toString(),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = SkyBlue

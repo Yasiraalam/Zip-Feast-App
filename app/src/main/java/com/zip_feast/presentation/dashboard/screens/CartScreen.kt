@@ -3,6 +3,7 @@ package com.zip_feast.presentation.dashboard.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,26 +18,33 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +59,8 @@ fun CartScreen(
     viewModel: CartViewModel = hiltViewModel<CartViewModel>()
 ) {
     val cartItems by viewModel.allCartItems.observeAsState(emptyList())
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -67,7 +77,7 @@ fun CartScreen(
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 16.dp),
-                    color = Color.Black
+                    color = uiColor
                 )
                 IconButton(
                     onClick = { /*TODO*/ },
@@ -78,13 +88,25 @@ fun CartScreen(
                     Icon(
                         imageVector = Icons.Outlined.Notifications,
                         contentDescription = "Notifications",
-                        tint = Color.Gray
+                        tint = uiColor
                     )
                 }
             }
-        }
+        },
     ) { innerPadding ->
-        CartItemsSection(cartItems, innerPadding, onRemoveItem = { viewModel.delete(it) })
+        val innerPadding = innerPadding
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            CartItemsSection(
+                cartItems,
+                innerPadding,
+                viewModel,
+                onRemoveItem = { viewModel.delete(it) }
+            )
+        }
     }
 }
 
@@ -92,40 +114,185 @@ fun CartScreen(
 fun CartItemsSection(
     cartItems: List<CartItem>,
     innerPadding: PaddingValues,
+    viewModel: CartViewModel,
     onRemoveItem: (CartItem) -> Unit
 ) {
+    val totalQuantity by viewModel.totalQuantity.observeAsState(0)
+    val totalPrice by viewModel.totalPrice.observeAsState(0.0)
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
     ) {
         items(cartItems) { cartItem ->
-            CartItemCard(cartItem, onRemoveItem)
+            CartItemCard(cartItem, viewModel, onRemoveItem)
+        }
+        item {
+            CouponSection()
+            Spacer(modifier = Modifier.height(10.dp))
+            ShippingItemsSection(totalQuantity,totalPrice)
+        }
+        item {
+            CheckOutButton()
+        }
+
+    }
+}
+
+@Composable
+fun CheckOutButton() {
+    Button(
+        onClick = { /*TODO*/ }, 
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = SkyBlue,
+            contentColor = Color.White
+        ),
+    ) {
+        Text(
+            text = "Check Out",
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+        )
+    }
+}
+
+@Composable
+fun ShippingItemsSection(totalQuantity: Int, totalPrice: Double) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp)
+        ) {
+            Row (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                Text(text = "Items(${totalQuantity})", fontSize = 10.sp, color = Color.Gray)
+                Text(text = "Rs $totalPrice", fontSize = 10.sp,fontWeight = FontWeight.Bold)
+            }
+            Row (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                Text(text = "Shipping", fontSize = 10.sp, color = Color.Gray)
+                Text(text = "Rs ${40}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Import Charges", fontSize = 10.sp, color = Color.Gray)
+                Text(text = "Rs ${30}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = Color.Gray
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Total Price", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(text = "Rs: $totalPrice", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = SkyBlue)
+
+            }
+        }
+
+    }
+}
+
+@Composable
+fun CartItemCard(
+    cartItem: CartItem,
+    viewModel: CartViewModel,
+    onRemoveItem: (CartItem) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(130.dp)
+            .padding(12.dp)
+            .background(Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        CartItem(cartItem, viewModel, onRemoveItem)
+    }
+}
+
+@Composable
+fun CouponSection() {
+    var couponCode by remember { mutableStateOf("") }
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Gray
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 10.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        OutlinedTextField(
+            singleLine = true,
+            modifier = Modifier.height(45.dp),
+            maxLines = 1,
+            value = couponCode,
+            onValueChange = { couponCode = it },
+            label = { Text("Coupon Code", fontSize = 10.sp, color = uiColor) },
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = SkyBlue,
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                text = "Apply",
+                fontSize = 8.sp,
+                fontStyle = FontStyle.Normal,
+                color = Color.White
+            )
         }
     }
 }
 
 @Composable
-fun CartItemCard(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(130.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .padding(12.dp)
-            .background(Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        CartItem(cartItem, onRemoveItem)
-    }
-}
-
-@Composable
-private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
+private fun CartItem(
+    cartItem: CartItem,
+    viewModel: CartViewModel,
+    onRemoveItem: (CartItem) -> Unit
+) {
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Gray
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(top = 12.dp, start = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -140,7 +307,8 @@ private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
         ) {
             Text(
                 text = cartItem.name,
-                color = Color.Black,
+                maxLines = 1,
+                color = uiColor,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
@@ -150,22 +318,50 @@ private fun CartItem(cartItem: CartItem, onRemoveItem: (CartItem) -> Unit) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.width(120.dp),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Outlined.Favorite,
-                    contentDescription = "Favorite",
-                    tint = Color.Red
-                )
-            }
+
             IconButton(onClick = { onRemoveItem(cartItem) }) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete",
-                    tint = Color.Black
+                    tint = uiColor
                 )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                IconButton(onClick = { viewModel.decreaseQuantity(cartItem) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_minus),
+                        contentDescription = "minus icon",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(Color.Gray)
+                    )
+                }
+                Text(
+                    text = "${cartItem.quantity}",
+                    color = Color.Black,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                IconButton(onClick = { viewModel.increaseQuantity(cartItem) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_plus),
+                        contentDescription = "plus icon",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(Color.Gray)
+                    )
+                }
             }
         }
     }

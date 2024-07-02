@@ -6,7 +6,7 @@ import com.zip_feast.data.local.models.CartItem
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-@Database(entities = [CartItem::class], version = 1,exportSchema = false)
+@Database(entities = [CartItem::class], version = 2,exportSchema = false)
 abstract class CartDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
 }
