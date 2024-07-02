@@ -1,4 +1,4 @@
-package com.zip_feast.viewmodels.cartViewmodel
+package com.zip_feast.presentation.cart.cartViewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

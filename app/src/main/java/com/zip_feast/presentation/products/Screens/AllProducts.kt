@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.dashboard.screens
+package com.zip_feast.presentation.products.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import com.zip_feast.models.FlashSaleItem
 import com.zip_feast.presentation.dashboard.dummyData.sampleProducts
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
+import com.zip_feast.presentation.dashboard.screens.FeedbackStars
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.dashboard.screens
+package com.zip_feast.presentation.cart.Screens
 
 
 import androidx.compose.foundation.Image
@@ -52,7 +52,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.zip_feast.R
 import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.presentation.theme.SkyBlue
-import com.zip_feast.viewmodels.cartViewmodel.CartViewModel
+import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
 
 @Composable
 fun CartScreen(
