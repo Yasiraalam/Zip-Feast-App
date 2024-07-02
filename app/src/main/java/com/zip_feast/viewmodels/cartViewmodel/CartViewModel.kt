@@ -1,5 +1,7 @@
 package com.zip_feast.viewmodels.cartViewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,6 +15,20 @@ import javax.inject.Inject
 class CartViewModel @Inject constructor(private val repository: CartRepository) : ViewModel() {
 
     val allCartItems = repository.allCartItems.asLiveData()
+
+    // LiveData for total quantity and price
+    private val _totalQuantity = MutableLiveData(0)
+    val totalQuantity: LiveData<Int> get() = _totalQuantity
+
+    private val _totalPrice = MutableLiveData(0.0)
+    val totalPrice: LiveData<Double> get() = _totalPrice
+
+    init {
+        // Observe changes in the cart items to recalculate totals
+        allCartItems.observeForever { items ->
+            calculateTotals(items)
+        }
+    }
 
     fun insert(cartItem: CartItem) = viewModelScope.launch {
         repository.insert(cartItem)
@@ -42,4 +58,17 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
             }
         }
     }
+    private fun calculateTotals(cartItems: List<CartItem>) {
+        var totalQty = 0
+        var totalPrc = 0.0
+
+        for (item in cartItems) {
+            totalQty += item.quantity
+            totalPrc += item.quantity * item.price.toDouble()
+        }
+        _totalQuantity.value = totalQty
+        _totalPrice.value = totalPrc
+    }
+
+
 }

@@ -19,14 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -50,7 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,6 +60,7 @@ fun CartScreen(
 ) {
     val cartItems by viewModel.allCartItems.observeAsState(emptyList())
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -121,6 +117,9 @@ fun CartItemsSection(
     viewModel: CartViewModel,
     onRemoveItem: (CartItem) -> Unit
 ) {
+    val totalQuantity by viewModel.totalQuantity.observeAsState(0)
+    val totalPrice by viewModel.totalPrice.observeAsState(0.0)
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -132,7 +131,7 @@ fun CartItemsSection(
         item {
             CouponSection()
             Spacer(modifier = Modifier.height(10.dp))
-            ShippingItemsSection()
+            ShippingItemsSection(totalQuantity,totalPrice)
         }
         item {
             CheckOutButton()
@@ -163,7 +162,7 @@ fun CheckOutButton() {
 }
 
 @Composable
-fun ShippingItemsSection() {
+fun ShippingItemsSection(totalQuantity: Int, totalPrice: Double) {
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
@@ -180,8 +179,8 @@ fun ShippingItemsSection() {
                     .padding(end = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                Text(text = "Items(${2})", fontSize = 10.sp, color = Color.Gray)
-                Text(text = "$ ${200}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
+                Text(text = "Items(${totalQuantity})", fontSize = 10.sp, color = Color.Gray)
+                Text(text = "Rs $totalPrice", fontSize = 10.sp,fontWeight = FontWeight.Bold)
             }
             Row (
                 modifier = Modifier
@@ -190,7 +189,7 @@ fun ShippingItemsSection() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 Text(text = "Shipping", fontSize = 10.sp, color = Color.Gray)
-                Text(text = "$ ${400}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
+                Text(text = "Rs ${40}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
             }
             Row(
                 modifier = Modifier
@@ -199,7 +198,7 @@ fun ShippingItemsSection() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = "Import Charges", fontSize = 10.sp, color = Color.Gray)
-                Text(text = "$ ${500}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
+                Text(text = "Rs ${30}", fontSize = 10.sp,fontWeight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -215,7 +214,7 @@ fun ShippingItemsSection() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = "Total Price", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-                Text(text = "$ ${1000}", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = SkyBlue)
+                Text(text = "Rs: $totalPrice", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = SkyBlue)
 
             }
         }
