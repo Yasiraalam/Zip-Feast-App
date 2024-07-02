@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
@@ -75,6 +77,12 @@ val bottomNavItems = listOf(
         route = Routes.HomeScreen.routes,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home
+    ),
+    BottomNavItem(
+        title = "Services",
+        route = Routes.ServicesScreen.routes,
+        selectedIcon = Icons.Filled.Build,
+        unselectedIcon = Icons.Outlined.Build
     ),
     BottomNavItem(
         title = "Explore",
