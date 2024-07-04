@@ -1,4 +1,4 @@
-package com.zip_feast.utils.authnavigation
+package com.zip_feast.presentation.auth.authnavigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost

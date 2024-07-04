@@ -1,4 +1,4 @@
-package com.zip_feast.viewmodels.auth
+package com.zip_feast.presentation.auth.authviewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

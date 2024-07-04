@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import com.zip_feast.R
 import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.theme.dimens
-import com.zip_feast.utils.authnavigation.Screen
+import com.zip_feast.presentation.auth.authnavigation.Screen
 
 
 

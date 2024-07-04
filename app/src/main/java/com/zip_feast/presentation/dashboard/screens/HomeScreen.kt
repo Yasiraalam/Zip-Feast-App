@@ -7,7 +7,6 @@
 package com.zip_feast.presentation.dashboard.screens
 
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -69,6 +68,7 @@ import com.zip_feast.models.FlashSaleItem
 import com.zip_feast.presentation.dashboard.dummyData.sampleFlashSaleItems
 import com.zip_feast.presentation.dashboard.dummyData.sampleMegaSaleItems
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
+import com.zip_feast.presentation.products.Screens.AllProducts
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

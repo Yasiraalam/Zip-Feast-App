@@ -12,10 +12,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.dashboard.screens.AccountScreen
-import com.zip_feast.presentation.dashboard.screens.CartScreen
+import com.zip_feast.presentation.profile.Screens.AccountScreen
+import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
+import com.zip_feast.presentation.dashboard.screens.ServicesScreen
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -30,6 +31,9 @@ fun NavGraph(
     ) {
         composable(route = Routes.HomeScreen.routes) {
             HomeScreen(navController)
+        }
+        composable(route = Routes.ServicesScreen.routes) {
+            ServicesScreen(navController)
         }
         composable(route = Routes.ExploreScreen.routes) {
             ExploreScreen()
