@@ -38,4 +38,9 @@ class NetworkModule {
     fun provideUserRepository(userApi: UserApi): UserRepository {
         return UserRepository(userApi)
     }
+    @Provides
+    @Singleton
+    fun SharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("zip.feast-prefs", Context.MODE_PRIVATE)
+    }
 }

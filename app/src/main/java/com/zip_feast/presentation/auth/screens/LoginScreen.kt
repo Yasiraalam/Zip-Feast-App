@@ -1,6 +1,5 @@
 package com.zip_feast.presentation.auth.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -22,20 +21,22 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -44,18 +45,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zip_feast.R
+import com.zip_feast.data.remote.models.LoginModel
 import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.presentation.auth.authnavigation.Screen
-
-
+import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
 
 
 @Composable
 fun LoginScreen(
     navController: NavController,
+    authViewModel: AuthViewModel = hiltViewModel(),
     onClick:()-> Unit
 ) {
     Surface {
@@ -67,7 +70,7 @@ fun LoginScreen(
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
             ) {
-                LoginSection(onClick = onClick)
+                LoginSection(authViewModel = authViewModel, onClick = onClick)
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
                 SocialMediaSection()
                 CreateAccountSection(navController)
@@ -204,7 +207,9 @@ private fun SocialMediaSection() {
 }
 
 @Composable
-private fun LoginSection(onClick: () -> Unit) {
+private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
+    val ApiResponseMessage by authViewModel.message.observeAsState()
+    var isLoading by rememberSaveable{ mutableStateOf(false) }
     var email by rememberSaveable {
         mutableStateOf("")
     }
@@ -222,7 +227,8 @@ private fun LoginSection(onClick: () -> Unit) {
             emailError =
                 if (email.matches("^[A-Za-z0-9+_.-]+@(gmail|hotmail|yahoo|outlook)\\.com$".toRegex())) {
                     ""
-                } else {
+                }
+                else {
                     "Invalid email address"
                 }
         })
@@ -262,22 +268,41 @@ private fun LoginSection(onClick: () -> Unit) {
             .fillMaxWidth()
             .height(MaterialTheme.dimens.buttonHeight),
         onClick = {
-            onClick()
             if (emailError.isEmpty() && passwordError.isEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-
+                isLoading = true
+                 authViewModel.loginUser(
+                     LoginModel(
+                         email = email,
+                         password = password
+                     )
+                 ){
+                     isLoading = false
+                     if(authViewModel.getToken() != null){
+                         onClick()
+                     }
+                 }
             }
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
             contentColor = Color.White
         ),
-        shape = RoundedCornerShape(size = 4.dp)
+        shape = RoundedCornerShape(size = 4.dp),
+        enabled = !isLoading
     ) {
-        Text(
-            fontSize = 12.sp,
-            text = stringResource(id = R.string.loginIn),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = if (isSystemInDarkTheme()) Color.Black else Color.Blue,
+                strokeWidth = 2.dp
+            )
+        }else {
+            Text(
+                fontSize = 12.sp,
+                text = stringResource(id = R.string.loginIn),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
+            )
+        }
     }
 }
 

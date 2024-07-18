@@ -129,7 +129,6 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
     val registrationMessage by authViewModel.message.observeAsState()
 
     var buttonEnabled by remember { mutableStateOf(true) }
-    var showProgress by remember { mutableStateOf(false) }
 
     // Check if all fields are filled
     val allFieldsFilled = username.isNotBlank() && emailError.isBlank() &&
@@ -279,14 +278,12 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
                     )
                 ){
                     if(registrationMessage =="success"){
-                        Log.d("authviewmodel", "RegistrationSection: success in screen")
                         navController.navigate(Screen.Login.route)
                     }else{
                         buttonEnabled =true
                         authViewModel.clearMessage()
                     }
                 }
-
             }else{
                 Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
@@ -330,7 +327,6 @@ fun alreadyHaveAccount(navController: NavController) {
             append("Login")
         }
     }
-
     Box(
         modifier = Modifier
             .fillMaxHeight(fraction = 0.4f)
