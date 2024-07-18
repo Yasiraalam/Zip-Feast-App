@@ -99,5 +99,6 @@ dependencies {
     //room db
     implementation (libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-
+    // sharedpref
+    implementation (libs.androidx.shared.pref)
 }

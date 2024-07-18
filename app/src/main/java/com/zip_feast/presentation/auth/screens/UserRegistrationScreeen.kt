@@ -1,6 +1,8 @@
 package com.zip_feast.presentation.auth.screens
 
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +31,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -120,6 +125,11 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
     var emailError by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf("") }
     var confirmPasswordError by rememberSaveable { mutableStateOf("") }
+
+    val registrationMessage by authViewModel.message.observeAsState()
+
+    var buttonEnabled by remember { mutableStateOf(true) }
+    var showProgress by remember { mutableStateOf(false) }
 
     // Check if all fields are filled
     val allFieldsFilled = username.isNotBlank() && emailError.isBlank() &&
@@ -254,10 +264,11 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
     }
 
     Spacer(modifier = Modifier.height(16.dp))
-
+    val context = LocalContext.current
     Button(
         onClick = {
             if (emailError.isEmpty() && passwordError.isEmpty() && confirmPasswordError.isEmpty()) {
+                buttonEnabled = false
                 authViewModel.registerUser(
                     userRequest = UserRequest(
                         name = username,
@@ -266,9 +277,18 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
                         confirmPassword = confirmPassword,
                         null
                     )
-                )
-            }else{
+                ){
+                    if(registrationMessage =="success"){
+                        Log.d("authviewmodel", "RegistrationSection: success in screen")
+                        navController.navigate(Screen.Login.route)
+                    }else{
+                        buttonEnabled =true
+                        authViewModel.clearMessage()
+                    }
+                }
 
+            }else{
+                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
         },
         enabled = allFieldsFilled,

@@ -1,11 +1,14 @@
 package com.zip_feast.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.zip_feast.data.remote.apiService.UserApi
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.CONSTANTS.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
