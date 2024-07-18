@@ -14,13 +14,21 @@ class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-
     fun registerUser(userRequest: UserRequest) {
         viewModelScope.launch {
             try {
-                userRepository.registerUser(userRequest)
+                val response = userRepository.registerUser(userRequest)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        Log.d("authviewmodel", "registerUser: Registration successful, message: ${it.message}")
+                    } ?: run {
+                        Log.d("authviewmodel", "registerUser: Unexpected error, empty response body")
+                    }
+                } else {
+                    Log.d("authviewmodel", "registerUser: Registration failed, response message: ${response.message()}")
+                }
             } catch (e: Exception) {
-                Log.d("authviewmodel", "registerUser: ${e.message}")
+                Log.d("authviewmodel", "registerUser: Exception occurred - ${e.message}")
             }
         }
     }

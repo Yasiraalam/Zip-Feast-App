@@ -62,6 +62,7 @@ androidx-compose-animation ={group ="androidx.compose.animation", name = "animat
 #room db
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

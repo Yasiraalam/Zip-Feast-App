@@ -1,5 +1,6 @@
 package com.zip_feast.presentation.auth.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -53,7 +55,8 @@ import com.zip_feast.presentation.auth.authnavigation.Screen
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    onClick:()-> Unit
 ) {
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +67,7 @@ fun LoginScreen(
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
             ) {
-                LoginSection()
+                LoginSection(onClick = onClick)
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
                 SocialMediaSection()
                 CreateAccountSection(navController)
@@ -201,7 +204,7 @@ private fun SocialMediaSection() {
 }
 
 @Composable
-private fun LoginSection() {
+private fun LoginSection(onClick: () -> Unit) {
     var email by rememberSaveable {
         mutableStateOf("")
     }
@@ -259,8 +262,9 @@ private fun LoginSection() {
             .fillMaxWidth()
             .height(MaterialTheme.dimens.buttonHeight),
         onClick = {
+            onClick()
             if (emailError.isEmpty() && passwordError.isEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                //TODO Handle login here
+
             }
         },
         colors = ButtonDefaults.buttonColors(
