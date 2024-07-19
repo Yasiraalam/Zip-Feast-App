@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,7 @@ import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.presentation.auth.authnavigation.Screen
 import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
+import com.zip_feast.utils.Resource
 
 
 @Composable
@@ -208,7 +210,7 @@ private fun SocialMediaSection() {
 
 @Composable
 private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
-    val ApiResponseMessage by authViewModel.message.observeAsState()
+    val apiResponse by authViewModel.loginState.observeAsState()
     var isLoading by rememberSaveable{ mutableStateOf(false) }
     var email by rememberSaveable {
         mutableStateOf("")
@@ -218,6 +220,28 @@ private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
     }
     var emailError by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(apiResponse) {
+        apiResponse?.let {
+            when (it) {
+                is Resource.Error -> {
+                    isLoading = false
+                    emailError = it.errorMessage ?: "An error occurred"
+                }
+                is Resource.Success -> {
+                    isLoading = false
+                    emailError = ""
+                    onClick()
+                }
+                is Resource.Loading -> {
+                    isLoading = true
+                    emailError = ""
+                }
+
+                else -> {}
+            }
+        }
+    }
     EmailTextField(
         label = "Email",
         leadingIcon = Icons.Default.Email,
@@ -279,6 +303,9 @@ private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
                      isLoading = false
                      if(authViewModel.getToken() != null){
                          onClick()
+                     }else{
+                         isLoading =true
+                         emailError = "Login failed"
                      }
                  }
             }

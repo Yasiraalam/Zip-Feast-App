@@ -27,11 +27,6 @@ class LoginActivity : ComponentActivity() {
                 }
             }
         }
-//        setContent {
-//            ZipFeastTheme {
-//                AuthNavigation(onLoginSuccess = { navigateToZipFeastActivity() })
-//            }
-//        }
     }
     private fun isUserLoggedIn(): Boolean {
         val token = sharedPreferences.getString("auth_token", null)

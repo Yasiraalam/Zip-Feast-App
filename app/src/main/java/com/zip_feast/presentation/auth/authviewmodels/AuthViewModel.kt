@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.zip_feast.data.remote.models.LoginModel
 import com.zip_feast.data.remote.models.LoginResponseModel
 import com.zip_feast.data.remote.models.UserRequest
+import com.zip_feast.data.remote.models.UserResponse
 import com.zip_feast.data.remote.repository.UserRepository
+import com.zip_feast.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -20,43 +22,44 @@ class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
-    private val _message = MutableLiveData<String>()
-    val message: LiveData<String> get() = _message
 
-    fun clearMessage() {
-        _message.value = ""
-    }
+    private val _signUpState = MutableLiveData<Resource<UserResponse>>()
+    val signUpState: LiveData<Resource<UserResponse>> get() = _signUpState
+
+
+    private val _loginState = MutableLiveData<Resource<LoginResponseModel>>()
+    val loginState: LiveData<Resource<LoginResponseModel>> get() = _loginState
+
     fun registerUser(userRequest: UserRequest, onRegisterSuccess:()->Unit){
         viewModelScope.launch {
+            _signUpState.value = Resource.Loading()
             try {
                 val response = userRepository.registerUser(userRequest)
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        _message.value = it.status
+                        _signUpState.value = Resource.Success(it)
                         onRegisterSuccess()
                         Log.d("authviewmodel", "registerUser: Registration successful")
                     } ?: run {
-                        _message.value = "Unexpected error, empty response body"
+                        _signUpState.value = Resource.Error("Unexpected error: empty response body")
                     }
                 } else {
-                    _message.value = "failed"
-                    Log.d("authviewmodel", "registerUser: Registration failed, response message: ${response.message()}")
+                    _signUpState.value = Resource.Error(response.body()?.message ?: "Email already exits")
                 }
             } catch (e: Exception) {
-                _message.value = "Exception occurred: ${e.message}"
-                Log.d("authviewmodel", "registerUser: Exception occurred - ${e.message}")
+                _signUpState.value = Resource.Error("Exception occurred: ${e.message}")
             }
         }
     }
 
     fun loginUser(loginModel: LoginModel, onLoginSuccess: () -> Unit) {
         viewModelScope.launch {
+            _loginState.value = Resource.Loading()
             try {
                 val response = userRepository.loginUser(loginModel)
                 handleResponse(response, onLoginSuccess)
             } catch (e: Exception) {
-                _message.value = "Exception occurred: ${e.message}"
-                Log.e("AuthViewModel", "loginUser: Exception occurred - ${e.message}", e)
+                _loginState.value = Resource.Error("Exception occurred: ${e.message}")
             }
         }
     }
@@ -64,17 +67,15 @@ class AuthViewModel @Inject constructor(
         if (response.isSuccessful) {
             val body = response.body()
             body?.let {
-                _message.value = it.status
+                _loginState.value = Resource.Success(it)
                 saveToken(it.refreshToken)
                 onLoginSuccess()
                 Log.d("AuthViewModel", "loginUser: Login successful")
             } ?: run {
-                _message.value = "Unexpected error: empty response body"
-                Log.w("AuthViewModel", "loginUser: Unexpected error, empty response body")
+                _loginState.value = Resource.Error("Unexpected error")
             }
         } else {
-            _message.value = response.body()?.message ?: "Login failed: ${response.message()}"
-            Log.w("AuthViewModel", "loginUser: Login failed - ${response.message()}")
+            _loginState.value = Resource.Error(response.body()?.message ?: "User Not Found")
         }
     }
 
