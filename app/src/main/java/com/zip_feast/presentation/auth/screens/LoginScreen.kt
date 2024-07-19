@@ -54,6 +54,7 @@ import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.presentation.auth.authnavigation.Screen
 import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
+import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.Resource
 
 
@@ -311,8 +312,8 @@ private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
             }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
-            contentColor = Color.White
+            containerColor = if (isSystemInDarkTheme()) Color.White else SkyBlue,
+            contentColor = if (isSystemInDarkTheme()) Color.Black else Color.White
         ),
         shape = RoundedCornerShape(size = 4.dp),
         enabled = !isLoading

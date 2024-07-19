@@ -63,6 +63,7 @@ import com.zip_feast.presentation.theme.BlueGray
 import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.auth.authnavigation.Screen
 import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
+import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.Resource
 
 
@@ -309,7 +310,7 @@ private fun RegistrationSection(authViewModel: AuthViewModel, navController: Nav
         enabled = !isLoading,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
+            containerColor = if (isSystemInDarkTheme()) BlueGray else SkyBlue,
             contentColor = Color.White
         ),
     ) {
