@@ -21,13 +21,17 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,18 +46,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zip_feast.R
+import com.zip_feast.data.remote.models.LoginModel
 import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.presentation.auth.authnavigation.Screen
-
-
+import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
+import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.utils.Resource
 
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onClick:()-> Unit
 ) {
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +73,7 @@ fun LoginScreen(
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
             ) {
-                LoginSection()
+                LoginSection(authViewModel = authViewModel, onClick = onClick)
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
                 SocialMediaSection()
                 CreateAccountSection(navController)
@@ -201,7 +210,9 @@ private fun SocialMediaSection() {
 }
 
 @Composable
-private fun LoginSection() {
+private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
+    val apiResponse by authViewModel.loginState.observeAsState()
+    var isLoading by rememberSaveable{ mutableStateOf(false) }
     var email by rememberSaveable {
         mutableStateOf("")
     }
@@ -210,6 +221,28 @@ private fun LoginSection() {
     }
     var emailError by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(apiResponse) {
+        apiResponse?.let {
+            when (it) {
+                is Resource.Error -> {
+                    isLoading = false
+                    emailError = it.errorMessage ?: "An error occurred"
+                }
+                is Resource.Success -> {
+                    isLoading = false
+                    emailError = ""
+                    onClick()
+                }
+                is Resource.Loading -> {
+                    isLoading = true
+                    emailError = ""
+                }
+
+                else -> {}
+            }
+        }
+    }
     EmailTextField(
         label = "Email",
         leadingIcon = Icons.Default.Email,
@@ -219,7 +252,8 @@ private fun LoginSection() {
             emailError =
                 if (email.matches("^[A-Za-z0-9+_.-]+@(gmail|hotmail|yahoo|outlook)\\.com$".toRegex())) {
                     ""
-                } else {
+                }
+                else {
                     "Invalid email address"
                 }
         })
@@ -260,20 +294,43 @@ private fun LoginSection() {
             .height(MaterialTheme.dimens.buttonHeight),
         onClick = {
             if (emailError.isEmpty() && passwordError.isEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                //TODO Handle login here
+                isLoading = true
+                 authViewModel.loginUser(
+                     LoginModel(
+                         email = email,
+                         password = password
+                     )
+                 ){
+                     isLoading = false
+                     if(authViewModel.getToken() != null){
+                         onClick()
+                     }else{
+                         isLoading =true
+                         emailError = "Login failed"
+                     }
+                 }
             }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
-            contentColor = Color.White
+            containerColor = if (isSystemInDarkTheme()) Color.White else SkyBlue,
+            contentColor = if (isSystemInDarkTheme()) Color.Black else Color.White
         ),
-        shape = RoundedCornerShape(size = 4.dp)
+        shape = RoundedCornerShape(size = 4.dp),
+        enabled = !isLoading
     ) {
-        Text(
-            fontSize = 12.sp,
-            text = stringResource(id = R.string.loginIn),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = if (isSystemInDarkTheme()) Color.Black else Color.Blue,
+                strokeWidth = 2.dp
+            )
+        }else {
+            Text(
+                fontSize = 12.sp,
+                text = stringResource(id = R.string.loginIn),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
+            )
+        }
     }
 }
 
