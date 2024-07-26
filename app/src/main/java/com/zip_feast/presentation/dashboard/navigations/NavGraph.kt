@@ -46,7 +46,7 @@ fun NavGraph(
         }
 
         composable(
-            route = Routes.ProductDetailScreen.routes,
+            route = Routes.ProductDetailScreen.routes + "/{productJson}",
             arguments = listOf(navArgument("productJson") { type = NavType.StringType })
         ) { backStackEntry ->
             val productJson = backStackEntry.arguments?.getString("productJson")
