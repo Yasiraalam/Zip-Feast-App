@@ -10,6 +10,7 @@ import com.zip_feast.data.remote.models.LoginModel
 import com.zip_feast.data.remote.models.LoginResponseModel
 import com.zip_feast.data.remote.models.UserRequest
 import com.zip_feast.data.remote.models.UserResponse
+import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val sharedPreferences: SharedPreferences
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _signUpState = MutableLiveData<Resource<UserResponse>>()
@@ -68,7 +69,7 @@ class AuthViewModel @Inject constructor(
             val body = response.body()
             body?.let {
                 _loginState.value = Resource.Success(it)
-                saveToken(it.refreshToken)
+                authRepository.saveToken(it.accessToken)
                 onLoginSuccess()
                 Log.d("AuthViewModel", "loginUser: Login successful")
             } ?: run {
@@ -78,12 +79,7 @@ class AuthViewModel @Inject constructor(
             _loginState.value = Resource.Error(response.body()?.message ?: "User Not Found")
         }
     }
-
-    private fun saveToken(token: String) {
-        sharedPreferences.edit().putString("auth_token", token).apply()
-    }
-
-    fun getToken(): String? {
-        return sharedPreferences.getString("auth_token", null)
+    fun isLoggedIn(): Boolean {
+        return authRepository.isLoggedIn()
     }
 }

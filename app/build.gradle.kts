@@ -101,4 +101,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     // sharedpref
     implementation (libs.androidx.shared.pref)
+
+    //coil
+    implementation(libs.androidx.coil.kt)
 }

@@ -302,7 +302,7 @@ private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
                      )
                  ){
                      isLoading = false
-                     if(authViewModel.getToken() != null){
+                     if(authViewModel.isLoggedIn()){
                          onClick()
                      }else{
                          isLoading =true
