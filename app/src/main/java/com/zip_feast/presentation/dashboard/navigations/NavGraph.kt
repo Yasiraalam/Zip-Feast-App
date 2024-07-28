@@ -56,18 +56,5 @@ fun NavGraph(
                 navController.navigateUp()
             }
         }
-//        composable<Dest.ProductDetailScreen>(
-//            typeMap = mapOf(
-//                typeOf<Data>() to CustomNavType<Data>(
-//                    Data::class,
-//                    Data.serializer()
-//                )
-//            )
-//        ) {
-//            val product = it.toRoute<Dest.ProductDetailScreen>()
-//            ProductDetailScreen(product, onBackClick = { navController.navigateUp() })
-//
-//        }
-
     }
 }
