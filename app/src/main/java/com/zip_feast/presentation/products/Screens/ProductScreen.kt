@@ -138,7 +138,6 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
-        Spacer(modifier = Modifier.height(5.dp))
         Row(
             modifier = Modifier
                 .align(Alignment.Start)
