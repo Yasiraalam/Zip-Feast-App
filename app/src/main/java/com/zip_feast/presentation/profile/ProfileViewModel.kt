@@ -25,9 +25,7 @@ class ProfileViewModel @Inject constructor(
     fun fetchUserProfile() {
         val token = authRepository.getToken()
         if (token != null) {
-            Log.d("ProfileViewModel", "fetchUserProfile: Token is available, initiating API call.")
             _profile.value = Resource.Loading()
-
             viewModelScope.launch {
                 try {
                     val result = userRepository.getUserProfile(token)

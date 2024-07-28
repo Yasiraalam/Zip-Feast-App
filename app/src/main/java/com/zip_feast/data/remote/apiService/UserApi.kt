@@ -24,7 +24,7 @@ interface UserApi {
         @Header("Authorization") token: String
     ): Response<AllProductsResponseModel>
 
-    @GET("profile")
+    @GET("user/profile")
     suspend fun getProfileInfo(
         @Header("Authorization") token: String
     ):Response<UserProfileResponse>

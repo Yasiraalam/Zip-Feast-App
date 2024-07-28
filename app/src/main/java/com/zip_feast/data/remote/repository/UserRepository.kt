@@ -1,5 +1,6 @@
 package com.zip_feast.data.remote.repository
 
+import android.util.Log
 import com.zip_feast.data.remote.apiService.UserApi
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.LoginModel
@@ -42,6 +43,7 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
     suspend fun getUserProfile(token: String): Resource<UserProfileResponse> {
         return try {
             val response = userApi.getProfileInfo("Bearer $token")
+            Log.d("repository", "${response.body() } ")
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
