@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +34,6 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,7 +58,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -71,15 +67,13 @@ import com.zip_feast.R
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.Data
 import com.zip_feast.presentation.dashboard.navigations.Routes
-import com.zip_feast.presentation.products.viewmodel.ProductsViewModel
 import com.zip_feast.presentation.products.Screens.AllProducts
 import com.zip_feast.presentation.products.Screens.ErrorScreen
+import com.zip_feast.presentation.products.viewmodel.ProductsViewModel
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.apputils.Resource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Composable
 fun HomeScreen(
@@ -504,9 +498,7 @@ fun FlashSaleList(products: List<Data>, navController: NavHostController) {
                     stock = item.stock,
                     updatedAt = item.updatedAt
                 )
-                val productJson = Json.encodeToString(productDetail)
-                val route = Routes.ProductDetailScreen.createRoute(productJson)
-                navController.navigate(route)
+                navController.navigate(Routes.ProductDetailScreen.createRoute(productDetail))
             }
         }
     }

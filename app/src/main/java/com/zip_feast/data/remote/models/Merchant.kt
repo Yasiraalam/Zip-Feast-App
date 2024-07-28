@@ -6,10 +6,9 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-@Parcelize
 data class Merchant(
     val address: String?,
     val email: String?,
     val name: String?,
     val storeName: String
-) : Parcelable
+)

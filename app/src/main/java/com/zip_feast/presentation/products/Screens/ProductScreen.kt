@@ -41,7 +41,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.data.remote.models.Data
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
-import com.zip_feast.presentation.dashboard.navigations.Routes
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

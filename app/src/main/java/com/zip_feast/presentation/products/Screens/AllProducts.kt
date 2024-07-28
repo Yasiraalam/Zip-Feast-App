@@ -30,17 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.Data
 import com.zip_feast.presentation.dashboard.navigations.Routes
-import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.apputils.Resource
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun AllProducts(productsResource: Resource<AllProductsResponseModel>, navController: NavHostController) {
@@ -91,9 +85,7 @@ private fun ProductsList(
                     stock = item.stock,
                     updatedAt = item.updatedAt,
                 )
-                val productJson = Json.encodeToString(productDetail)
-                val route = Routes.ProductDetailScreen.createRoute(productJson)
-                navController.navigate(route)
+                navController.navigate(Routes.ProductDetailScreen.createRoute(productDetail))
             }
         }
     }
