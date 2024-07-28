@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,15 +58,16 @@ fun ProductDetailScreen(
         topBar = { ProductTopAppBar(product.name, onBackClick) },
         containerColor = Color.White
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            ProductDetail(product, cartViewModel)
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            item {
+                ProductDetail(product, cartViewModel)
+            }
         }
     }
 }
 
 @Composable
 fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
-    var searchText by rememberSaveable { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -87,17 +90,9 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
             text = productName,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = Color.Black,
+            modifier = Modifier.padding(end = 64.dp)
         )
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = "Search",
-                modifier = Modifier
-                    .fillMaxSize(0.9f),
-                tint = Color.Black
-            )
-        }
         IconButton(onClick = { /*TODO*/ }) {
             Icon(
                 imageVector = Icons.Outlined.MoreVert,
@@ -122,7 +117,7 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
             painter = rememberAsyncImagePainter(model = product.productImage),
             contentDescription = null,
             modifier = Modifier
-                .aspectRatio(16 / 9f)
+                .aspectRatio(12 / 10f)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -144,14 +139,37 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
                 .align(Alignment.Start)
         )
         Spacer(modifier = Modifier.height(5.dp))
+        Row(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(horizontal = 12.dp)
+        ) {
+            Text(
+                text = product.description,
+                fontSize = 11.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(9.dp))
+            Text(
+                text = if (product.isAvailable) "Available" else "Not Available",
+                fontSize = 10.sp,
+                color = if (product.isAvailable) Color.Green else Color.Red,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            )
+        }
         Text(
-            text = product.description,
-            fontSize = 13.sp,
+            text = "Stock: "+product.stock,
+            fontSize = 11.sp,
             color = Color.Black,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
+        Spacer(modifier = Modifier.width(9.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {

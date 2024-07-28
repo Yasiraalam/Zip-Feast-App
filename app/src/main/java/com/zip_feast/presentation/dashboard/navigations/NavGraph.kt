@@ -53,7 +53,7 @@ fun NavGraph(
             val productJson = backStackEntry.arguments?.getString("product")
             val product = Json.decodeFromString<Data>(productJson!!)
             ProductDetailScreen(product){
-
+                navController.navigateUp()
             }
         }
 //        composable<Dest.ProductDetailScreen>(
