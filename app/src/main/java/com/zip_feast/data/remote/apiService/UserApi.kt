@@ -3,6 +3,7 @@ package com.zip_feast.data.remote.apiService
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.LoginModel
 import com.zip_feast.data.remote.models.LoginResponseModel
+import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
 import com.zip_feast.data.remote.models.UserRequest
 import com.zip_feast.data.remote.models.UserResponse
 import retrofit2.Response
@@ -22,5 +23,10 @@ interface UserApi {
     suspend fun getAllProducts(
         @Header("Authorization") token: String
     ): Response<AllProductsResponseModel>
+
+    @GET("profile")
+    suspend fun getProfileInfo(
+        @Header("Authorization") token: String
+    ):Response<UserProfileResponse>
 
 }

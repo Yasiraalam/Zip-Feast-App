@@ -18,16 +18,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,14 +39,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.zip_feast.R
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import com.zip_feast.presentation.profile.ProfileViewModel
 import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.utils.apputils.Resource
 
 
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(
+    navController: NavHostController,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
+    val profileState = viewModel.profile.observeAsState(initial = Resource.Loading())
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserProfile()
+    }
     Scaffold(
         topBar = {
             ProfileTopSection(){
@@ -53,18 +65,61 @@ fun ProfileScreen(navController: NavHostController) {
             }
         }
     ) {innerPadding->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding(), start = 15.dp, end = 15.dp)
-        ) {
-            ProfileHeader()
-            Spacer(modifier = Modifier.height(24.dp))
-            ProfileItem(icon = Icons.Default.Person, label = "Gender", value = "Male")
-            ProfileItem(icon = Icons.Default.Create, label = "Birthday", value = "10-09-2000")
-            ProfileItem(icon = Icons.Default.Email, label = "Email", value = "yasir981@gmail.com")
-            ProfileItem(icon = Icons.Default.Phone, label = "Phone Number", value = "(+91)78899-04799")
-            ProfileItem(icon = Icons.Default.Lock, label = "Change Password", value = "************")
+        when (profileState.value) {
+            is Resource.Loading -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding()),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "Loading...")
+                }
+            }
+            is Resource.Success -> {
+                // Show profile data
+                val profile = (profileState.value as Resource.Success).data
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            start = 15.dp,
+                            end = 15.dp
+                        )
+                ) {
+                    ProfileHeader(
+                        name = profile?.data?.name ?: "Unknown",
+                        avatarUrl = profile?.data?.avatar.toString(),
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProfileItem(icon = Icons.Default.Call, label = "Phone Number", value = (profile?.data?.phone ?: "+91XXXXXXXXXX").toString())
+                    ProfileItem(icon = Icons.Default.Email, label = "Email", value = (profile?.data?.email ?: "example@gmail.com"))
+                    ProfileItem(icon = Icons.Default.Info, label = "Address", value = ((profile?.data?.address ?: "India").toString()))
+                }
+            }
+            is Resource.Error -> {
+                // Show error message
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = innerPadding.calculateTopPadding(),
+                            start = 15.dp,
+                            end = 15.dp
+                        )
+                ) {
+                    ProfileHeader(
+                        name = "Unknown",
+                        avatarUrl = "@username",
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProfileItem(icon = Icons.Default.Call, label = "Phone Number", value = "+91XXXXXXXXXX")
+                    ProfileItem(icon = Icons.Default.Email, label = "Email", value = "example@gmail.com")
+                    ProfileItem(icon = Icons.Default.Info, label = "Address", value = "India")
+                }
+            }
         }
     }
 }
@@ -96,7 +151,7 @@ fun ProfileTopSection(onBackClick: () -> Unit) {
     }
 }
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(name: String, avatarUrl: String) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -104,8 +159,13 @@ fun ProfileHeader() {
             .fillMaxWidth()
             .padding(top = 10.dp)
     ) {
+        val imagePainter = if (avatarUrl.isNullOrEmpty()) {
+            rememberImagePainter(Icons.Default.Person)
+        } else {
+            rememberImagePainter(avatarUrl)
+        }
         Image(
-            painter = painterResource(id = R.drawable.boys_tshirt),
+            painter =   imagePainter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -115,12 +175,12 @@ fun ProfileHeader() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Yasir Alam",
+            text = name,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "@yasir_alam",
+            text = "@$name",
             fontSize = 16.sp,
             color = Color.Gray
         )
@@ -151,7 +211,7 @@ fun ProfileItem(icon: ImageVector, label: String, value: String) {
             )
             Text(
                 text = value,
-                fontSize = 16.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
         }

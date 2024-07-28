@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.dashboard.navigations
+package com.zip_feast.presentation.navigations
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Icon

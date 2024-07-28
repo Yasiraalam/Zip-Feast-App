@@ -32,7 +32,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.Data
-import com.zip_feast.presentation.dashboard.navigations.Routes
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.apputils.Resource
 

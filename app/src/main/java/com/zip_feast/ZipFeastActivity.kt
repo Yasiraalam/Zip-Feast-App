@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.zip_feast.models.BottomNav.BottomNavItem
-import com.zip_feast.presentation.dashboard.navigations.MyBottomBar
-import com.zip_feast.presentation.dashboard.navigations.NavGraph
-import com.zip_feast.presentation.dashboard.navigations.Routes
+import com.zip_feast.presentation.navigations.MyBottomBar
+import com.zip_feast.presentation.navigations.NavGraph
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.ZipFeastTheme
 import dagger.hilt.android.AndroidEntryPoint
 
