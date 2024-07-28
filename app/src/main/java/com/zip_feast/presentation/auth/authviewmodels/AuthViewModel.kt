@@ -12,7 +12,7 @@ import com.zip_feast.data.remote.models.UserRequest
 import com.zip_feast.data.remote.models.UserResponse
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
-import com.zip_feast.utils.Resource
+import com.zip_feast.utils.apputils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response

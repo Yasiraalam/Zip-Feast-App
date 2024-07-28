@@ -36,6 +36,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,17 +70,16 @@ import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.R
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.Data
+import com.zip_feast.presentation.dashboard.navigations.Routes
 import com.zip_feast.presentation.products.viewmodel.ProductsViewModel
 import com.zip_feast.presentation.products.Screens.AllProducts
 import com.zip_feast.presentation.products.Screens.ErrorScreen
 import com.zip_feast.presentation.theme.SkyBlue
-import com.zip_feast.utils.Resource
+import com.zip_feast.utils.apputils.Resource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun HomeScreen(
@@ -91,15 +91,15 @@ fun HomeScreen(
         containerColor = Color.White,
 
         ) { paddingValues ->
-        val adjustedPadding = remember(paddingValues) {
-            PaddingValues(
-                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                top = paddingValues.calculateTopPadding() - 8.dp,
-                end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
-                bottom = paddingValues.calculateBottomPadding() - 16.dp
-            )
-        }
-        Content(adjustedPadding, navController,viewModel)
+//        val adjustedPadding = remember(paddingValues) {
+//            PaddingValues(
+//                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
+//                top = paddingValues.calculateTopPadding() - 8.dp,
+//                end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+//                bottom = paddingValues.calculateBottomPadding() - 16.dp
+//            )
+//        }
+        Content(paddingValues, navController,viewModel)
     }
 }
 
@@ -324,6 +324,7 @@ fun PromotionsItem(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun topAppBar() {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
@@ -435,14 +436,14 @@ fun flashSaleSection(productsResource: Resource<AllProductsResponseModel>, navCo
 
     when (productsResource) {
         is Resource.Loading -> {
-//            CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.5f))
+            //CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.2f))
         }
         is Resource.Success -> {
-            val products = (productsResource as Resource.Success<AllProductsResponseModel>).data?.data ?: emptyList()
+            val products = productsResource.data?.data ?: emptyList()
             FlashSaleItems(navController,products)
         }
         is Resource.Error -> {
-            val errorMessage = (productsResource as Resource.Error).errorMessage
+            val errorMessage = productsResource.errorMessage
             ErrorScreen(errorMessage)
         }
     }
@@ -487,12 +488,25 @@ fun FlashSaleList(products: List<Data>, navController: NavHostController) {
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        items(products) { items ->
-            FlashSaleCard(item = items) {
-                val productJson = Json.encodeToString(items)
-                val encodedProductJson =
-                    URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
-                navController.navigate("productDetail/$encodedProductJson")
+        items(products) { item ->
+            FlashSaleCard(item = item) {
+                val productDetail = Data(
+                    category = item.category,
+                    createdAt = item.createdAt,
+                    description = item.description,
+                    id = item.id,
+                    isAvailable = item.isAvailable,
+                    merchant = item.merchant,
+                    merchantId = item.merchantId,
+                    name = item.name,
+                    price = item.price,
+                    productImage = item.productImage,
+                    stock = item.stock,
+                    updatedAt = item.updatedAt
+                )
+                val productJson = Json.encodeToString(productDetail)
+                val route = Routes.ProductDetailScreen.createRoute(productJson)
+                navController.navigate(route)
             }
         }
     }
@@ -537,7 +551,6 @@ fun FlashSaleCard(item: Data, onClick: () -> Unit) {
                         .fillMaxSize()
                 )
             }
-            //FeedbackStars(rating = item.rating)
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {
                 Text(
                     text = item.name,
@@ -561,116 +574,3 @@ fun FlashSaleCard(item: Data, onClick: () -> Unit) {
         }
     }
 }
-
-//@Composable
-//fun MegaSaleSection(navController: NavHostController) {
-//    Column(
-//        modifier = Modifier.padding(horizontal = 5.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            Text(
-//                text = "Mega Sale",
-//                fontWeight = FontWeight.Bold
-//            )
-//            Text(
-//                text = "See More ",
-//                fontWeight = FontWeight.Bold,
-//                fontSize = 12.sp,
-//                color = SkyBlue,
-//                modifier = Modifier.clickable {
-//                    // TODO: show all categories in seperate screen full
-//                }
-//            )
-//        }
-//        Spacer(modifier = Modifier.height(16.dp))
-//        MegaSaleList(items = sampleMegaSaleItems, navController)
-//    }
-//}
-
-//@Composable
-//fun MegaSaleList(items: List<FlashSaleItem>, navController: NavHostController) {
-//    LazyRow(
-//        horizontalArrangement = Arrangement.spacedBy(5.dp),
-//        modifier = Modifier.fillMaxWidth()
-//    ) {
-//        items(items) { item ->
-//            MegaSaleCard(item = item) {
-//                val productDetail = ProductDetail(
-//                    productId = item.productId,
-//                    imageResId = item.imageResId,
-//                    name = item.name,
-//                    price = item.price,
-//                    discount = item.discount,
-//                    rating = item.rating,
-//                    quantity = 1
-//                )
-//                val productJson = Json.encodeToString(productDetail)
-//                val encodedProductJson =
-//                    URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
-//                navController.navigate("productDetail/$encodedProductJson")
-//            }
-//
-//        }
-//    }
-//}
-//
-//@Composable
-//fun MegaSaleCard(item: FlashSaleItem, onClick: () -> Unit) {
-//    Card(
-//        modifier = Modifier
-//            .clickable {
-//                onClick()
-//            }
-//            .width(160.dp)
-//            .height(240.dp)
-//            .padding(horizontal = 8.dp),
-//        elevation = CardDefaults.cardElevation(
-//            defaultElevation = 4.dp
-//        ),
-//        colors = CardDefaults.cardColors(
-//            containerColor = Color.White,
-//            contentColor = Color.Black
-//        )
-//    ) {
-//        Column(
-//            modifier = Modifier.fillMaxSize()
-//        ) {
-//            Image(
-//                painter = painterResource(id = item.imageResId),
-//                contentDescription = item.name,
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .width(150.dp)
-//                    .height(130.dp)
-//            )
-//            FeedbackStars(rating = item.rating)
-//            Text(
-//                text = item.name,
-//                fontWeight = FontWeight.Bold,
-//                fontSize = 10.sp,
-//                modifier = Modifier.padding(horizontal = 8.dp)
-//            )
-//            Text(
-//                text = item.price.toString(),
-//                fontSize = 12.sp,
-//                fontWeight = FontWeight.Bold,
-//                color = SkyBlue,
-//                modifier = Modifier.padding(horizontal = 8.dp)
-//            )
-//            Text(
-//                text = item.discount,
-//                fontSize = 9.sp,
-//                color = Color.Red,
-//                modifier = Modifier.padding(horizontal = 8.dp)
-//            )
-//        }
-//    }
-//}
-
-
-
-
-

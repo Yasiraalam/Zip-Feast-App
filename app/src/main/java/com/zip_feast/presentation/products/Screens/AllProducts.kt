@@ -30,17 +30,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.models.Data
+import com.zip_feast.presentation.dashboard.navigations.Routes
+import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
 import com.zip_feast.presentation.theme.SkyBlue
-import com.zip_feast.utils.Resource
+import com.zip_feast.utils.apputils.Resource
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun AllProducts(productsResource: Resource<AllProductsResponseModel>,navController: NavHostController) {
+fun AllProducts(productsResource: Resource<AllProductsResponseModel>, navController: NavHostController) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         when (productsResource) {
@@ -74,10 +77,23 @@ private fun ProductsList(
     ) {
         items(products) { item ->
             AllProductsItems(item = item) {
-                val productJson = Json.encodeToString(item)
-                val encodedProductJson =
-                    URLEncoder.encode(productJson, StandardCharsets.UTF_8.toString())
-                navController.navigate("productDetail/$encodedProductJson")
+                val productDetail = Data(
+                    category = item.category,
+                    createdAt = item.createdAt,
+                    description = item.description,
+                    id = item.id,
+                    isAvailable = item.isAvailable,
+                    merchant = item.merchant,
+                    merchantId = item.merchantId,
+                    name = item.name,
+                    price = item.price,
+                    productImage = item.productImage,
+                    stock = item.stock,
+                    updatedAt = item.updatedAt,
+                )
+                val productJson = Json.encodeToString(productDetail)
+                val route = Routes.ProductDetailScreen.createRoute(productJson)
+                navController.navigate(route)
             }
         }
     }
@@ -124,7 +140,6 @@ fun AllProductsItems(item: Data,onClick: ()-> Unit ){
                         .fillMaxSize()
                 )
             }
-//            FeedbackStars(rating = 3)
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {
                 Text(
                     text = item.name,

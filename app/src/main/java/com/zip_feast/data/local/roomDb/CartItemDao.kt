@@ -20,7 +20,7 @@ interface CartItemDao {
     @Delete
     suspend fun deleteCartItems(cartItem: CartItem)
 
-    @Query("DELETE FROM cart_items WHERE productId = :productId")
+    @Query("DELETE FROM cart_items WHERE Id = :productId")
     suspend fun deleteCartItemById(productId:Int)
     // TODO: may ne need to change the datatype of productid in future
 

@@ -6,7 +6,7 @@ import com.zip_feast.data.remote.models.LoginModel
 import com.zip_feast.data.remote.models.LoginResponseModel
 import com.zip_feast.data.remote.models.UserRequest
 import com.zip_feast.data.remote.models.UserResponse
-import com.zip_feast.utils.Resource
+import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response
 import javax.inject.Inject
 

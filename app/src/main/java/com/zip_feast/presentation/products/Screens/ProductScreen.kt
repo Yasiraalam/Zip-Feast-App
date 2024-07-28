@@ -1,4 +1,3 @@
-
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -33,23 +32,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.local.models.CartItem
-import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.data.remote.models.Data
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
+import com.zip_feast.presentation.dashboard.navigations.Routes
+import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProductDetailScreen(
+    product: Data,
     cartViewModel: CartViewModel = hiltViewModel<CartViewModel>(),
-    product: ProductDetail,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -110,7 +110,7 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
+fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     Column(
@@ -120,7 +120,7 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = product.imageResId),
+            painter = rememberAsyncImagePainter(model = product.productImage),
             contentDescription = null,
             modifier = Modifier
                 .aspectRatio(16 / 9f)
@@ -137,7 +137,7 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "product.price",
+            text = "Rs " + product.price,
             fontSize = 16.sp,
             color = SkyBlue,
             modifier = Modifier
@@ -146,9 +146,9 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = product.discount,
-            fontSize = 14.sp,
-            color = Color.Red,
+            text = product.description,
+            fontSize = 13.sp,
+            color = Color.Black,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
@@ -158,13 +158,19 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
             onClick = {
                 coroutineScope.launch {
                     val cartItem = CartItem(
-                        productId = product.productId,
-                        imageResId = product.imageResId,
+                        category = product.category,
+                        createdAt = product.createdAt,
+                        description = product.description,
+                        id = product.id,
+                        isAvailable = product.isAvailable,
+                        merchant = product.merchant,
+                        merchantId = product.merchantId,
                         name = product.name,
                         price = product.price,
-                        discount = product.discount,
-                        rating = product.rating,
-                        quantity = 1,
+                        productImage = product.productImage,
+                        stock = product.stock,
+                        updatedAt = product.updatedAt,
+                        quantity = 1
                     )
                     cartViewModel.insert(cartItem)
                     Toast.makeText(context, "Item added in Cart", Toast.LENGTH_SHORT).show()

@@ -22,7 +22,7 @@ fun MyBottomBar(navController: NavHostController) {
     val uiColor = if(isSystemInDarkTheme()) Color.White else Color.Black
     NavigationBar {
         bottomNavItems.forEach { item ->
-            val selected = currentDestination == item.route
+            val selected = currentDestination ==item.route
             NavigationBarItem(
                 selected = selected,
                 onClick = {

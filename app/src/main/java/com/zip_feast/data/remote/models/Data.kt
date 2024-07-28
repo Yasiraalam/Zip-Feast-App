@@ -1,5 +1,12 @@
 package com.zip_feast.data.remote.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
+
+@Serializable
+@Parcelize
 data class Data(
     val category: String,
     val createdAt: String,
@@ -7,10 +14,10 @@ data class Data(
     val id: Int,
     val isAvailable: Boolean,
     val merchant: Merchant,
-    val merchantId: Int,
-    val name: String,
+    val merchantId: Int ,
+    val name: String ,
     val price: String,
     val productImage: String,
     val stock: String,
     val updatedAt: String
-)
+) : Parcelable

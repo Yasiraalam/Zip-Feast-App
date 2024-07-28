@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.products
+package com.zip_feast.presentation.products.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,11 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.zip_feast.data.remote.models.AllProductsResponseModel
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
-import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
-import com.zip_feast.utils.Resource
+import com.zip_feast.utils.apputils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +21,9 @@ class ProductsViewModel @Inject constructor(
 
     private val _products = MutableLiveData<Resource<AllProductsResponseModel>>()
     val products: LiveData<Resource<AllProductsResponseModel>> get() = _products
-
+//    init {
+//        fetchProducts()
+//    }
     fun fetchProducts() {
         val token = authRepository.getToken()
         if (token != null) {
