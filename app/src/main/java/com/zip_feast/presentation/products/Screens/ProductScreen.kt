@@ -1,4 +1,3 @@
-
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
@@ -33,23 +33,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.local.models.CartItem
-import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.data.remote.models.Data
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
+import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProductDetailScreen(
+    product: Data,
     cartViewModel: CartViewModel = hiltViewModel<CartViewModel>(),
-    product: ProductDetail,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -57,15 +58,16 @@ fun ProductDetailScreen(
         topBar = { ProductTopAppBar(product.name, onBackClick) },
         containerColor = Color.White
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            ProductDetail(product, cartViewModel)
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            item {
+                ProductDetail(product, cartViewModel)
+            }
         }
     }
 }
 
 @Composable
 fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
-    var searchText by rememberSaveable { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -88,17 +90,9 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
             text = productName,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = Color.Black,
+            modifier = Modifier.padding(end = 64.dp)
         )
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = "Search",
-                modifier = Modifier
-                    .fillMaxSize(0.9f),
-                tint = Color.Black
-            )
-        }
         IconButton(onClick = { /*TODO*/ }) {
             Icon(
                 imageVector = Icons.Outlined.MoreVert,
@@ -110,7 +104,7 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
+fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     Column(
@@ -120,10 +114,10 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = product.imageResId),
+            painter = rememberAsyncImagePainter(model = product.productImage),
             contentDescription = null,
             modifier = Modifier
-                .aspectRatio(16 / 9f)
+                .aspectRatio(12 / 10f)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -137,34 +131,62 @@ fun ProductDetail(product: ProductDetail, cartViewModel: CartViewModel) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "product.price",
+            text = "Rs " + product.price,
             fontSize = 16.sp,
             color = SkyBlue,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
-        Spacer(modifier = Modifier.height(5.dp))
+        Row(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(horizontal = 12.dp)
+        ) {
+            Text(
+                text = product.description,
+                fontSize = 11.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(9.dp))
+            Text(
+                text = if (product.isAvailable) "Available" else "Not Available",
+                fontSize = 10.sp,
+                color = if (product.isAvailable) Color.Green else Color.Red,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            )
+        }
         Text(
-            text = product.discount,
-            fontSize = 14.sp,
-            color = Color.Red,
+            text = "Stock: "+product.stock,
+            fontSize = 11.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
+        Spacer(modifier = Modifier.width(9.dp))
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 coroutineScope.launch {
                     val cartItem = CartItem(
-                        productId = product.productId,
-                        imageResId = product.imageResId,
+                        category = product.category,
+                        createdAt = product.createdAt,
+                        description = product.description,
+                        id = product.id,
+                        isAvailable = product.isAvailable,
+                        merchant = product.merchant,
+                        merchantId = product.merchantId,
                         name = product.name,
                         price = product.price,
-                        discount = product.discount,
-                        rating = product.rating,
-                        quantity = 1,
+                        productImage = product.productImage,
+                        stock = product.stock,
+                        updatedAt = product.updatedAt,
+                        quantity = 1
                     )
                     cartViewModel.insert(cartItem)
                     Toast.makeText(context, "Item added in Cart", Toast.LENGTH_SHORT).show()

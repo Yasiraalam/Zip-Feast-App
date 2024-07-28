@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.R
 import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.presentation.theme.SkyBlue
@@ -297,7 +298,7 @@ private fun CartItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
-            painter = painterResource(id = cartItem.imageResId),
+            painter = rememberAsyncImagePainter(model = cartItem.productImage),
             modifier = Modifier.size(60.dp),
             contentDescription = "item"
         )
@@ -312,7 +313,7 @@ private fun CartItem(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "MRP ${cartItem.price}",
+                text = "Rs ${cartItem.price}",
                 color = SkyBlue,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -362,6 +363,13 @@ private fun CartItem(
                             .background(Color.Gray)
                     )
                 }
+            }
+            if (cartItem.quantity >= cartItem.stock.toInt()) {
+                Text(
+                    text = "Only ${cartItem.stock} left in stock",
+                    color = Color.Red,
+                    fontSize = 12.sp
+                )
             }
         }
     }

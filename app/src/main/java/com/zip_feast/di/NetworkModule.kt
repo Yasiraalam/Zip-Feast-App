@@ -3,6 +3,8 @@ package com.zip_feast.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.zip_feast.data.remote.apiService.UserApi
+import com.zip_feast.data.remote.repository.AuthRepository
+import com.zip_feast.data.remote.repository.AuthRepositoryImpl
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.CONSTANTS.BASE_URL
 import dagger.Module
@@ -40,7 +42,13 @@ class NetworkModule {
     }
     @Provides
     @Singleton
-    fun SharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences("zip.feast-prefs", Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthRepository(sharedPreferences: SharedPreferences): AuthRepository {
+        return AuthRepositoryImpl(sharedPreferences)
     }
 }

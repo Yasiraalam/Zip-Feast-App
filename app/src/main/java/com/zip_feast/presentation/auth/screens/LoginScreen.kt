@@ -55,7 +55,7 @@ import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.presentation.auth.authnavigation.Screen
 import com.zip_feast.presentation.auth.authviewmodels.AuthViewModel
 import com.zip_feast.presentation.theme.SkyBlue
-import com.zip_feast.utils.Resource
+import com.zip_feast.utils.apputils.Resource
 
 
 @Composable
@@ -302,7 +302,7 @@ private fun LoginSection(onClick: () -> Unit, authViewModel: AuthViewModel) {
                      )
                  ){
                      isLoading = false
-                     if(authViewModel.getToken() != null){
+                     if(authViewModel.isLoggedIn()){
                          onClick()
                      }else{
                          isLoading =true

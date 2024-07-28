@@ -1,22 +1,22 @@
-package com.zip_feast.models
+package com.zip_feast.data.remote.models
 
-import com.zip_feast.data.remote.models.Merchant
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 
-
-data class FlashSaleItem(
+@Serializable
+data class Data(
     val category: String,
     val createdAt: String,
     val description: String,
     val id: Int,
     val isAvailable: Boolean,
     val merchant: Merchant,
-    val merchantId: Int,
-    val name: String,
+    val merchantId: Int ,
+    val name: String ,
     val price: String,
     val productImage: String,
     val stock: String,
     val updatedAt: String
 )
-

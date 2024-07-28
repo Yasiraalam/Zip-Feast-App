@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.kotlin.serialization)
+    id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
 }
 
@@ -101,4 +102,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     // sharedpref
     implementation (libs.androidx.shared.pref)
+
+    //coil
+    implementation(libs.androidx.coil.kt)
 }

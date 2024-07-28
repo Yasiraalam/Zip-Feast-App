@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
@@ -23,7 +21,6 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -46,16 +43,13 @@ class ZipFeastActivity : ComponentActivity() {
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = backStackEntry?.destination?.route
                 val routesToHideBottomBar = listOf(
-                    Routes.ProductDetailScreen.routes
+                    Routes.ProductDetailScreen
                 )
                 Scaffold(
                     bottomBar = {
-                        if (currentRoute !in routesToHideBottomBar) {
-                            NavigationBar {
-                                MyBottomBar(navController = navController)
-                            }
+                        NavigationBar {
+                            MyBottomBar(navController = navController)
                         }
-
                     }
                 ) { innerPadding ->
                     val adjustedPadding = PaddingValues(

@@ -2,15 +2,22 @@ package com.zip_feast.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.zip_feast.data.remote.models.Merchant
 
 @Entity(tableName = "cart_items")
 data class CartItem(
     @PrimaryKey(autoGenerate = false)
-    val productId: Int,
-    val imageResId: Int,
+    val id: Int,
+    val category: String,
+    val createdAt: String,
+    val description: String,
+    val isAvailable: Boolean,
+    val merchant: Merchant,
+    val merchantId: Int,
     val name: String,
-    val price: Double,
-    val discount: String,
-    val rating: Int,
-    var quantity: Int,
+    val price: String,
+    val productImage: String,
+    val stock: String,
+    val updatedAt: String,
+    val quantity: Int
 )

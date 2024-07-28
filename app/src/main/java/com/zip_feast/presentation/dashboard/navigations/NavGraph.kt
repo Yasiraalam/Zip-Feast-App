@@ -11,12 +11,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.zip_feast.presentation.dashboard.navigations.navmodel.ProductDetail
-import com.zip_feast.presentation.profile.screens.AccountScreen
+import com.zip_feast.data.remote.models.Data
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
 import com.zip_feast.presentation.dashboard.screens.ServicesScreen
+import com.zip_feast.presentation.profile.screens.AccountScreen
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -25,9 +25,11 @@ fun NavGraph(
     paddingValues: PaddingValues,
 ) {
     NavHost(
-        navController =navController,
-        startDestination =  Routes.HomeScreen.routes,
-        modifier = Modifier.fillMaxSize().padding(paddingValues)
+        navController = navController,
+        startDestination = Routes.HomeScreen.routes,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
     ) {
         composable(route = Routes.HomeScreen.routes) {
             HomeScreen(navController)
@@ -44,19 +46,15 @@ fun NavGraph(
         composable(route = Routes.AccountScreen.routes) {
             AccountScreen()
         }
-
         composable(
             route = Routes.ProductDetailScreen.routes,
-            arguments = listOf(navArgument("productJson") { type = NavType.StringType })
+            arguments = listOf(navArgument("product") { type = NavType.StringType })
         ) { backStackEntry ->
-            val productJson = backStackEntry.arguments?.getString("productJson")
-            val product = productJson?.let { Json.decodeFromString<ProductDetail>(it) }
-            product?.let {
-                ProductDetailScreen(product = it, onBackClick = { navController.navigateUp() })
+            val productJson = backStackEntry.arguments?.getString("product")
+            val product = Json.decodeFromString<Data>(productJson!!)
+            ProductDetailScreen(product){
+                navController.navigateUp()
             }
         }
-
     }
 }
-
-
