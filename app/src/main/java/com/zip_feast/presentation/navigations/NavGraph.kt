@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.dashboard.navigations
+package com.zip_feast.presentation.navigations
 
 import ProductDetailScreen
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,12 +11,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.zip_feast.data.remote.models.Data
+import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
 import com.zip_feast.presentation.dashboard.screens.ServicesScreen
 import com.zip_feast.presentation.profile.screens.AccountScreen
+import com.zip_feast.presentation.profile.screens.ProfileScreen
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -44,7 +45,7 @@ fun NavGraph(
             CartScreen()
         }
         composable(route = Routes.AccountScreen.routes) {
-            AccountScreen()
+            AccountScreen(navController)
         }
         composable(
             route = Routes.ProductDetailScreen.routes,
@@ -55,6 +56,9 @@ fun NavGraph(
             ProductDetailScreen(product){
                 navController.navigateUp()
             }
+        }
+        composable(route = Routes.ProfileScreen.routes){
+            ProfileScreen(navController = navController)
         }
     }
 }

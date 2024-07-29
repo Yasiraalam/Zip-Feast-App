@@ -1,8 +1,6 @@
 package com.zip_feast.models
 
-import com.zip_feast.data.remote.models.Merchant
-import kotlinx.serialization.Serializable
-
+import com.zip_feast.data.remote.models.productsModels.Merchant
 
 
 data class FlashSaleItem(

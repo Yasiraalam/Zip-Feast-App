@@ -15,7 +15,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.zip_feast.R
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.Black
 import com.zip_feast.presentation.theme.SkyBlue
 
@@ -26,7 +28,9 @@ sealed class IconType {
 }
 
 @Composable
-fun AccountScreen() {
+fun AccountScreen(
+    navController: NavHostController
+) {
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
     Scaffold(
         topBar = {
@@ -71,7 +75,7 @@ fun AccountScreen() {
                 ) {
 
                     TextAndIconSection(iconType = IconType.VectorIcon(Icons.Outlined.Person), text = "Profile") {
-                        // Handle click
+                            navController.navigate(Routes.ProfileScreen.routes)
                     }
                     // Using DrawableIcon
                     TextAndIconSection(iconType = IconType.DrawableIcon(painterResource(id = R.drawable.order_ic)), text = "Order") {

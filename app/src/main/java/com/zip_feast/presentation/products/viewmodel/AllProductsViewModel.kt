@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zip_feast.data.remote.models.AllProductsResponseModel
+import com.zip_feast.data.remote.models.productsModels.AllProductsResponseModel
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.apputils.Resource

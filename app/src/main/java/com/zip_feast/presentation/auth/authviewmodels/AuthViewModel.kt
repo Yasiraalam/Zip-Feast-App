@@ -1,15 +1,14 @@
 package com.zip_feast.presentation.auth.authviewmodels
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zip_feast.data.remote.models.LoginModel
-import com.zip_feast.data.remote.models.LoginResponseModel
-import com.zip_feast.data.remote.models.UserRequest
-import com.zip_feast.data.remote.models.UserResponse
+import com.zip_feast.data.remote.models.loginModel.LoginModel
+import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
+import com.zip_feast.data.remote.models.loginModel.UserRequest
+import com.zip_feast.data.remote.models.loginModel.UserResponse
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.apputils.Resource

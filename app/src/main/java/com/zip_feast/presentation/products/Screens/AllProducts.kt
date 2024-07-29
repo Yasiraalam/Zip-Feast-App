@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.zip_feast.data.remote.models.AllProductsResponseModel
-import com.zip_feast.data.remote.models.Data
-import com.zip_feast.presentation.dashboard.navigations.Routes
+import com.zip_feast.data.remote.models.productsModels.AllProductsResponseModel
+import com.zip_feast.data.remote.models.productsModels.Data
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.apputils.Resource
 
@@ -92,7 +92,7 @@ private fun ProductsList(
 }
 
 @Composable
-fun AllProductsItems(item: Data,onClick: ()-> Unit ){
+fun AllProductsItems(item: Data, onClick: ()-> Unit ){
 
     Card(
         modifier = Modifier

@@ -1,4 +1,4 @@
-package com.zip_feast.data.remote.models
+package com.zip_feast.data.remote.models.productsModels
 
 data class Meta(
     val limit: Int,

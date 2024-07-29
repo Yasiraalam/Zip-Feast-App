@@ -31,7 +31,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,7 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zip_feast.R
-import com.zip_feast.data.remote.models.LoginModel
+import com.zip_feast.data.remote.models.loginModel.LoginModel
 import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.theme.dimens
 import com.zip_feast.presentation.auth.authnavigation.Screen
