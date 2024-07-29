@@ -6,7 +6,6 @@ import com.zip_feast.data.remote.apiService.UserApi
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.AuthRepositoryImpl
 import com.zip_feast.data.remote.repository.UserRepository
-import com.zip_feast.presentation.profile.ProfileViewModel
 import com.zip_feast.utils.CONSTANTS.BASE_URL
 import dagger.Module
 import dagger.Provides

@@ -1,7 +1,6 @@
 package com.zip_feast.presentation.auth.screens
 
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -57,8 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zip_feast.R
-import com.zip_feast.data.remote.models.UserRequest
-import com.zip_feast.presentation.theme.Black
+import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.presentation.theme.BlueGray
 import com.zip_feast.presentation.theme.Roboto
 import com.zip_feast.presentation.auth.authnavigation.Screen

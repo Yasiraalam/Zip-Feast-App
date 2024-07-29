@@ -1,7 +1,7 @@
 package com.zip_feast.presentation.navigations
 
 import android.net.Uri
-import com.zip_feast.data.remote.models.Data
+import com.zip_feast.data.remote.models.productsModels.Data
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

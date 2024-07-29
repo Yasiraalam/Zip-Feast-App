@@ -2,7 +2,7 @@ package com.zip_feast.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zip_feast.data.remote.models.Merchant
+import com.zip_feast.data.remote.models.productsModels.Merchant
 
 @Entity(tableName = "cart_items")
 data class CartItem(

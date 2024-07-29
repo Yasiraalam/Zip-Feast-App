@@ -67,8 +67,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.R
-import com.zip_feast.data.remote.models.AllProductsResponseModel
-import com.zip_feast.data.remote.models.Data
+import com.zip_feast.data.remote.models.productsModels.AllProductsResponseModel
+import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.products.Screens.AllProducts
 import com.zip_feast.presentation.products.Screens.ErrorScreen

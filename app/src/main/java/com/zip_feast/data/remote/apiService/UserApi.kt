@@ -1,16 +1,19 @@
 package com.zip_feast.data.remote.apiService
 
-import com.zip_feast.data.remote.models.AllProductsResponseModel
-import com.zip_feast.data.remote.models.LoginModel
-import com.zip_feast.data.remote.models.LoginResponseModel
+import com.zip_feast.data.remote.models.productsModels.AllProductsResponseModel
+import com.zip_feast.data.remote.models.loginModel.LoginModel
+import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
-import com.zip_feast.data.remote.models.UserRequest
-import com.zip_feast.data.remote.models.UserResponse
+import com.zip_feast.data.remote.models.loginModel.UserRequest
+import com.zip_feast.data.remote.models.loginModel.UserResponse
+import com.zip_feast.data.remote.models.userUpdateModels.UpdateProfileRequest
+import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface UserApi {
     @POST("user/register")
@@ -29,4 +32,9 @@ interface UserApi {
         @Header("Authorization") token: String
     ):Response<UserProfileResponse>
 
+    @PUT("profile")
+    suspend fun updateUserProfile(
+        @Header("Authorization") token: String,
+        @Body userInfoUpdate: UserInfoUpdate
+    ): Response<UserProfileResponse>
 }

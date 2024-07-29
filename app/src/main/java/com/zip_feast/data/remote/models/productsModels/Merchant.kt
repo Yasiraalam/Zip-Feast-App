@@ -1,7 +1,5 @@
-package com.zip_feast.data.remote.models
+package com.zip_feast.data.remote.models.productsModels
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 
