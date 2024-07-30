@@ -1,12 +1,11 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class
 )
 
 package com.zip_feast.presentation.dashboard.screens
 
 
+import SearchSuggestions
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +28,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Notifications
@@ -40,9 +38,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,7 +57,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -81,35 +78,137 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    viewModel: ProductsViewModel = hiltViewModel()
+    productsViewModel: ProductsViewModel = hiltViewModel()
 ) {
+    var isSearchActive by remember { mutableStateOf(false) }
     Scaffold(
-        topBar = { topAppBar() },
+        topBar = {
+            topAppBar(productsViewModel, navController) { active ->
+                if(!active) productsViewModel.resetFilteredProducts()
+                isSearchActive = active
+            }
+        },
         containerColor = Color.White,
-
-        ) { paddingValues ->
-        val adjustedPadding = remember(paddingValues) {
-            PaddingValues(
-                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                top = paddingValues.calculateTopPadding() - 8.dp,
-                end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
-                bottom = paddingValues.calculateBottomPadding() - 16.dp
-            )
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            if (isSearchActive) {
+                SearchSuggestions(productsViewModel, navController)
+            } else {
+                Content(paddingValues, navController, productsViewModel)
+            }
         }
-        Content(adjustedPadding, navController,viewModel)
     }
+}
+
+@Composable
+fun topAppBar(
+    productsViewModel: ProductsViewModel,
+    navController: NavHostController,
+    onSearchActiveChange: (Boolean) -> Unit
+) {
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+    var searchText by rememberSaveable { mutableStateOf("") }
+    var active by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .padding(top = 15.dp, start = 10.dp, end = 10.dp)
+            .height(if (active) 100.dp else 65.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        SearchBar(
+            query = searchText,
+            onQueryChange = { newQuery ->
+                searchText = newQuery
+                productsViewModel.filterProducts(newQuery)
+            },
+            onSearch = { newQuery ->
+                println("Perform Search Query here $newQuery")
+            },
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .padding(end = 8.dp),
+            active = active,
+            onActiveChange = {
+                active = it
+                onSearchActiveChange(it)
+            },
+            placeholder = {
+                Text(
+                    text = "Search Food, grocery etc.",
+                    fontSize = 12.sp,
+                    maxLines = 1,
+                    color = uiColor,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "search icon",
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            },
+            trailingIcon = if (active) {
+                {
+                    IconButton(onClick = {
+                        if (searchText.isNotEmpty()) {
+                            searchText = ""
+                        } else {
+                            active = false
+                            onSearchActiveChange(false)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close",
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .size(28.dp)
+                        )
+                    }
+                }
+            } else null
+        ) {
+
+        }
+        if (!active) {
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Favorite",
+                    tint = Color.Black
+                )
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = "Notifications",
+                    tint = Color.Black
+                )
+            }
+        }
+    }
+
 }
 
 @Composable
 fun Content(
     paddingValues: PaddingValues,
     navController: NavHostController,
-    viewModel: ProductsViewModel
+    productsViewModel: ProductsViewModel
 ) {
-    val productsResource by viewModel.products.observeAsState(Resource.Loading())
+    val productsResource by productsViewModel.products.observeAsState(Resource.Loading())
     LaunchedEffect(Unit) {
-        viewModel.fetchProducts()
+        productsViewModel.fetchProducts()
     }
+
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
@@ -131,7 +230,7 @@ fun Content(
             Spacer(modifier = Modifier.height(20.dp))
         }
         item {
-            flashSaleSection(productsResource,navController)
+            flashSaleSection(productsResource, navController)
         }
         item {
             Spacer(modifier = Modifier.height(20.dp))
@@ -148,9 +247,8 @@ fun Content(
             )
         }
         item {
-            AllProducts(productsResource,navController)
+            AllProducts(productsResource, navController)
         }
-
     }
 }
 
@@ -321,62 +419,6 @@ fun PromotionsItem(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun topAppBar() {
-    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    var searchText by rememberSaveable { mutableStateOf("") }
-    Row(
-        modifier = Modifier
-            .padding(top = 50.dp, start = 10.dp, end = 10.dp)
-            .height(60.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            placeholder = {
-                Text(
-                    text = "Search Food, grocery etc.",
-                    fontSize = 12.sp,
-                    color = uiColor,
-                )
-            },
-            singleLine = true,
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = SkyBlue,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(1f)
-                .fillMaxHeight()
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Outlined.FavoriteBorder,
-                contentDescription = "Favorite",
-                tint = Color.Black
-            )
-        }
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notifications",
-                tint = Color.Black
-            )
-        }
-    }
-}
-
 @Composable
 fun CategoriesList() {
     val iconsAndTitles = listOf(
@@ -429,16 +471,21 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun flashSaleSection(productsResource: Resource<AllProductsResponseModel>, navController: NavHostController) {
+fun flashSaleSection(
+    productsResource: Resource<AllProductsResponseModel>,
+    navController: NavHostController
+) {
 
     when (productsResource) {
         is Resource.Loading -> {
             //CircularProgressIndicator(modifier = Modifier.fillMaxSize(0.2f))
         }
+
         is Resource.Success -> {
             val products = productsResource.data?.data ?: emptyList()
-            FlashSaleItems(navController,products)
+            FlashSaleItems(navController, products)
         }
+
         is Resource.Error -> {
             val errorMessage = productsResource.errorMessage
             ErrorScreen(errorMessage)
@@ -475,7 +522,7 @@ private fun FlashSaleItems(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        FlashSaleList(products,navController)
+        FlashSaleList(products, navController)
     }
 }
 
@@ -538,7 +585,7 @@ fun FlashSaleCard(item: Data, onClick: () -> Unit) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-               Image(
+                Image(
                     painter = rememberAsyncImagePainter(model = item.productImage),
                     contentDescription = item.name,
                     contentScale = ContentScale.Crop,
@@ -554,16 +601,16 @@ fun FlashSaleCard(item: Data, onClick: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Rs "+item.price,
+                    text = "Rs " + item.price,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = SkyBlue
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = if(item.isAvailable) "Available" else "Not Available",
+                    text = if (item.isAvailable) "Available" else "Not Available",
                     fontSize = 10.sp,
-                    color = if(item.isAvailable) Color.Green else Color.Red,
+                    color = if (item.isAvailable) Color.Green else Color.Red,
                 )
             }
         }

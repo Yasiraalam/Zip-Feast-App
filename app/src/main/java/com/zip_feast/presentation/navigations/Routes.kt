@@ -18,5 +18,11 @@ sealed class Routes(val routes:String) {
         }
     }
     data object ProfileScreen : Routes("ProfileScreen")
+    data object SearchResultScreen : Routes("SearchResultScreen/{query}") {
+        fun createRoute(query: String): String {
+            return "SearchResultScreen/${Uri.encode(query)}"
+        }
+    }
+
 }
 

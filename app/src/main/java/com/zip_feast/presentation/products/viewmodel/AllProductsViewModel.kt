@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zip_feast.data.remote.models.productsModels.AllProductsResponseModel
+import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.apputils.Resource
@@ -21,9 +22,10 @@ class ProductsViewModel @Inject constructor(
 
     private val _products = MutableLiveData<Resource<AllProductsResponseModel>>()
     val products: LiveData<Resource<AllProductsResponseModel>> get() = _products
-//    init {
-//        fetchProducts()
-//    }
+
+    private val _filteredProducts = MutableLiveData<List<Data>>()
+    val filteredProducts: LiveData<List<Data>> get() = _filteredProducts
+
     fun fetchProducts() {
         val token = authRepository.getToken()
         if (token != null) {
@@ -58,6 +60,21 @@ class ProductsViewModel @Inject constructor(
         } else {
             Log.d("products", "Token is null")
         }
+    }
+
+    fun filterProducts(query: String) {
+        val allProducts = _products.value?.data?.data
+        if (allProducts != null) {
+            val filtered = allProducts.filter { product ->
+                product.name.contains(query, ignoreCase = true)
+            }
+            _filteredProducts.value = filtered
+        }
+    }
+
+
+    fun resetFilteredProducts() {
+        _filteredProducts.value = _products.value?.data?.data
     }
 }
 
