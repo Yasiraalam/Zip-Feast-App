@@ -16,8 +16,10 @@ import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
 import com.zip_feast.presentation.dashboard.screens.ServicesScreen
+import com.zip_feast.presentation.products.viewmodel.ProductsViewModel
 import com.zip_feast.presentation.profile.screens.AccountScreen
 import com.zip_feast.presentation.profile.screens.ProfileScreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -42,7 +44,7 @@ fun NavGraph(
             ExploreScreen()
         }
         composable(route = Routes.CartScreen.routes) {
-            CartScreen()
+            CartScreen(navController = navController)
         }
         composable(route = Routes.AccountScreen.routes) {
             AccountScreen(navController)
@@ -60,5 +62,12 @@ fun NavGraph(
         composable(route = Routes.ProfileScreen.routes){
             ProfileScreen(navController = navController)
         }
+//        composable(
+//            route = Routes.SearchResultScreen.routes,
+//            arguments = listOf(navArgument("query") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val query = backStackEntry.arguments?.getString("query")
+//            SearchResultScreen(navController=navController)
+//        }
     }
 }

@@ -66,7 +66,7 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
 
         for (item in cartItems) {
             totalQty += item.quantity
-            totalPrc += item.quantity * item.price.toDouble()
+            totalPrc += item.quantity * item.price.toDouble() +70.00
         }
         _totalQuantity.value = totalQty
         _totalPrice.value = totalPrc
