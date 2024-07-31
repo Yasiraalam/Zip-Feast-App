@@ -6,6 +6,7 @@ package com.zip_feast.presentation.dashboard.screens
 
 
 import SearchSuggestions
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -125,7 +126,8 @@ fun topAppBar(
                 productsViewModel.filterProducts(newQuery)
             },
             onSearch = { newQuery ->
-                println("Perform Search Query here $newQuery")
+//                productsViewModel.fetchProducts()
+//                navController.navigate(Routes.SearchResultScreen.createRoute(newQuery))
             },
             modifier = Modifier
                 .weight(1f)
@@ -178,6 +180,7 @@ fun topAppBar(
 
         }
         if (!active) {
+            searchText =""
             Spacer(modifier = Modifier.width(8.dp))
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
