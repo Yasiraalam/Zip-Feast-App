@@ -8,6 +8,7 @@ package com.zip_feast.presentation.dashboard.screens
 import SearchSuggestions
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,6 +62,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -78,16 +82,19 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    productsViewModel: ProductsViewModel = hiltViewModel()
+    navController: NavHostController, productsViewModel: ProductsViewModel = hiltViewModel()
 ) {
     var isSearchActive by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            topAppBar(productsViewModel, navController) { active ->
-                if(!active) productsViewModel.resetFilteredProducts()
-                isSearchActive = active
-            }
+            topAppBar(
+                productsViewModel,
+                navController,
+                onSearchActiveChange = { active ->
+                    if (!active) productsViewModel.resetFilteredProducts()
+                    isSearchActive = active
+                }
+            )
         },
         containerColor = Color.White,
     ) { paddingValues ->
@@ -113,14 +120,13 @@ fun topAppBar(
 
     Row(
         modifier = Modifier
-            .padding(top = 15.dp, start = 10.dp, end = 10.dp)
-            .height(if (active) 100.dp else 65.dp)
+            .padding(10.dp)
+            .height(if (active) 105.dp else 65.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        SearchBar(
-            query = searchText,
+        SearchBar(query = searchText,
             onQueryChange = { newQuery ->
                 searchText = newQuery
                 productsViewModel.filterProducts(newQuery)
@@ -131,8 +137,7 @@ fun topAppBar(
             },
             modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight()
-                .padding(end = 8.dp),
+                .fillMaxHeight(),
             active = active,
             onActiveChange = {
                 active = it
@@ -175,21 +180,20 @@ fun topAppBar(
                         )
                     }
                 }
-            } else null
-        ) {
+            } else null) {
 
         }
         if (!active) {
-            searchText =""
+            searchText = ""
             Spacer(modifier = Modifier.width(8.dp))
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(top = 10.dp)) {
                 Icon(
                     imageVector = Icons.Outlined.FavoriteBorder,
                     contentDescription = "Favorite",
                     tint = Color.Black
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { /*TODO*/ },modifier = Modifier.padding(top = 10.dp)) {
                 Icon(
                     imageVector = Icons.Outlined.Notifications,
                     contentDescription = "Notifications",
@@ -261,22 +265,18 @@ fun categoriesSection() {
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Category",
-                fontWeight = FontWeight.Bold
+                text = "Category", fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "More Category..",
+            Text(text = "More Category..",
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 color = SkyBlue,
                 modifier = Modifier.clickable {
                     // TODO: show all categories in seperate screen full
-                }
-            )
+                })
         }
         Spacer(modifier = Modifier.height(16.dp))
         CategoriesList()
@@ -371,8 +371,7 @@ fun PromotionsItem(
     imagePainter: Painter
 ) {
     Card(
-        modifier = Modifier
-            .width(366.dp),
+        modifier = Modifier.width(366.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor,
@@ -439,13 +438,9 @@ fun CategoriesList() {
         horizontalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         items(iconsAndTitles) { iconResId ->
-            IconCategories(
-                iconResId = iconResId.first,
-                title = iconResId.second,
-                onClick = {
-                    // TODO: handle here if user click any category navigate
-                }
-            )
+            IconCategories(iconResId = iconResId.first, title = iconResId.second, onClick = {
+                // TODO: handle here if user click any category navigate
+            })
         }
     }
 }
@@ -458,8 +453,7 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            modifier = Modifier
-                .size(38.dp),
+            modifier = Modifier.size(38.dp),
             painter = painterResource(id = iconResId),
             contentDescription = title,
             tint = uiColor
@@ -475,8 +469,7 @@ fun IconCategories(iconResId: Int, title: String, onClick: () -> Unit) {
 
 @Composable
 fun flashSaleSection(
-    productsResource: Resource<AllProductsResponseModel>,
-    navController: NavHostController
+    productsResource: Resource<AllProductsResponseModel>, navController: NavHostController
 ) {
 
     when (productsResource) {
@@ -499,30 +492,26 @@ fun flashSaleSection(
 
 @Composable
 private fun FlashSaleItems(
-    navController: NavHostController,
-    products: List<Data>
+    navController: NavHostController, products: List<Data>
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 5.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = "Flash Sale",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
             )
-            Text(
-                text = "See More..",
+            Text(text = "See More..",
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 color = SkyBlue,
                 modifier = Modifier.clickable {
                     // TODO:  show here a screen where all product shown fully
-                }
-            )
+                })
         }
         Spacer(modifier = Modifier.height(16.dp))
         FlashSaleList(products, navController)
@@ -532,8 +521,7 @@ private fun FlashSaleItems(
 @Composable
 fun FlashSaleList(products: List<Data>, navController: NavHostController) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        modifier = Modifier.fillMaxWidth()
+        horizontalArrangement = Arrangement.spacedBy(5.dp), modifier = Modifier.fillMaxWidth()
     ) {
         items(products) { item ->
             FlashSaleCard(item = item) {
@@ -559,22 +547,19 @@ fun FlashSaleList(products: List<Data>, navController: NavHostController) {
 
 @Composable
 fun FlashSaleCard(item: Data, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .clickable {
-                onClick()
-            }
-            .width(160.dp)
-            .height(240.dp)
-            .padding(horizontal = 8.dp),
+    Card(modifier = Modifier
+        .clickable {
+            onClick()
+        }
+        .width(160.dp)
+        .height(240.dp)
+        .padding(horizontal = 8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
-        )
-    ) {
+            containerColor = Color.White, contentColor = Color.Black
+        )) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -592,8 +577,7 @@ fun FlashSaleCard(item: Data, onClick: () -> Unit) {
                     painter = rememberAsyncImagePainter(model = item.productImage),
                     contentDescription = item.name,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             Column(modifier = Modifier.padding(horizontal = 8.dp)) {

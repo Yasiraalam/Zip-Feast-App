@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.remote.models.productsModels.Data
-import com.zip_feast.presentation.dashboard.screens.ProductCard
 import com.zip_feast.presentation.dashboard.screens.ProductNotFound
 import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.products.viewmodel.ProductsViewModel
