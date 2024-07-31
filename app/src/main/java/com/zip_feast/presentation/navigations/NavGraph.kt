@@ -44,7 +44,7 @@ fun NavGraph(
             ExploreScreen()
         }
         composable(route = Routes.CartScreen.routes) {
-            CartScreen()
+            CartScreen(navController = navController)
         }
         composable(route = Routes.AccountScreen.routes) {
             AccountScreen(navController)

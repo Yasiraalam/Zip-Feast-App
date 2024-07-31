@@ -3,6 +3,7 @@ package com.zip_feast.presentation.cart.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,21 +45,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.R
 import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
+import com.zip_feast.presentation.navigations.Routes
 
 @Composable
 fun CartScreen(
-    viewModel: CartViewModel = hiltViewModel<CartViewModel>()
+    viewModel: CartViewModel = hiltViewModel<CartViewModel>(),
+    navController: NavHostController
 ) {
     val cartItems by viewModel.allCartItems.observeAsState(emptyList())
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
@@ -104,6 +110,7 @@ fun CartScreen(
             CartItemsSection(
                 cartItems,
                 innerPadding,
+                navController = navController,
                 viewModel,
                 onRemoveItem = { viewModel.delete(it) }
             )
@@ -115,6 +122,7 @@ fun CartScreen(
 fun CartItemsSection(
     cartItems: List<CartItem>,
     innerPadding: PaddingValues,
+    navController: NavHostController,
     viewModel: CartViewModel,
     onRemoveItem: (CartItem) -> Unit
 ) {
@@ -127,7 +135,7 @@ fun CartItemsSection(
             .padding(innerPadding)
     ) {
         items(cartItems) { cartItem ->
-            CartItemCard(cartItem, viewModel, onRemoveItem)
+            CartItemCard(cartItem, viewModel, navController = navController, onRemoveItem)
         }
         item {
             CouponSection()
@@ -227,6 +235,7 @@ fun ShippingItemsSection(totalQuantity: Int, totalPrice: Double) {
 fun CartItemCard(
     cartItem: CartItem,
     viewModel: CartViewModel,
+    navController: NavHostController,
     onRemoveItem: (CartItem) -> Unit
 ) {
     Card(
@@ -240,8 +249,9 @@ fun CartItemCard(
             containerColor = Color.White
         )
     ) {
-        CartItem(cartItem, viewModel, onRemoveItem)
+        CartItem(cartItem, viewModel, navController = navController,onRemoveItem)
     }
+    HorizontalDivider()
 }
 
 @Composable
@@ -257,7 +267,8 @@ fun CouponSection() {
     ) {
         OutlinedTextField(
             singleLine = true,
-            modifier = Modifier.height(45.dp),
+            modifier = Modifier
+                .height(75.dp),
             maxLines = 1,
             value = couponCode,
             onValueChange = { couponCode = it },
@@ -287,19 +298,20 @@ fun CouponSection() {
 private fun CartItem(
     cartItem: CartItem,
     viewModel: CartViewModel,
+    navController:NavHostController,
     onRemoveItem: (CartItem) -> Unit
 ) {
-    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Gray
+    val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 12.dp, start = 10.dp),
+            .clickable {},
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
             painter = rememberAsyncImagePainter(model = cartItem.productImage),
-            modifier = Modifier.size(60.dp),
+            modifier = Modifier.size(90.dp),
             contentDescription = "item"
         )
         Spacer(modifier = Modifier.width(16.dp))
@@ -310,14 +322,27 @@ private fun CartItem(
                 text = cartItem.name,
                 maxLines = 1,
                 color = uiColor,
-                modifier = Modifier.padding(bottom = 8.dp)
             )
+            HorizontalDivider()
             Text(
                 text = "Rs ${cartItem.price}",
                 color = SkyBlue,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(bottom = 8.dp)
             )
+            if (cartItem.quantity >= cartItem.stock.toInt()) {
+                Text(
+                    text = "Only ${cartItem.stock} left ",
+                    color = Color.Red,
+                    fontSize = 12.sp
+                )
+            }else{
+                Text(
+                    text = if(cartItem.isAvailable) "Available" else "Out of Stock",
+                    fontSize = 10.sp,
+                    color = if(cartItem.isAvailable) Color.Green else Color.Red,
+                )
+            }
+
         }
         Column(
             modifier = Modifier.width(120.dp),
@@ -344,7 +369,7 @@ private fun CartItem(
                         tint = Color.White,
                         modifier = Modifier
                             .clip(CircleShape)
-                            .background(Color.Gray)
+                            .background(SkyBlue)
                     )
                 }
                 Text(
@@ -360,16 +385,9 @@ private fun CartItem(
                         tint = Color.White,
                         modifier = Modifier
                             .clip(CircleShape)
-                            .background(Color.Gray)
+                            .background(SkyBlue)
                     )
                 }
-            }
-            if (cartItem.quantity >= cartItem.stock.toInt()) {
-                Text(
-                    text = "Only ${cartItem.stock} left in stock",
-                    color = Color.Red,
-                    fontSize = 12.sp
-                )
             }
         }
     }
