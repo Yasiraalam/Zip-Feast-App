@@ -9,7 +9,8 @@ import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
 import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
-import com.zip_feast.data.remote.models.ordersModels.UserOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderResponseModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response
@@ -43,6 +44,7 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
             Resource.Error( "An unknown error occurred.Try again!")
         }
     }
+
     suspend fun getUserProfile(token: String): Resource<UserProfileResponse> {
         return try {
             val response = userApi.getProfileInfo("Bearer $token")
@@ -80,6 +82,7 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
             Resource.Error("An unknown error occurred. Try again!")
         }
     }
+
     suspend fun updateUserAddress(token: String, userAddress: UserAddress): Resource<UserProfileResponse> {
         return try {
             val response = userApi.updateUserAddress("Bearer $token", userAddress)
@@ -98,27 +101,30 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
             Resource.Error("An unknown error occurred. Try again!")
         }
     }
-    suspend fun userOrder(token: String, userOrderRequestModel: UserOrderRequestModel): Resource<UserOrderRequestModel> {
+
+    suspend fun userOrder(token: String, cartOrderRequestModel: CartOrderRequestModel): Resource<CartOrderResponseModel> {
         return try {
-            val response = userApi.userOrder("Bearer $token", userOrderRequestModel)
-            Log.d("Repository", "Response code: ${response.code()}")
+            val response = userApi.userOrder("Bearer $token", cartOrderRequestModel)
+            Log.d("RepositoryOrder", "Request Model: $cartOrderRequestModel")
+            Log.d("RepositoryOrder", "Response code: ${response.code()}")
             if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null) {
-                    Log.d("Repository", "userOrder response body: $body")
-                    Resource.Success(body)
-                } else {
-                    Log.d("Repository", "Response body is null")
+                response.body()?.let {
+                    Log.d("RepositoryOrder", "userOrder response body: $it")
+                    Resource.Success(it)
+                } ?: run {
+                    Log.d("RepositoryOrder", "Response body is null")
                     Resource.Error("Response body is null")
                 }
             } else {
-                Log.d("Repository", "Error response: ${response.message()}")
-                Resource.Error("Error: ${response.message()}")
+                val errorMsg = response.errorBody()?.string() ?: response.message()
+                Log.d("RepositoryOrder", "Error response: $errorMsg")
+                Resource.Error("Error: $errorMsg")
             }
         } catch (e: Exception) {
-            Log.d("Repository", "Exception: ${e.message}")
+            Log.d("RepositoryOrder", "Exception: ${e.message}")
             Resource.Error("An unknown error occurred. Try again!")
         }
     }
+
 
 }

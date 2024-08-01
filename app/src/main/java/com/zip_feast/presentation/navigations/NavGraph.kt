@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
-import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
@@ -22,6 +22,7 @@ import com.zip_feast.presentation.dashboard.screens.ServicesScreen
 import com.zip_feast.presentation.dashboard.screens.AccountScreen
 import com.zip_feast.presentation.orders.screens.OrderScreen
 import com.zip_feast.presentation.orders.screens.ShippingDetailsScreen
+import com.zip_feast.presentation.orders.screens.SuccessScreen
 import com.zip_feast.presentation.profile.screens.EditAddressScreen
 import com.zip_feast.presentation.profile.screens.ProfileScreen
 import com.zip_feast.presentation.profile.screens.ShipToScreen
@@ -87,16 +88,24 @@ fun NavGraph(
 
         composable(
             route = Routes.ShippingDetailsScreen.routes,
-            arguments = listOf(navArgument("product") { type = NavType.StringType })
+            arguments = listOf(navArgument("orderDetails") { type = NavType.StringType })
         ) { navBackStackEntry ->
-            val productJson = navBackStackEntry.arguments?.getString("product")
-            val product = productJson?.let { Json.decodeFromString<UserOrderModel>(it) }
+            val orderDetailsJson = navBackStackEntry.arguments?.getString("orderDetails")
+            val cartOrderRequestModel = orderDetailsJson?.let { Json.decodeFromString<CartOrderRequestModel>(it) }
 
-            product?.let {
-                ShippingDetailsScreen(userOrderModel = it, navController = navController,) {
+            cartOrderRequestModel?.let {
+                ShippingDetailsScreen(cartOrderRequestModel = it, navController = navController) {
                     navController.navigateUp()
                 }
             }
+        }
+        composable(
+            route= Routes.OrderSuccessScreen.routes
+        ){
+            SuccessScreen(navController = navController){
+                navController.navigateUp()
+            }
+
         }
     }
 }

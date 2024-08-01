@@ -7,7 +7,8 @@ import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
 import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
-import com.zip_feast.data.remote.models.ordersModels.UserOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderResponseModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import retrofit2.Response
 import retrofit2.http.Body
@@ -48,8 +49,7 @@ interface UserApi {
     @POST("user/order/create")
     suspend fun userOrder(
         @Header("Authorization") token: String,
-        @Body userOrderRequestModel: UserOrderRequestModel
-    ):Response<UserOrderRequestModel>
-
+        @Body cartOrderRequestModel: CartOrderRequestModel
+    ):Response<CartOrderResponseModel>
 
 }

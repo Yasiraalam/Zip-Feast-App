@@ -206,13 +206,13 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel,navController: Nav
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                val productsId = UserOrderModel(
-                    productId = product.id,
-                    quantity = 1
-                )
-                navController.navigate(
-                    Routes.ShippingDetailsScreen.sendToShip(productsId)
-                )
+//                val productsId = UserOrderModel(
+//                    productId = product.id,
+//                    quantity = 1
+//                )
+//                navController.navigate(
+//                    Routes.ShippingDetailsScreen.sendToShip(productsId)
+//                )
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(

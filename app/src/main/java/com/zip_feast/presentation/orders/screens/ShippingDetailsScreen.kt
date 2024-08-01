@@ -1,5 +1,6 @@
 package com.zip_feast.presentation.orders.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,14 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
-import com.zip_feast.data.remote.models.ordersModels.UserOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.orders.viewmodel.PlaceOrderViewModel
 import com.zip_feast.utils.apputils.Resource
 
 @Composable
 fun ShippingDetailsScreen(
-    userOrderModel: UserOrderModel,
+    cartOrderRequestModel: CartOrderRequestModel,
     navController: NavHostController,
     placeOrderViewModel: PlaceOrderViewModel=  hiltViewModel<PlaceOrderViewModel>(),
     onBackClick: () -> Unit
@@ -36,7 +37,7 @@ fun ShippingDetailsScreen(
         when (orderInformation) {
             is Resource.Success -> {
                 val message = "Order placed successfully!"
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                navController.navigate(Routes.OrderSuccessScreen.routes)
             }
             is Resource.Error -> {
                 val message = (orderInformation as Resource.Error).errorMessage ?: "An unknown error occurred."
@@ -100,33 +101,25 @@ fun ShippingDetailsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = selectedPaymentMode == "Cash on Delivery",
-                        onClick = { selectedPaymentMode = "Cash on Delivery" }
+                        selected = selectedPaymentMode == "COD",
+                        onClick = { selectedPaymentMode = "COD" }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Cash on Delivery")
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
             val context = LocalContext.current
             Button(
                 onClick = {
+                    val userOrder = cartOrderRequestModel.copy(
+                        deliveryAddress = address,
+                        paymentMethod = selectedPaymentMode
+                    )
                     if (selectedPaymentMode == "Pay Online") {
                         "Order placed, payment mode: Pay Online"
                         Toast.makeText(context, "pay online first", Toast.LENGTH_SHORT).show()
                     } else {
-                        "Order placed, payment mode: Cash on Delivery"
-                        val userOrder = UserOrderRequestModel(
-                            userOrder = listOf(
-                                UserOrderModel(
-                                    productId = userOrderModel.productId,
-                                    quantity = 1
-                                )
-                            ) ,
-                            deliveryAddress = address,
-                            paymentMethod = selectedPaymentMode
-                        )
                         placeOrderViewModel.placeOrder(userOrder)
                         navController.navigateUp()
                     }

@@ -3,7 +3,8 @@ package com.zip_feast.presentation.orders.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zip_feast.data.remote.models.ordersModels.UserOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderResponseModel
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.apputils.Resource
@@ -15,23 +16,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlaceOrderViewModel@Inject constructor(
+class PlaceOrderViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository
-):ViewModel() {
+) : ViewModel() {
 
-    private val _orderInformation = MutableStateFlow<Resource<UserOrderRequestModel>>(Resource.Loading())
-    val orderInformation: StateFlow<Resource<UserOrderRequestModel>> = _orderInformation.asStateFlow()
+    private val _orderInformation =
+        MutableStateFlow<Resource<CartOrderResponseModel>>(Resource.Loading())
+    val orderInformation: StateFlow<Resource<CartOrderResponseModel>> =
+        _orderInformation.asStateFlow()
 
-    fun placeOrder(userOrderRequestModel: UserOrderRequestModel) {
+    fun placeOrder(cartOrderRequestModel: CartOrderRequestModel) {
         val token = authRepository.getToken()
-        viewModelScope.launch {
-            if (token != null) {
+        if (token != null) {
+            viewModelScope.launch {
                 _orderInformation.value = Resource.Loading()
                 viewModelScope.launch {
-                    _orderInformation.value = Resource.Loading()
                     try {
-                        val result = userRepository.userOrder(token, userOrderRequestModel)
+                        val result = userRepository.userOrder(token, cartOrderRequestModel)
                         Log.d("PlaceOrder", "placeOrder: ${result.data}")
                         _orderInformation.value = result
                     } catch (e: Exception) {
@@ -41,8 +43,10 @@ class PlaceOrderViewModel@Inject constructor(
                     }
                 }
             }
+        }else{
+            Log.d("PlaceOrder", "placeOrder: token is null")
         }
-
     }
+
 
 }

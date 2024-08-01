@@ -2,7 +2,7 @@ package com.zip_feast.presentation.navigations
 
 import android.net.Uri
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
-import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.productsModels.Data
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -26,6 +26,8 @@ sealed class Routes(val routes:String) {
         }
     }
     data object OrderScreen : Routes("OrderScreen")
+    //order Success screen
+    data object OrderSuccessScreen : Routes("OrderSuccessScreen")
     data object ShipToScreen : Routes("ShipToScreen")
 
     data object EditAddressScreen : Routes("EditAddressScreen/{userAddress}") {
@@ -35,9 +37,9 @@ sealed class Routes(val routes:String) {
         }
     }
 
-    data object ShippingDetailsScreen:Routes("ShippingDetailsScreen/{product}/{pro") {
-        fun sendToShip(userOrderModel: UserOrderModel):String{
-            val userOrder = Json.encodeToString(userOrderModel)
+    data object ShippingDetailsScreen:Routes("ShippingDetailsScreen/{orderDetails}") {
+        fun sendToShip(cartOrderRequestModel: CartOrderRequestModel):String{
+            val userOrder = Json.encodeToString(cartOrderRequestModel)
             return "ShippingDetailsScreen/${Uri.encode(userOrder)}"
         }
     }

@@ -16,7 +16,6 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
 
     val allCartItems = repository.allCartItems.asLiveData()
 
-    // LiveData for total quantity and price
     private val _totalQuantity = MutableLiveData(0)
     val totalQuantity: LiveData<Int> get() = _totalQuantity
 
@@ -51,6 +50,7 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
             }
         }
     }
+
     fun decreaseQuantity(cartItem: CartItem) {
         if (cartItem.quantity > 1) {
             viewModelScope.launch {
@@ -60,6 +60,7 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
             }
         }
     }
+
     private fun calculateTotals(cartItems: List<CartItem>) {
         var totalQty = 0
         var totalPrc = 0.0
@@ -71,6 +72,5 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
         _totalQuantity.value = totalQty
         _totalPrice.value = totalPrc
     }
-
 
 }
