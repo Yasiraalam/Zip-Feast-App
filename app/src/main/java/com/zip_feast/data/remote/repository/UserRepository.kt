@@ -2,13 +2,14 @@ package com.zip_feast.data.remote.repository
 
 import android.util.Log
 import com.zip_feast.data.remote.apiService.UserApi
+import com.zip_feast.data.remote.models.ProfileModel.UserAddress
 import com.zip_feast.data.remote.models.productsModels.AllProductsResponseModel
 import com.zip_feast.data.remote.models.loginModel.LoginModel
 import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
 import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
-import com.zip_feast.data.remote.models.userUpdateModels.UpdateProfileRequest
+import com.zip_feast.data.remote.models.ordersModels.UserOrderRequestModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response
@@ -79,4 +80,45 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
             Resource.Error("An unknown error occurred. Try again!")
         }
     }
+    suspend fun updateUserAddress(token: String, userAddress: UserAddress): Resource<UserProfileResponse> {
+        return try {
+            val response = userApi.updateUserAddress("Bearer $token", userAddress)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Log.d("Repository", "updateUserProfile: ${body}")
+                    Resource.Success(body)
+                } else {
+                    Resource.Error("Response body is null")
+                }
+            } else {
+                Resource.Error("Error: ${response.message()}")
+            }
+        } catch (e: Exception) {
+            Resource.Error("An unknown error occurred. Try again!")
+        }
+    }
+    suspend fun userOrder(token: String, userOrderRequestModel: UserOrderRequestModel): Resource<UserOrderRequestModel> {
+        return try {
+            val response = userApi.userOrder("Bearer $token", userOrderRequestModel)
+            Log.d("Repository", "Response code: ${response.code()}")
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Log.d("Repository", "userOrder response body: $body")
+                    Resource.Success(body)
+                } else {
+                    Log.d("Repository", "Response body is null")
+                    Resource.Error("Response body is null")
+                }
+            } else {
+                Log.d("Repository", "Error response: ${response.message()}")
+                Resource.Error("Error: ${response.message()}")
+            }
+        } catch (e: Exception) {
+            Log.d("Repository", "Exception: ${e.message}")
+            Resource.Error("An unknown error occurred. Try again!")
+        }
+    }
+
 }

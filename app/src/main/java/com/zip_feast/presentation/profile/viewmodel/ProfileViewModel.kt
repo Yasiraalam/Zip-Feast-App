@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zip_feast.data.remote.models.ProfileModel.UserAddress
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
-import com.zip_feast.data.remote.models.userUpdateModels.UpdateProfileRequest
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
@@ -26,6 +26,10 @@ class ProfileViewModel @Inject constructor(
 
     private val _updatedprofile = MutableLiveData<Resource<UserProfileResponse>>()
     val updatedprofile: LiveData<Resource<UserProfileResponse>> = _updatedprofile
+
+    private val _updatedAddress = MutableLiveData<Resource<UserProfileResponse>>()
+    val updatedAddress: LiveData<Resource<UserProfileResponse>> = _updatedAddress
+
 
     fun fetchUserProfile() {
         val token = authRepository.getToken()
@@ -65,9 +69,23 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             val token = authRepository.getToken()
             if (token!=null){
-                  val result = userRepository.updateUserProfile(token, userInfoUpdate)
+                  val result = userRepository.updateUserProfile(token=token, userInfoUpdate =userInfoUpdate)
                   _updatedprofile.postValue(result)
                   fetchUserProfile()
+            }else{
+                Log.d("ProfileViewModel", "fetchUserProfile: Token is null")
+            }
+
+        }
+    }
+    fun updateUserAddress(userAddress: UserAddress) {
+        viewModelScope.launch {
+            val token = authRepository.getToken()
+            if (token!=null){
+                val result = userRepository.updateUserAddress(token=token, userAddress =userAddress)
+                Log.d("Address", "Address: ${result.data?.data}")
+                _updatedAddress.postValue(result)
+                fetchUserProfile()
             }else{
                 Log.d("ProfileViewModel", "fetchUserProfile: Token is null")
             }

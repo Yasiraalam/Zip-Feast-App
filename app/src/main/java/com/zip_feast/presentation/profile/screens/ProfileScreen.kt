@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.zip_feast.data.remote.models.userUpdateModels.UpdateProfileRequest
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.presentation.profile.viewmodel.ProfileViewModel
 import com.zip_feast.presentation.theme.SkyBlue

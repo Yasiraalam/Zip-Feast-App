@@ -165,8 +165,5 @@ fun ErrorScreen(errorMessage: String?) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = errorMessage ?: "An unknown error occurred")
-        Button(onClick = { /* Retry logic */ }) {
-            Text(text = "Retry")
-        }
     }
 }
