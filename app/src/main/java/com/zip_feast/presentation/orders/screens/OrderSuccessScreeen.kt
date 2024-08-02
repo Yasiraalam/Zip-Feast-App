@@ -1,6 +1,5 @@
 package com.zip_feast.presentation.orders.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,13 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
 import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.SkyBlue
 
 @Composable
 fun SuccessScreen(
     navController: NavHostController,
-    onBackClick: () -> Unit
+    onbackClick: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -58,7 +58,9 @@ fun SuccessScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = { onBackClick.invoke() },
+                onClick = {
+                    onbackClick.invoke()
+                },
                 modifier = Modifier.fillMaxWidth(0.5f).height(55.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SkyBlue,

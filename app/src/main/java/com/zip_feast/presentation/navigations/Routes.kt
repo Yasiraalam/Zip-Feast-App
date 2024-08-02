@@ -26,8 +26,6 @@ sealed class Routes(val routes:String) {
         }
     }
     data object OrderScreen : Routes("OrderScreen")
-    //order Success screen
-    data object OrderSuccessScreen : Routes("OrderSuccessScreen")
     data object ShipToScreen : Routes("ShipToScreen")
 
     data object EditAddressScreen : Routes("EditAddressScreen/{userAddress}") {
@@ -41,6 +39,15 @@ sealed class Routes(val routes:String) {
         fun sendToShip(cartOrderRequestModel: CartOrderRequestModel):String{
             val userOrder = Json.encodeToString(cartOrderRequestModel)
             return "ShippingDetailsScreen/${Uri.encode(userOrder)}"
+        }
+    }
+
+    data object OrderSuccessScreen: Routes("OrderSuccessScreen")
+
+    data object UserOrdersScreen:Routes("UserOrdersScreen/{orderDetails}") {
+        fun sendToOrders(cartOrderRequestModel: CartOrderRequestModel):String{
+            val userOrder = Json.encodeToString(cartOrderRequestModel)
+            return "UserOrdersScreen/${Uri.encode(userOrder)}"
         }
     }
 

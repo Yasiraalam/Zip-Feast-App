@@ -63,13 +63,15 @@ enum class EditableField {
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
 ) {
     val profileState = viewModel.profile.observeAsState(initial = Resource.Loading())
     val updatedInfo = viewModel.updatedprofile.observeAsState(initial = Resource.Loading())
+
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfile()
     }
+
     var editingField by remember {
         mutableStateOf(EditableField.NONE)
     }

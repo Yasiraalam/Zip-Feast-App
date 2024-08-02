@@ -23,7 +23,6 @@ class CartViewModel @Inject constructor(private val repository: CartRepository) 
     val totalPrice: LiveData<Double> get() = _totalPrice
 
     init {
-        // Observe changes in the cart items to recalculate totals
         allCartItems.observeForever { items ->
             calculateTotals(items)
         }

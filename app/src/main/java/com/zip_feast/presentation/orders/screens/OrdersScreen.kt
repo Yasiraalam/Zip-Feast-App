@@ -21,57 +21,58 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.presentation.orders.viewmodel.PlaceOrderViewModel
 import com.zip_feast.presentation.theme.SkyBlue
 
 @Composable
-fun OrderScreen(navHostController: NavHostController) {
+fun OrderScreen(
+    navController: NavHostController,
+    viewModel: PlaceOrderViewModel = hiltViewModel<PlaceOrderViewModel>(),
+) {
+    val userOrdersState = viewModel.fetchUserOrders.collectAsState()
+    val userOrders = userOrdersState.value.data?.data ?: emptyList()
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Order") },
             navigationIcon = {
-                IconButton(onClick = { /* Handle back navigation */ }) {
+                IconButton(onClick = { navController.navigateUp() }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                 }
             }
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        OrderCard(
-            orderNumber = "SDG1345KJD",
-            orderDate = "August 1, 2017",
-            orderStatus = "Shipping",
-            itemsPurchased = 1,
-            price = 299.43
-        )
         Spacer(modifier = Modifier.height(8.dp))
-        OrderCard(
-            orderNumber = "SDG1345KJD",
-            orderDate = "August 1, 2017",
-            orderStatus = "Shipping",
-            itemsPurchased = 1,
-            price = 299.43
-        )
+        if(userOrders.isEmpty()){
+            OrderCard(
+                orderStatus = userOrders.first().orderStatus,
+                paymentMethod = userOrders.first().paymentMethod,
+                totalAmount = userOrders.first().totalAmount,
+                totalQuantity = userOrders.first().totalQuantity,
+                deliveryAddress = userOrders.first().deliveryAddress
+            )
+        }else{
+            Text(text = "No  Orders")
+        }
+      
         Spacer(modifier = Modifier.height(8.dp))
-        OrderCard(
-            orderNumber = "SDG1345KJD",
-            orderDate = "August 1, 2017",
-            orderStatus = "Shipping",
-            itemsPurchased = 1,
-            price = 299.43
-        )
     }
 }
 
 @Composable
 fun OrderCard(
-    orderNumber: String,
-    orderDate: String,
     orderStatus: String,
-    itemsPurchased: Int,
-    price: Double
+    paymentMethod: String,
+    totalAmount: Int,
+    totalQuantity: Int,
+    deliveryAddress: String
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -86,12 +87,12 @@ fun OrderCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = orderNumber,
+                text = deliveryAddress,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Order at E-com: $orderDate",
+                text = "Payement Mode: $paymentMethod",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Normal
             )
@@ -101,12 +102,12 @@ fun OrderCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Order Status",
+                    text = "Order Status $orderStatus",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Normal
                 )
                 Text(
-                    text = orderStatus,
+                    text = "Quentity: $totalQuantity",
                     style = MaterialTheme.typography.titleSmall,
                     color = SkyBlue,
                     fontWeight = FontWeight.Normal
@@ -123,7 +124,7 @@ fun OrderCard(
                     fontWeight = FontWeight.Normal
                 )
                 Text(
-                    text = "$itemsPurchased items purchased",
+                    text = " items purchased",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Normal
                 )
@@ -134,12 +135,12 @@ fun OrderCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Price",
+                    text = "Total: $totalAmount",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "$${String.format("%.2f", price)}",
+                    text = "$${String.format("%.2f", totalAmount)}",
                     style = MaterialTheme.typography.titleMedium,
                     color = SkyBlue
                 )

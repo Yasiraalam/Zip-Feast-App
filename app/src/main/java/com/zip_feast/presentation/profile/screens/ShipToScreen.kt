@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -42,65 +43,74 @@ import com.zip_feast.utils.apputils.Resource
 @Composable
 fun ShipToScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = hiltViewModel()
-    ) {
+    viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
+) {
     LaunchedEffect(Unit) {
-        viewModel.updatedAddress
+        viewModel.fetchUserProfile()
     }
-    val userAddress = viewModel.updatedAddress.observeAsState(Resource.Loading())
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        TopAppBar(
-            title = { Text("Ship To") },
-            navigationIcon = {
-                IconButton(onClick = {
-                    navController.navigateUp()
-                }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+    val userAddress = viewModel.profile.observeAsState(Resource.Loading())
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Ship To") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /* Handle add action */ }) {
+                        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Address")
+                    }
                 }
-            },
-            actions = {
-                IconButton(onClick = { /* Handle add action */ }) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+            )
+        },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                ShipToCard(
+                    state = userAddress.value.data?.data?.state ?: "No state available",
+                    address = userAddress.value.data?.data?.address ?: "No address available",
+                    phoneNumber = userAddress.value.data?.data?.phone ?: "No phone number available",
+                    city = userAddress.value.data?.data?.city ?: "No city available",
+                    navController = navController
+                )
+                Button(
+                    onClick = { /* Handle next action */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = Color(0xFF64C8FF)
+                    )
+                ) {
+                    Text(
+                        text = "Next",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        ShipToCard(
-            state = userAddress.value.data?.data?.state ?: "No state available",
-            address = userAddress.value.data?.data?.address ?: "No address available",
-            phoneNumber = userAddress.value.data?.data?.phone ?: "No phone number available",
-            city = userAddress.value.data?.data?.city ?: "No city available",
-            navController = navController
-        )
-        Button(
-            onClick = { /* Handle next action */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            colors = ButtonDefaults.buttonColors(
-                contentColor = Color(0xFF64C8FF)
-            )
-        ) {
-            Text(
-                text = "Next",
-                color = Color.White,
-                style = MaterialTheme.typography.titleMedium
-            )
         }
-    }
+    )
 }
 
 @Composable
 fun ShipToCard(
     state: String?,
     address: String?,
-    city:String?,
+    city: String?,
     phoneNumber: String?,
     navController: NavHostController
-
 ) {
     Card(
         elevation = CardDefaults.elevatedCardElevation(
@@ -115,16 +125,16 @@ fun ShipToCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = state?:"state",
+                text = state ?: "State",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = address?:"address",
+                text = address ?: "Address",
                 style = MaterialTheme.typography.titleSmall
             )
             Text(
-                text = phoneNumber?:"Phone number",
+                text = phoneNumber ?: "Phone number",
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.height(16.dp))

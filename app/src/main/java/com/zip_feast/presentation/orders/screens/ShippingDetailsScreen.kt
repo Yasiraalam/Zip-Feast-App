@@ -33,10 +33,10 @@ fun ShippingDetailsScreen(
 
     val orderInformation by placeOrderViewModel.orderInformation.collectAsState()
     val context = LocalContext.current
+
     LaunchedEffect(orderInformation) {
         when (orderInformation) {
             is Resource.Success -> {
-                val message = "Order placed successfully!"
                 navController.navigate(Routes.OrderSuccessScreen.routes)
             }
             is Resource.Error -> {
@@ -72,12 +72,6 @@ fun ShippingDetailsScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Email") }
-            )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = address,

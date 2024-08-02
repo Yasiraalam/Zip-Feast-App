@@ -32,7 +32,7 @@ interface UserApi {
     @GET("user/profile")
     suspend fun getProfileInfo(
         @Header("Authorization") token: String
-    ):Response<UserProfileResponse>
+    ): Response<UserProfileResponse>
 
     @PUT("profile")
     suspend fun updateUserProfile(
@@ -50,6 +50,12 @@ interface UserApi {
     suspend fun userOrder(
         @Header("Authorization") token: String,
         @Body cartOrderRequestModel: CartOrderRequestModel
+    ): Response<CartOrderResponseModel>
+
+    @GET("user/order/all")
+    suspend fun getAllUserOrders(
+        @Header("Authorization") token: String,
+        @Body artOrderRequestModel: CartOrderRequestModel
     ):Response<CartOrderResponseModel>
 
 }

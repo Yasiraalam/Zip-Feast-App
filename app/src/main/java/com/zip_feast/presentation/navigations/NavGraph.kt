@@ -62,18 +62,15 @@ fun NavGraph(
         ) { backStackEntry ->
             val productJson = backStackEntry.arguments?.getString("product")
             val product = Json.decodeFromString<Data>(productJson!!)
-            ProductDetailScreen(product=product, navController = navController){
+            ProductDetailScreen(product = product, navController = navController) {
                 navController.navigateUp()
             }
         }
-        composable(route = Routes.ProfileScreen.routes){
+        composable(route = Routes.ProfileScreen.routes) {
             ProfileScreen(navController = navController)
         }
-        composable(route = Routes.OrderScreen.routes){
-            OrderScreen(navController)
-        }
-        composable(route = Routes.ShipToScreen.routes){
-            ShipToScreen(navController =navController)
+        composable(route = Routes.ShipToScreen.routes) {
+            ShipToScreen(navController = navController)
         }
 
         composable(
@@ -83,7 +80,11 @@ fun NavGraph(
             val userAddressJson = backStackEntry.arguments?.getString("userAddress")
             val userAddress = Json.decodeFromString<UserAddress>(userAddressJson!!)
             val viewModel = hiltViewModel<ProfileViewModel>()
-            EditAddressScreen(navController = navController, userAddress =userAddress , viewModel = viewModel)
+            EditAddressScreen(
+                navController = navController,
+                userAddress = userAddress,
+                viewModel = viewModel
+            )
         }
 
         composable(
@@ -91,7 +92,8 @@ fun NavGraph(
             arguments = listOf(navArgument("orderDetails") { type = NavType.StringType })
         ) { navBackStackEntry ->
             val orderDetailsJson = navBackStackEntry.arguments?.getString("orderDetails")
-            val cartOrderRequestModel = orderDetailsJson?.let { Json.decodeFromString<CartOrderRequestModel>(it) }
+            val cartOrderRequestModel =
+                orderDetailsJson?.let { Json.decodeFromString<CartOrderRequestModel>(it) }
 
             cartOrderRequestModel?.let {
                 ShippingDetailsScreen(cartOrderRequestModel = it, navController = navController) {
@@ -99,13 +101,13 @@ fun NavGraph(
                 }
             }
         }
-        composable(
-            route= Routes.OrderSuccessScreen.routes
-        ){
-            SuccessScreen(navController = navController){
+        composable(route = Routes.OrderSuccessScreen.routes) {
+            SuccessScreen(navController = navController) {
                 navController.navigateUp()
             }
-
+        }
+        composable(route = Routes.UserOrdersScreen.routes) {
+            OrderScreen(navController = navController)
         }
     }
 }

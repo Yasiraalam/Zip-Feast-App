@@ -26,6 +26,9 @@ class PlaceOrderViewModel @Inject constructor(
     val orderInformation: StateFlow<Resource<CartOrderResponseModel>> =
         _orderInformation.asStateFlow()
 
+    private val _fetchUserOrders= MutableStateFlow<Resource<CartOrderResponseModel>>(Resource.Loading())
+    val fetchUserOrders: StateFlow<Resource<CartOrderResponseModel>> =_fetchUserOrders.asStateFlow()
+
     fun placeOrder(cartOrderRequestModel: CartOrderRequestModel) {
         val token = authRepository.getToken()
         if (token != null) {
@@ -43,10 +46,26 @@ class PlaceOrderViewModel @Inject constructor(
                     }
                 }
             }
-        }else{
+        } else {
             Log.d("PlaceOrder", "placeOrder: token is null")
         }
     }
-
-
+    fun fetchUserOrders(cartOrderRequestModel: CartOrderRequestModel){
+        val token = authRepository.getToken()
+        if(token != null){
+            viewModelScope.launch {
+                try {
+                    val result = userRepository.fetchUserOrders(token, cartOrderRequestModel)
+                    Log.d("FetchOrder", "fetchUserOrders: ${result.data?.data}")
+                    _fetchUserOrders.value = result
+                } catch (e: Exception) {
+                    Log.d("FetchOrder", "placeOrder: error Order")
+                    _fetchUserOrders.value =
+                        Resource.Error("An unknown error occurred. Try again!")
+                }
+            }
+        }else{
+            Log.d("FetchOrder" ,"fetchUserOrders: Token is null")
+        }
+    }
 }

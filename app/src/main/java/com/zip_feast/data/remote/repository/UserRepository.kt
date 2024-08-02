@@ -24,7 +24,7 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
     }
 
     suspend fun loginUser(loginModel: LoginModel): Response<LoginResponseModel> {
-        return  userApi.loginUser(loginModel)
+        return userApi.loginUser(loginModel)
     }
 
     suspend fun getProducts(token: String): Resource<AllProductsResponseModel> {
@@ -41,14 +41,14 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
                 Resource.Error("Error: ${response.message()}")
             }
         } catch (e: Exception) {
-            Resource.Error( "An unknown error occurred.Try again!")
+            Resource.Error("An unknown error occurred.Try again!")
         }
     }
 
     suspend fun getUserProfile(token: String): Resource<UserProfileResponse> {
         return try {
             val response = userApi.getProfileInfo("Bearer $token")
-            Log.d("repository", "${response.body() } ")
+            Log.d("repository", "${response.body()} ")
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
@@ -64,7 +64,10 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
         }
     }
 
-    suspend fun updateUserProfile(token: String, userInfoUpdate: UserInfoUpdate): Resource<UserProfileResponse> {
+    suspend fun updateUserProfile(
+        token: String,
+        userInfoUpdate: UserInfoUpdate
+    ): Resource<UserProfileResponse> {
         return try {
             val response = userApi.updateUserProfile("Bearer $token", userInfoUpdate)
             if (response.isSuccessful) {
@@ -83,7 +86,10 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
         }
     }
 
-    suspend fun updateUserAddress(token: String, userAddress: UserAddress): Resource<UserProfileResponse> {
+    suspend fun updateUserAddress(
+        token: String,
+        userAddress: UserAddress
+    ): Resource<UserProfileResponse> {
         return try {
             val response = userApi.updateUserAddress("Bearer $token", userAddress)
             if (response.isSuccessful) {
@@ -102,7 +108,10 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
         }
     }
 
-    suspend fun userOrder(token: String, cartOrderRequestModel: CartOrderRequestModel): Resource<CartOrderResponseModel> {
+    suspend fun userOrder(
+        token: String,
+        cartOrderRequestModel: CartOrderRequestModel
+    ): Resource<CartOrderResponseModel> {
         return try {
             val response = userApi.userOrder("Bearer $token", cartOrderRequestModel)
             Log.d("RepositoryOrder", "Request Model: $cartOrderRequestModel")
@@ -126,5 +135,27 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
         }
     }
 
-
+    suspend fun fetchUserOrders(
+        token: String,
+        cartOrderRequestModel: CartOrderRequestModel
+    ): Resource<CartOrderResponseModel> {
+        return try {
+            val response = userApi.getAllUserOrders(token,cartOrderRequestModel)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    Log.d("RepositoryOrder", "userOrder response body: $it")
+                    Resource.Success(it)
+                } ?: run {
+                    Log.d("RepositoryOrder", "Response body is null")
+                    Resource.Error("Response body is null")
+                }
+            } else {
+                val errorMsg = response.errorBody()?.string() ?: response.message()
+                Log.d("RepositoryOrder", "Error response: $errorMsg")
+                Resource.Error("Error: $errorMsg")
+            }
+        } catch (e: Exception) {
+            Resource.Error("An unknown error occurred. Try again!")
+        }
+    }
 }
