@@ -1,6 +1,5 @@
 package com.zip_feast.presentation.orders.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.orders.viewmodel.PlaceOrderViewModel
 import com.zip_feast.utils.apputils.Resource

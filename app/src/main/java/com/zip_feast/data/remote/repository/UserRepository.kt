@@ -9,8 +9,8 @@ import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
 import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
-import com.zip_feast.data.remote.models.ordersModels.CartOrderResponseModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response
@@ -114,8 +114,6 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
     ): Resource<CartOrderResponseModel> {
         return try {
             val response = userApi.userOrder("Bearer $token", cartOrderRequestModel)
-            Log.d("RepositoryOrder", "Request Model: $cartOrderRequestModel")
-            Log.d("RepositoryOrder", "Response code: ${response.code()}")
             if (response.isSuccessful) {
                 response.body()?.let {
                     Log.d("RepositoryOrder", "userOrder response body: $it")
@@ -135,15 +133,12 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
         }
     }
 
-    suspend fun fetchUserOrders(
-        token: String,
-        cartOrderRequestModel: CartOrderRequestModel
-    ): Resource<CartOrderResponseModel> {
+    suspend fun fetchUserOrders(token: String): Resource<CartOrderResponseModel> {
         return try {
-            val response = userApi.getAllUserOrders(token,cartOrderRequestModel)
+            val response = userApi.getAllUserOrders("Bearer $token")
             if (response.isSuccessful) {
                 response.body()?.let {
-                    Log.d("RepositoryOrder", "userOrder response body: $it")
+                    Log.d("RepositoryOrder", "userOrder response body: ${it.data.first()}")
                     Resource.Success(it)
                 } ?: run {
                     Log.d("RepositoryOrder", "Response body is null")

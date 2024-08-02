@@ -7,8 +7,8 @@ import com.zip_feast.data.remote.models.loginModel.LoginResponseModel
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
 import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
-import com.zip_feast.data.remote.models.ordersModels.CartOrderResponseModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import retrofit2.Response
 import retrofit2.http.Body
@@ -54,8 +54,7 @@ interface UserApi {
 
     @GET("user/order/all")
     suspend fun getAllUserOrders(
-        @Header("Authorization") token: String,
-        @Body artOrderRequestModel: CartOrderRequestModel
+        @Header("Authorization") token: String
     ):Response<CartOrderResponseModel>
 
 }

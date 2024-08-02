@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
@@ -106,7 +106,7 @@ fun NavGraph(
                 navController.navigateUp()
             }
         }
-        composable(route = Routes.UserOrdersScreen.routes) {
+        composable(route = Routes.OrderScreen.routes) {
             OrderScreen(navController = navController)
         }
     }
