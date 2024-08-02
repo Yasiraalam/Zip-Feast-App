@@ -45,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +55,8 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.R
 import com.zip_feast.data.local.models.CartItem
+import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
+import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
 import com.zip_feast.presentation.navigations.Routes
@@ -143,16 +144,35 @@ fun CartItemsSection(
             ShippingItemsSection(totalQuantity,totalPrice)
         }
         item {
-            CheckOutButton()
+            CheckOutButton(cartItems,viewModel,navController,totalPrice,totalQuantity)
         }
 
     }
 }
 
 @Composable
-fun CheckOutButton() {
+fun CheckOutButton(
+    cartItems: List<CartItem>,
+    viewModel: CartViewModel,
+    navController: NavHostController,
+    totalPrice: Double,
+    totalQuantity: Int
+) {
     Button(
-        onClick = { /*TODO*/ }, 
+        onClick = {
+            val userOrderModels = cartItems.map {
+                UserOrderModel(
+                    productId = it.id,
+                    quantity = it.quantity
+                )
+            }
+            val cartOrderRequestModel = CartOrderRequestModel(
+                cart = userOrderModels,
+                deliveryAddress = "",
+                paymentMethod = ""
+            )
+            navController.navigate(Routes.ShippingDetailsScreen.sendToShip(cartOrderRequestModel))
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),

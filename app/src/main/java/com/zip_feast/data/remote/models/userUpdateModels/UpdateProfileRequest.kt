@@ -17,8 +17,7 @@ data class UpdateProfileRequest(
 )
 
 data class UserInfoUpdate(
-    val email: String,
     val phone: String? = null,
     val address: String? = null,
-
+    val email: String?
 )

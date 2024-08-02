@@ -33,19 +33,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.local.models.CartItem
+import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
 import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.SkyBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProductDetailScreen(
+    navController: NavHostController,
     product: Data,
     cartViewModel: CartViewModel = hiltViewModel<CartViewModel>(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -54,7 +58,7 @@ fun ProductDetailScreen(
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             item {
-                ProductDetail(product, cartViewModel)
+                ProductDetail(product, cartViewModel, navController = navController)
             }
         }
     }
@@ -98,7 +102,7 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
+fun ProductDetail(product: Data, cartViewModel: CartViewModel,navController: NavHostController) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     Column(
@@ -201,7 +205,15 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+//                val productsId = UserOrderModel(
+//                    productId = product.id,
+//                    quantity = 1
+//                )
+//                navController.navigate(
+//                    Routes.ShippingDetailsScreen.sendToShip(productsId)
+//                )
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Yellow,
@@ -212,9 +224,10 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel) {
                 text = "Buy Now",
                 fontWeight = FontWeight.Bold,
                 fontSize = 13.sp,
-                fontStyle = FontStyle.Normal,
+                fontStyle = FontStyle.Normal
             )
         }
     }
 }
+
 

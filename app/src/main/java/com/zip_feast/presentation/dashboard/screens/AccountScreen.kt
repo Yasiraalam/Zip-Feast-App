@@ -1,4 +1,4 @@
-package com.zip_feast.presentation.profile.screens
+package com.zip_feast.presentation.dashboard.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -77,15 +77,14 @@ fun AccountScreen(
                     TextAndIconSection(iconType = IconType.VectorIcon(Icons.Outlined.Person), text = "Profile") {
                             navController.navigate(Routes.ProfileScreen.routes)
                     }
-                    // Using DrawableIcon
-                    TextAndIconSection(iconType = IconType.DrawableIcon(painterResource(id = R.drawable.order_ic)), text = "Order") {
-                        // Handle click
+
+                    TextAndIconSection(iconType = IconType.DrawableIcon(painterResource(id = R.drawable.order_ic)), text = "Orders") {
+                        //navController.navigate(Routes.OrderScreen.routes)
                     }
 
                     TextAndIconSection(iconType = IconType.VectorIcon(Icons.Outlined.LocationOn), text = "Address") {
-                        // Handle click
+                        navController.navigate(Routes.ShipToScreen.routes)
                     }
-                    // Using DrawableIcon
                     TextAndIconSection(iconType = IconType.DrawableIcon(painterResource(id = R.drawable.payment_ic)), text = "Payment") {
                         // Handle click
                     }
