@@ -3,8 +3,8 @@ package com.zip_feast.presentation.orders.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
-import com.zip_feast.data.remote.models.ordersModels.CartOrderResponseModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.apputils.Resource
@@ -50,12 +50,12 @@ class PlaceOrderViewModel @Inject constructor(
             Log.d("PlaceOrder", "placeOrder: token is null")
         }
     }
-    fun fetchUserOrders(cartOrderRequestModel: CartOrderRequestModel){
+    fun fetchUserOrders(){
         val token = authRepository.getToken()
         if(token != null){
             viewModelScope.launch {
                 try {
-                    val result = userRepository.fetchUserOrders(token, cartOrderRequestModel)
+                    val result = userRepository.fetchUserOrders(token=token)
                     Log.d("FetchOrder", "fetchUserOrders: ${result.data?.data}")
                     _fetchUserOrders.value = result
                 } catch (e: Exception) {

@@ -78,12 +78,12 @@ val bottomNavItems = listOf(
         selectedIcon = Icons.Filled.Build,
         unselectedIcon = Icons.Outlined.Build
     ),
-    BottomNavItem(
-        title = "Explore",
-        route = Routes.ExploreScreen.routes,
-        selectedIcon = Icons.Filled.Search,
-        unselectedIcon = Icons.Outlined.Search
-    ),
+//    BottomNavItem(
+//        title = "Explore",
+//        route = Routes.ExploreScreen.routes,
+//        selectedIcon = Icons.Filled.Search,
+//        unselectedIcon = Icons.Outlined.Search
+//    ),
     BottomNavItem(
         title = "Cart",
         route = Routes.CartScreen.routes,
