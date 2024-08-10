@@ -36,6 +36,7 @@ fun ShippingDetailsScreen(
     LaunchedEffect(orderInformation) {
         when (orderInformation) {
             is Resource.Success -> {
+
                 navController.navigate(Routes.OrderSuccessScreen.routes)
             }
             is Resource.Error -> {
@@ -114,7 +115,7 @@ fun ShippingDetailsScreen(
                         Toast.makeText(context, "pay online first", Toast.LENGTH_SHORT).show()
                     } else {
                         placeOrderViewModel.placeOrder(userOrder)
-                        navController.navigateUp()
+                        navController.navigate(Routes.OrderSuccessScreen.routes)
                     }
                     
                 },

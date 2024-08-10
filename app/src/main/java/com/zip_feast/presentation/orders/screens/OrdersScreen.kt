@@ -2,6 +2,7 @@
 
 package com.zip_feast.presentation.orders.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.Data
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.orders.viewmodel.PlaceOrderViewModel
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.apputils.Resource
@@ -77,7 +81,9 @@ fun OrderScreen(
                                 paymentMethod = order.paymentMethod,
                                 totalAmount = order.totalAmount,
                                 totalQuantity = order.totalQuantity,
-                                deliveryAddress = order.deliveryAddress
+                                deliveryAddress = order.deliveryAddress,
+                                navController = navController,
+                                viewModel = viewModel
                             )
                         }
                     }
@@ -96,7 +102,9 @@ fun OrderCard(
     paymentMethod: String,
     totalAmount: Int,
     totalQuantity: Int,
-    deliveryAddress: String
+    deliveryAddress: String,
+    navController: NavHostController,
+    viewModel: PlaceOrderViewModel
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -105,6 +113,9 @@ fun OrderCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 5.dp)
+            .clickable {
+
+            }
     ) {
         Column(
             modifier = Modifier

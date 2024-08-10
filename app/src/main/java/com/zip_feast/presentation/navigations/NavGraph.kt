@@ -15,11 +15,13 @@ import androidx.navigation.navArgument
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.productsModels.Data
+import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
 import com.zip_feast.presentation.dashboard.screens.ServicesScreen
 import com.zip_feast.presentation.dashboard.screens.AccountScreen
+import com.zip_feast.presentation.dashboard.screens.ServiceProviderDetailScreen
 import com.zip_feast.presentation.orders.screens.OrderScreen
 import com.zip_feast.presentation.orders.screens.ShippingDetailsScreen
 import com.zip_feast.presentation.orders.screens.SuccessScreen
@@ -109,5 +111,21 @@ fun NavGraph(
         composable(route = Routes.OrderScreen.routes) {
             OrderScreen(navController = navController)
         }
+        composable(
+            route = Routes.ServiceProviderDetailScreen.routes,
+            arguments = listOf(navArgument("orderDetail") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderDetailJson = backStackEntry.arguments?.getString("orderDetail")
+            val orderDetail = orderDetailJson?.let { Json.decodeFromString<com.zip_feast.data.remote.models.serviceProviders.Data>(it) }
+
+            ServiceProviderDetailScreen(
+                navController = navController,
+                serviceProvider = orderDetail,
+                onBackClick = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
     }
 }

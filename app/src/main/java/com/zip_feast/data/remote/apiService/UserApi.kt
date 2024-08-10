@@ -9,7 +9,10 @@ import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
+import com.zip_feast.data.remote.models.serviceProviders.AllServiceProvidersResponseModel
+import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
+import com.zip_feast.presentation.dashboard.viewmodels.ServiceProvidersViewModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -56,5 +59,17 @@ interface UserApi {
     suspend fun getAllUserOrders(
         @Header("Authorization") token: String
     ):Response<CartOrderResponseModel>
+
+    @GET("service-providers")
+    suspend fun getAllServiceProviders(
+        @Header("Authorization") token: String
+    ):Response<AllServiceProvidersResponseModel>
+
+    @GET("service-providers")
+    suspend fun serviceProvidersDetail(
+        @Header("serviceId") serviceId :Int,
+        @Header("Authorization") token: String
+    ):Response<ServiceProviderDetailResponse>
+
 
 }

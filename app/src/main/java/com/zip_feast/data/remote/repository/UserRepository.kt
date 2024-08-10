@@ -11,6 +11,7 @@ import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
+import com.zip_feast.data.remote.models.serviceProviders.AllServiceProvidersResponseModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response

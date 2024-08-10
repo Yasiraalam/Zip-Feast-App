@@ -16,12 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.theme.SkyBlue
 
 @Composable
 fun SuccessScreen(
     navController: NavHostController,
-    onbackClick: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -56,7 +57,8 @@ fun SuccessScreen(
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
-                    onbackClick.invoke()
+                    onBackClick.invoke()
+                    navController.navigate(Routes.HomeScreen.routes)
                 },
                 modifier = Modifier.fillMaxWidth(0.5f).height(55.dp),
                 colors = ButtonDefaults.buttonColors(
