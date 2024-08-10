@@ -55,8 +55,8 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.R
 import com.zip_feast.data.local.models.CartItem
-import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.UserOrderModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
 import com.zip_feast.presentation.navigations.Routes

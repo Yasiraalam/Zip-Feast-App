@@ -2,8 +2,11 @@ package com.zip_feast.presentation.navigations
 
 import android.net.Uri
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
-import com.zip_feast.data.remote.models.ordersModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.productsModels.Data
+import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
+import com.zip_feast.presentation.dashboard.viewmodels.ServiceProvidersViewModel
+import com.zip_feast.presentation.orders.viewmodel.PlaceOrderViewModel
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -44,11 +47,12 @@ sealed class Routes(val routes:String) {
 
     data object OrderSuccessScreen: Routes("OrderSuccessScreen")
 
-    data object UserOrdersScreen:Routes("UserOrdersScreen/{orderDetails}") {
-        fun sendToOrders(cartOrderRequestModel: CartOrderRequestModel):String{
-            val userOrder = Json.encodeToString(cartOrderRequestModel)
-            return "UserOrdersScreen/${Uri.encode(userOrder)}"
+    data object ServiceProviderDetailScreen : Routes("ServiceProviderDetailScreen/{orderDetail}") {
+        fun sendToDetail(data: com.zip_feast.data.remote.models.serviceProviders.Data): String {
+            val orderDetailJson = Json.encodeToString(data)
+            return "ServiceProviderDetailScreen/${Uri.encode(orderDetailJson)}"
         }
     }
+
 
 }

@@ -1,7 +1,7 @@
 package com.zip_feast.utils.extensionFunctions
 
 import com.zip_feast.data.local.models.CartItem
-import com.zip_feast.data.remote.models.ordersModels.UserOrderModel
+import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.UserOrderModel
 
 fun CartItem.toUserOrderModel(): UserOrderModel {
     return UserOrderModel(

@@ -68,6 +68,7 @@ class AuthViewModel @Inject constructor(
             val body = response.body()
             body?.let {
                 _loginState.value = Resource.Success(it)
+                Log.d("RepositoryOrder", "Token when logged in ${it.accessToken}")
                 authRepository.saveToken(it.accessToken)
                 onLoginSuccess()
                 Log.d("AuthViewModel", "loginUser: Login successful")

@@ -1,4 +1,4 @@
-package com.zip_feast.data.remote.models.ordersModels
+package com.zip_feast.data.remote.models.ordersModels.ordersResponse
 
 import kotlinx.serialization.Serializable
 

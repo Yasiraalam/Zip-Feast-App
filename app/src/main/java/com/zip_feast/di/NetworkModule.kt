@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.zip_feast.data.remote.apiService.UserApi
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.AuthRepositoryImpl
+import com.zip_feast.data.remote.repository.ServiceProvidersRepository
 import com.zip_feast.data.remote.repository.UserRepository
 import com.zip_feast.utils.CONSTANTS.BASE_URL
 import dagger.Module
@@ -39,6 +40,11 @@ class NetworkModule {
     @Singleton
     fun provideUserRepository(userApi: UserApi): UserRepository {
         return UserRepository(userApi)
+    }
+    @Provides
+    @Singleton
+    fun provideServiceRepository(userApi: UserApi): ServiceProvidersRepository {
+        return ServiceProvidersRepository(userApi)
     }
     @Provides
     @Singleton

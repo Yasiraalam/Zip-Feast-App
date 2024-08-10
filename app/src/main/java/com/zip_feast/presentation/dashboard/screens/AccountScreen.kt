@@ -79,7 +79,7 @@ fun AccountScreen(
                     }
 
                     TextAndIconSection(iconType = IconType.DrawableIcon(painterResource(id = R.drawable.order_ic)), text = "Orders") {
-                        //navController.navigate(Routes.OrderScreen.routes)
+                        navController.navigate(Routes.OrderScreen.routes)
                     }
 
                     TextAndIconSection(iconType = IconType.VectorIcon(Icons.Outlined.LocationOn), text = "Address") {
