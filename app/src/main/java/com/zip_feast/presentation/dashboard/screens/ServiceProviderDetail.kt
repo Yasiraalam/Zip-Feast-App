@@ -1,8 +1,9 @@
 package com.zip_feast.presentation.dashboard.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,17 +24,22 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Typeface
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,9 +47,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.zip_feast.data.remote.models.serviceProviders.Data
-import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
 import com.zip_feast.presentation.dashboard.viewmodels.ServiceProvidersViewModel
 import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.utils.apputils.CustomSnackBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -54,14 +60,31 @@ fun ServiceProviderDetailScreen(
     onBackClick: () -> Unit,
     serviceProvider: Data?,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         topBar = { ProductTopAppBar(serviceProvider?.name.toString(), onBackClick) },
-        containerColor = Color.White
-    ) { innerPadding ->
+        containerColor = Color.White,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = 56.dp)
+            ) { data ->
+                CustomSnackBar(snackbarData = data)
+            }
+        },
+
+        ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             item {
-                ServiceDetail(serviceProvider, navController = navController)
+                ServiceDetail(
+                    serviceProvider,
+                    navController = navController,
+                    snackBarState = snackbarHostState,
+                    coroutineScope = coroutineScope
+                )
             }
         }
     }
@@ -72,7 +95,7 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 
     Row(
         modifier = Modifier
-            .padding(top = 50.dp, start = 10.dp, end = 5.dp)
+            .padding(top = 10.dp, start = 10.dp, end = 5.dp)
             .height(60.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -107,10 +130,10 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 @Composable
 fun ServiceDetail(
     serviceProvider: Data?,
-    navController: NavHostController
+    navController: NavHostController,
+    snackBarState: SnackbarHostState,
+    coroutineScope: CoroutineScope
 ) {
-    val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -156,7 +179,12 @@ fun ServiceDetail(
                 Text(
                     text = buildAnnotatedString {
                         append("Email: ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = SkyBlue)) {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                color = SkyBlue
+                            )
+                        ) {
                             append(serviceProvider?.email)
                         }
                     },
@@ -217,13 +245,19 @@ fun ServiceDetail(
                 .padding(horizontal = 12.dp)
                 .align(Alignment.Start)
         )
-        Spacer(modifier = Modifier
-            .height(16.dp)
-            .width(9.dp))
+        Spacer(
+            modifier = Modifier
+                .height(16.dp)
+                .width(9.dp)
+        )
         Button(
             onClick = {
                 coroutineScope.launch {
-                    Toast.makeText(context, "${serviceProvider?.name} is booked Successfully", Toast.LENGTH_SHORT).show()
+                    snackBarState.showSnackbar(
+                        message = "${serviceProvider?.name} is Booked Successfully",
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Short
+                    )
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -239,6 +273,7 @@ fun ServiceDetail(
                 fontStyle = FontStyle.Normal,
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
     }
 }

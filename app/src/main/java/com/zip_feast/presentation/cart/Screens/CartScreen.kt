@@ -34,12 +34,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,6 +64,8 @@ import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrde
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
 import com.zip_feast.presentation.navigations.Routes
+import com.zip_feast.utils.apputils.CustomSnackBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun CartScreen(
@@ -68,10 +74,18 @@ fun CartScreen(
 ) {
     val cartItems by viewModel.allCartItems.observeAsState(emptyList())
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = 56.dp)
+            ) { data ->
+                CustomSnackBar(snackbarData = data)
+            }
+        },
         topBar = {
             Box(
                 modifier = Modifier
@@ -82,7 +96,7 @@ fun CartScreen(
             ) {
                 Text(
                     text = "Your Cart",
-                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    fontSize = MaterialTheme.typography.titleSmall.fontSize,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 16.dp),
                     color = uiColor
@@ -113,7 +127,8 @@ fun CartScreen(
                 innerPadding,
                 navController = navController,
                 viewModel,
-                onRemoveItem = { viewModel.delete(it) }
+                onRemoveItem = { viewModel.delete(it) },
+                snackbarHostState
             )
         }
     }
@@ -125,7 +140,8 @@ fun CartItemsSection(
     innerPadding: PaddingValues,
     navController: NavHostController,
     viewModel: CartViewModel,
-    onRemoveItem: (CartItem) -> Unit
+    onRemoveItem: (CartItem) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
     val totalQuantity by viewModel.totalQuantity.observeAsState(0)
     val totalPrice by viewModel.totalPrice.observeAsState(0.0)
@@ -139,12 +155,12 @@ fun CartItemsSection(
             CartItemCard(cartItem, viewModel, navController = navController, onRemoveItem)
         }
         item {
-            CouponSection()
+            CouponSection(snackbarHostState)
             Spacer(modifier = Modifier.height(10.dp))
             ShippingItemsSection(totalQuantity,totalPrice)
         }
         item {
-            CheckOutButton(cartItems,viewModel,navController,totalPrice,totalQuantity)
+            CheckOutButton(cartItems,viewModel,navController,totalPrice,totalQuantity,snackbarHostState)
         }
 
     }
@@ -156,7 +172,8 @@ fun CheckOutButton(
     viewModel: CartViewModel,
     navController: NavHostController,
     totalPrice: Double,
-    totalQuantity: Int
+    totalQuantity: Int,
+    snackbarHostState: SnackbarHostState
 ) {
     Button(
         onClick = {
@@ -275,12 +292,13 @@ fun CartItemCard(
 }
 
 @Composable
-fun CouponSection() {
+fun CouponSection(snackbarHostState: SnackbarHostState) {
     var couponCode by remember { mutableStateOf("") }
     val uiColor = if (isSystemInDarkTheme()) Color.White else Color.Gray
+    val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
+            .padding(vertical = 8.dp, horizontal = 10.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -288,17 +306,26 @@ fun CouponSection() {
         OutlinedTextField(
             singleLine = true,
             modifier = Modifier
-                .height(75.dp),
+                .weight(1f)
+                .height(55.dp),
             maxLines = 1,
             value = couponCode,
             onValueChange = { couponCode = it },
-            label = { Text("Coupon Code", fontSize = 10.sp, color = uiColor) },
+            label = { Text("Coupon Code", fontSize = 14.sp, color = uiColor) },
         )
         Spacer(modifier = Modifier.width(8.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "No Coupon is Available Now ",
+                        actionLabel = "Ok",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            },
             modifier = Modifier
-                .fillMaxWidth(),
+                .height(55.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SkyBlue,
                 contentColor = Color.White
@@ -306,7 +333,7 @@ fun CouponSection() {
         ) {
             Text(
                 text = "Apply",
-                fontSize = 8.sp,
+                fontSize = 12.sp,
                 fontStyle = FontStyle.Normal,
                 color = Color.White
             )

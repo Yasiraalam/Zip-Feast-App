@@ -1,4 +1,3 @@
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +20,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +42,7 @@ import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
 import com.zip_feast.presentation.theme.SkyBlue
+import com.zip_feast.utils.apputils.CustomSnackBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -49,14 +53,25 @@ fun ProductDetailScreen(
     cartViewModel: CartViewModel = hiltViewModel<CartViewModel>(),
     onBackClick: () -> Unit,
 ) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         topBar = { ProductTopAppBar(product.name, onBackClick) },
-        containerColor = Color.White
+        containerColor = Color.White,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = 56.dp)
+            ) { data ->
+                CustomSnackBar(snackbarData = data)
+            }
+        }
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             item {
-                ProductDetail(product, cartViewModel, navController = navController)
+                ProductDetail(product, cartViewModel, navController = navController,snackbarHostState)
             }
         }
     }
@@ -67,7 +82,7 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 
     Row(
         modifier = Modifier
-            .padding(top = 50.dp, start = 10.dp, end = 5.dp)
+            .padding(top = 20.dp, start = 10.dp, end = 5.dp)
             .height(60.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -100,7 +115,12 @@ fun ProductTopAppBar(productName: String, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ProductDetail(product: Data, cartViewModel: CartViewModel,navController: NavHostController) {
+fun ProductDetail(
+    product: Data,
+    cartViewModel: CartViewModel,
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState
+) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     Column(
@@ -185,7 +205,10 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel,navController: Nav
                         quantity = 1
                     )
                     cartViewModel.insert(cartItem)
-                    Toast.makeText(context, "Item added in Cart", Toast.LENGTH_SHORT).show()
+                    snackbarHostState.showSnackbar(
+                        message = "${product.name} added to cart",
+                        duration = SnackbarDuration.Short
+                    )
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -225,6 +248,7 @@ fun ProductDetail(product: Data, cartViewModel: CartViewModel,navController: Nav
                 fontStyle = FontStyle.Normal
             )
         }
+        Spacer(modifier = Modifier.height(26.dp))
     }
 }
 
