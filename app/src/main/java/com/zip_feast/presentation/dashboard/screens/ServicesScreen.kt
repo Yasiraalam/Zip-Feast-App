@@ -75,13 +75,13 @@ fun ServicesScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
+                    .height(70.dp)
                     .padding(top = 40.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     text = "Service Providers",
-                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    fontSize = MaterialTheme.typography.titleSmall.fontSize,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 16.dp),
                     color = uiColor
@@ -121,9 +121,9 @@ fun ServicesScreen(
                     item {
                         Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
-                            Text(text = "Loading...", color = uiColor)
+                            Text(text = "Loading...", color = uiColor, modifier = Modifier.align(Alignment.Center))
                         }
                     }
                 }
@@ -134,7 +134,7 @@ fun ServicesScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(text = "Error: ${state.errorMessage}", color = uiColor)
+                            Text(text = "No Service Provider Available Now!", color = uiColor, modifier = Modifier.align(Alignment.Center))
                         }
                     }
                 }

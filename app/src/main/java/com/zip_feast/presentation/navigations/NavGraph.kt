@@ -16,6 +16,7 @@ import com.zip_feast.data.remote.models.ProfileModel.UserAddress
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
+import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen

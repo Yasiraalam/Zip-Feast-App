@@ -25,8 +25,6 @@ class ServiceProvidersViewModel @Inject constructor(
     private val _serviceProviders =MutableStateFlow<Resource<AllServiceProvidersResponseModel>>(Resource.Loading())
     val serviceProviders: StateFlow<Resource<AllServiceProvidersResponseModel>> =_serviceProviders.asStateFlow()
 
-    private val _serviceProviderDetail =MutableStateFlow<Resource<ServiceProviderDetailResponse>>(Resource.Loading())
-    val serviceProviderDetail: StateFlow<Resource<ServiceProviderDetailResponse>> =_serviceProviderDetail.asStateFlow()
 
     fun getAllServiceProviders(){
         val token = authRepository.getToken()
@@ -46,4 +44,5 @@ class ServiceProvidersViewModel @Inject constructor(
             Log.d("ServiceProviders" ,"fetchUserOrders: Token is null")
         }
     }
+
 }
