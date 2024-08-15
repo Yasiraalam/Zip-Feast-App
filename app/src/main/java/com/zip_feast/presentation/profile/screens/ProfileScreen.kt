@@ -66,7 +66,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
 ) {
     val profileState = viewModel.profile.observeAsState(initial = Resource.Loading())
-    val updatedInfo = viewModel.updatedprofile.observeAsState(initial = Resource.Loading())
+    val updatedProfileState = viewModel.userUpdatedProfile.observeAsState(initial = Resource.Loading())
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfile()
@@ -102,7 +102,6 @@ fun ProfileScreen(
             }
 
             is Resource.Success -> {
-                // Show profile data
                 val profile = (profileState.value as Resource.Success).data
                 LaunchedEffect(profile) {
                     tempPhone = profile?.data?.phone ?: ""
@@ -154,7 +153,7 @@ fun ProfileScreen(
                     ProfileItem(
                         icon = Icons.Default.Info,
                         label = "Address",
-                        value = ((profile?.data?.state + " " + profile?.data?.address + " " + profile?.data?.pincode).toString()),
+                        value = ((profile?.data?.state + " " + profile?.data?.address + " " + profile?.data?.pincode)),
                         onValueChange = {
                             tempAddress = it
                             updateButtonEnabled = true
@@ -185,21 +184,6 @@ fun ProfileScreen(
                     ) {
                         Text(text = "Update Info")
                     }
-                    val context = LocalContext.current
-                    LaunchedEffect(key1 = profileState.value) {
-                        if (updatedInfo.value is Resource.Success) {
-                            // Show success message, update UI, etc.
-                            Toast.makeText(
-                                context,
-                                "Profile updated successfully!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.fetchUserProfile() // Refresh the user profile
-                        } else if (updatedInfo.value is Resource.Error) {
-                            // Show error message to the user
-                        }
-                    }
-
                 }
             }
 
@@ -272,19 +256,7 @@ fun ProfileScreen(
                     ) {
                         Text(text = "Update Info")
                     }
-                    val context = LocalContext.current
-                    LaunchedEffect(key1 = updatedInfo.value) {
-                        if (updatedInfo.value is Resource.Success) {
-                            Toast.makeText(
-                                context,
-                                "Profile updated successfully!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.fetchUserProfile()
-                        } else if (updatedInfo.value is Resource.Error) {
-                            // Show error message to the user
-                        }
-                    }
+
                 }
             }
         }

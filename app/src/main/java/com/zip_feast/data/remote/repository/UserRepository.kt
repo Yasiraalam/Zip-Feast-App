@@ -12,6 +12,7 @@ import com.zip_feast.data.remote.models.loginModel.UserResponse
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
 import com.zip_feast.data.remote.models.serviceProviders.AllServiceProvidersResponseModel
+import com.zip_feast.data.remote.models.updatemodels.UserUpdateResModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response
@@ -68,18 +69,20 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
     suspend fun updateUserProfile(
         token: String,
         userInfoUpdate: UserInfoUpdate
-    ): Resource<UserProfileResponse> {
+    ): Resource<UserUpdateResModel> {
         return try {
             val response = userApi.updateUserProfile("Bearer $token", userInfoUpdate)
             if (response.isSuccessful) {
                 val body = response.body()
+                Log.d("updateUserProfileRepository", "updateUserProfile: ${body?.data?.phone}")
                 if (body != null) {
-                    Log.d("Repository", "updateUserProfile: ${body.data.phone}")
+                    Log.d("updateUserProfileRepository", "updateUserProfile: ${body.data.phone}")
                     Resource.Success(body)
                 } else {
-                    Resource.Error("Response body is null")
+                    Resource.Error("Response body or data is null")
                 }
             } else {
+                Log.d("updateUserProfileRepository", "Error occured ${response.message()}")
                 Resource.Error("Error: ${response.message()}")
             }
         } catch (e: Exception) {
