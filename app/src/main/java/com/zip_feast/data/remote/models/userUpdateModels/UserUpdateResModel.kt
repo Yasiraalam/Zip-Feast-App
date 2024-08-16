@@ -1,4 +1,4 @@
-package com.zip_feast.data.remote.models.updatemodels
+package com.zip_feast.data.remote.models.userUpdateModels
 
 import kotlinx.serialization.Serializable
 

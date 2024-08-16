@@ -3,7 +3,7 @@ package com.zip_feast.data.remote.models.ordersModels.ordersResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Data(
+data class OrderDetails(
     val createdAt: String,
     val deliveryAddress: String,
     val id: Int,

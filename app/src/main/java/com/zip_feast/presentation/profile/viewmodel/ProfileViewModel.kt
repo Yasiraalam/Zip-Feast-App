@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
 import com.zip_feast.data.remote.models.ProfileModel.UserProfileResponse
-import com.zip_feast.data.remote.models.updatemodels.UserUpdateResModel
+import com.zip_feast.data.remote.models.userUpdateModels.UserUpdateResModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.data.remote.repository.UserRepository

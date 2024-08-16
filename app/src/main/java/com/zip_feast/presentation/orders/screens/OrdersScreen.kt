@@ -21,20 +21,27 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.zip_feast.data.remote.models.ProfileModel.Order
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.OrderDetails
+import com.zip_feast.presentation.navigations.Routes
 import com.zip_feast.presentation.orders.viewmodel.PlaceOrderViewModel
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.utils.apputils.Resource
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
 fun OrderScreen(
@@ -48,48 +55,60 @@ fun OrderScreen(
     val userOrdersState = viewModel.fetchUserOrders.collectAsState()
     val userOrders = userOrdersState.value.data?.data ?: emptyList()
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text("Order") },
-            navigationIcon = {
-                IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-                }
-            }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        when (userOrdersState.value) {
-            is Resource.Loading -> {
-                Text(text = "Loading...", modifier = Modifier.padding(16.dp))
-            }
-            is Resource.Error -> {
-                Text(text = "${(userOrdersState.value as Resource.Error).errorMessage}", modifier = Modifier.padding(16.dp))
-            }
-            is Resource.Success -> {
-                if (userOrders.isNotEmpty()) {
-                    LazyColumn(
-                        modifier =  Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(userOrders) { order ->
-                            OrderCard(
-                                orderStatus = order.orderStatus,
-                                paymentMethod = order.paymentMethod,
-                                totalAmount = order.totalAmount,
-                                totalQuantity = order.totalQuantity,
-                                deliveryAddress = order.deliveryAddress,
-                                navController = navController,
-                                viewModel = viewModel
-                            )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text("Your Orders") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+            )
+        },
+        content = {innerPadding->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                when (userOrdersState.value) {
+                    is Resource.Loading -> {
+                        Text(text = "Loading...", modifier = Modifier.padding(16.dp))
+                    }
+                    is Resource.Error -> {
+                        Text(text = "${(userOrdersState.value as Resource.Error).errorMessage}", modifier = Modifier.padding(16.dp))
+                    }
+                    is Resource.Success -> {
+                        if (userOrders.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(userOrders) { order ->
+                                    OrderCard(
+                                        orderDetails = order,
+                                        orderStatus = order.orderStatus,
+                                        paymentMethod = order.paymentMethod,
+                                        totalAmount = order.totalAmount,
+                                        totalQuantity = order.totalQuantity,
+                                        deliveryAddress = order.deliveryAddress,
+                                        navController = navController
+                                    )
+                                }
+                            }
+                        } else {
+                            Text(text = "No Orders", modifier = Modifier.padding(16.dp))
                         }
                     }
-                } else {
-                    Text(text = "No Orders", modifier = Modifier.padding(16.dp))
                 }
             }
         }
-    }
+    )
+
+
 }
 
 
@@ -101,8 +120,13 @@ fun OrderCard(
     totalQuantity: Int,
     deliveryAddress: String,
     navController: NavHostController,
-    viewModel: PlaceOrderViewModel
+    orderDetails: OrderDetails
 ) {
+    val statusColor = when (orderStatus) {
+        "PENDING", "ARRIVED" -> Color.Red
+        "DELIVERED" -> SkyBlue
+        else -> MaterialTheme.colorScheme.onSurface
+    }
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
@@ -111,7 +135,8 @@ fun OrderCard(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 5.dp)
             .clickable {
-
+                val orderJson = Json.encodeToString(orderDetails)
+                navController.navigate(Routes.OrderDetailScreen.sendToDetail(orderJson))
             }
     ) {
         Column(
@@ -143,7 +168,7 @@ fun OrderCard(
                 Text(
                     text = orderStatus,
                     style = MaterialTheme.typography.titleSmall,
-                    color = SkyBlue,
+                    color = statusColor,
                     fontWeight = FontWeight.Normal
                 )
             }
@@ -174,9 +199,9 @@ fun OrderCard(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "$totalAmount",
+                    text = "Rs: $totalAmount.00",
                     style = MaterialTheme.typography.titleMedium,
-                    color = SkyBlue
+                    color = Color.Red
                 )
             }
         }

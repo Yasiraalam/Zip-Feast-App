@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CartOrderResponseModel(
-    val `data`: List<Data>,
+    val `data`: List<OrderDetails>,
     val message: String,
     val status: String
 )

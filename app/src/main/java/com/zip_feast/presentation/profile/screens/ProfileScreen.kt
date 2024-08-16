@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -71,14 +72,12 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfile()
     }
-
     var editingField by remember {
         mutableStateOf(EditableField.NONE)
     }
     var tempPhone by remember { mutableStateOf("") }
     var tempEmail by remember { mutableStateOf("") }
     var tempAddress by remember { mutableStateOf("") }
-
     var updateButtonEnabled by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -98,16 +97,18 @@ fun ProfileScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = "Loading...")
+                    CircularProgressIndicator()
                 }
             }
-
             is Resource.Success -> {
                 val profile = (profileState.value as Resource.Success).data
                 LaunchedEffect(profile) {
-                    tempPhone = profile?.data?.phone ?: ""
-                    tempEmail = profile?.data?.email ?: ""
+                    tempPhone = profile?.data?.phone ?: updatedProfileState.value.data?.data?.phone ?: ""
+                    tempEmail = profile?.data?.email ?: updatedProfileState.value.data?.data?.email ?: ""
                     tempAddress =
-                        "${profile?.data?.state ?: ""} ${profile?.data?.address ?: ""} ${profile?.data?.pincode ?: ""}"
+                        "${profile?.data?.state ?: updatedProfileState.value.data?.data?.state ?: ""} " +
+                                (profile?.data?.address ?: updatedProfileState.value.data?.data?.address ?: "") +
+                                " ${profile?.data?.pincode ?:""}"
                 }
                 Column(
                     modifier = Modifier

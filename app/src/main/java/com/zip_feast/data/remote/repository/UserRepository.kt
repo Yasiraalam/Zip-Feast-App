@@ -11,8 +11,7 @@ import com.zip_feast.data.remote.models.loginModel.UserRequest
 import com.zip_feast.data.remote.models.loginModel.UserResponse
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
 import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
-import com.zip_feast.data.remote.models.serviceProviders.AllServiceProvidersResponseModel
-import com.zip_feast.data.remote.models.updatemodels.UserUpdateResModel
+import com.zip_feast.data.remote.models.userUpdateModels.UserUpdateResModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
 import com.zip_feast.utils.apputils.Resource
 import retrofit2.Response
@@ -72,6 +71,7 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
     ): Resource<UserUpdateResModel> {
         return try {
             val response = userApi.updateUserProfile("Bearer $token", userInfoUpdate)
+            Log.d("updateUserProfileRepository", "updateUserProfile: before success")
             if (response.isSuccessful) {
                 val body = response.body()
                 Log.d("updateUserProfileRepository", "updateUserProfile: ${body?.data?.phone}")
@@ -157,4 +157,25 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
             Resource.Error("An unknown error occurred. Try again!")
         }
     }
+//    suspend fun getOrderDetails(orderId: Int, token: String): Resource<OrderDetailsResponseModel> {
+//        return try {
+//            val response = userApi.getOrderDetails(orderId= orderId, "Bearer $token")
+//            if (response.isSuccessful) {
+//                response.body()?.let {
+//                    Log.d("RepositoryOrder", "Order details response body: ${it.data}")
+//                    Resource.Success(it)
+//                } ?: run {
+//                    Log.d("RepositoryOrder", "Response body is null")
+//                    Resource.Error("Response body is null")
+//                }
+//            } else {
+//                val errorMsg = response.errorBody()?.string() ?: response.message()
+//                Log.d("RepositoryOrder", "Error response: $errorMsg")
+//                Resource.Error("Error: $errorMsg")
+//            }
+//        } catch (e: Exception) {
+//            Resource.Error("An unknown error occurred. Try again!")
+//        }
+//    }
+
 }
