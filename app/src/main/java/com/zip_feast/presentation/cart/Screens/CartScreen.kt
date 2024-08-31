@@ -1,6 +1,7 @@
 package com.zip_feast.presentation.cart.Screens
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +63,7 @@ import com.zip_feast.R
 import com.zip_feast.data.local.models.CartItem
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.UserOrderModel
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.productsModels.Data
 import com.zip_feast.presentation.theme.SkyBlue
 import com.zip_feast.presentation.cart.cartViewmodel.CartViewModel
 import com.zip_feast.presentation.navigations.Routes
@@ -117,19 +120,45 @@ fun CartScreen(
         },
     ) { innerPadding ->
         val innerPadding = innerPadding
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CartItemsSection(
-                cartItems,
-                innerPadding,
-                navController = navController,
-                viewModel,
-                onRemoveItem = { viewModel.delete(it) },
-                snackbarHostState
-            )
+        if (cartItems.isEmpty()) {
+            // No items found screen
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.order_ic),
+                        contentDescription = "Empty Cart",
+                        modifier = Modifier.size(150.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "No items found in your cart",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray
+                    )
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                CartItemsSection(
+                    cartItems,
+                    innerPadding,
+                    navController = navController,
+                    viewModel,
+                    onRemoveItem = { viewModel.delete(it) },
+                    snackbarHostState
+                )
+            }
         }
     }
 }
@@ -275,6 +304,7 @@ fun CartItemCard(
     navController: NavHostController,
     onRemoveItem: (CartItem) -> Unit
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -352,7 +382,23 @@ private fun CartItem(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .clickable {},
+            .clickable {
+                val productDetail = Data(
+                    id = cartItem.id,
+                    name = cartItem.name,
+                    description = cartItem.description,
+                    price = cartItem.price,
+                    productImage = cartItem.productImage,
+                    stock = cartItem.stock,
+                    createdAt = cartItem.createdAt,
+                    updatedAt = cartItem.updatedAt,
+                    category = cartItem.category,
+                    merchant = cartItem.merchant,
+                    merchantId = cartItem.merchantId,
+                    isAvailable = cartItem.isAvailable
+                )
+                navController.navigate(Routes.ProductDetailScreen.createRoute(productDetail))
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
