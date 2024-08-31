@@ -68,19 +68,4 @@ class PlaceOrderViewModel @Inject constructor(
             Log.d("FetchOrder" ,"fetchUserOrders: Token is null")
         }
     }
-
-//    private val _orderDetails = MutableStateFlow<Resource<OrderDetailsResponseModel>>(Resource.Loading())
-//    val orderDetails: StateFlow<Resource<OrderDetailsResponseModel>> = _orderDetails.asStateFlow()
-//
-//    fun fetchOrderDetails(orderId: Int) {
-//        val token = authRepository.getToken()
-//        if(token != null){
-//            viewModelScope.launch {
-//                _orderDetails.value = userRepository.getOrderDetails(orderId=orderId,token= token)
-//            }
-//        }else{
-//            Log.d("FetchUserOrderDetails", "fetchOrderDetails: Token is null")
-//        }
-//
-//    }
 }

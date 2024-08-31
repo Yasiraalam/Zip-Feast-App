@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +32,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -92,9 +95,8 @@ fun ProductDetail(orderData: OrderDetails?) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ProductProgressIndicator(currentStep = 0)
+        ProductProgressIndicator(orderStatus = orderData?.orderStatus.toString())
     }
-
     ProductCard(
         productName = orderData?.items?.first()?.product?.name.toString(),
         productImage = orderData?.items?.first()?.product?.productImage,
@@ -158,29 +160,75 @@ fun ProductDetail(orderData: OrderDetails?) {
 }
 
 @Composable
-fun ProductProgressIndicator(currentStep: Int) {
+fun ProductProgressIndicator(orderStatus: String) {
     val steps = listOf(
-        Pair(currentStep == 0, Color(0xFF56D4FD)),
-        Pair(currentStep == 1, Color.Gray),
-        Pair(currentStep == 2, Color.Gray),
-        Pair(currentStep == 3, Color.Gray)
+        "Order Placed",
+        "Shipped",
+        "Out for Delivery",
+        "Delivered"
     )
-    Row(
-        modifier = Modifier
-            .padding(vertical = 16.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround
+
+    val currentStep = when (orderStatus) {
+        "PENDING" -> 1
+        "ARRIVING" -> 2
+        "DELIVERED" -> 4
+        else -> 0
+    }
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        steps.forEach { (isActive, color) ->
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(CircleShape)
-                    .background(if (isActive) color else Color.LightGray)
-            )
+        Row(
+            modifier = Modifier
+                .padding(start = 26.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            steps.forEachIndexed { index, _ ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(23.dp)
+                            .clip(CircleShape)
+                            .background(if (index <= currentStep) SkyBlue else Color.LightGray)
+                    )
+
+                    if (index < steps.size - 1) {
+                        Spacer(
+                            modifier = Modifier
+                                .height(2.dp)
+                                .weight(1f)
+                                .background(if (index < currentStep) SkyBlue else Color.LightGray)
+                        )
+                    }
+                }
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            steps.forEach { status ->
+                Text(
+                    text = status,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(vertical = 2.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun ProductCard(
