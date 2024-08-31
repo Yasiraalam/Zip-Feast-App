@@ -47,6 +47,12 @@ sealed class Routes(val routes:String) {
 
     data object OrderSuccessScreen: Routes("OrderSuccessScreen")
 
+    data object OrderDetailScreen : Routes("OrderDetailScreen/{order}") {
+        fun sendToDetail(order: String): String {
+            return "OrderDetailScreen/${Uri.encode(order)}"
+        }
+    }
+
     data object ServiceProviderDetailScreen : Routes("ServiceProviderDetailScreen/{orderDetail}") {
         fun sendToDetail(data: com.zip_feast.data.remote.models.serviceProviders.Data): String {
             val orderDetailJson = Json.encodeToString(data)

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -66,19 +67,17 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
 ) {
     val profileState = viewModel.profile.observeAsState(initial = Resource.Loading())
-    val updatedInfo = viewModel.updatedprofile.observeAsState(initial = Resource.Loading())
+    val updatedProfileState = viewModel.userUpdatedProfile.observeAsState(initial = Resource.Loading())
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfile()
     }
-
     var editingField by remember {
         mutableStateOf(EditableField.NONE)
     }
     var tempPhone by remember { mutableStateOf("") }
     var tempEmail by remember { mutableStateOf("") }
     var tempAddress by remember { mutableStateOf("") }
-
     var updateButtonEnabled by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -98,17 +97,18 @@ fun ProfileScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = "Loading...")
+                    CircularProgressIndicator()
                 }
             }
-
             is Resource.Success -> {
-                // Show profile data
                 val profile = (profileState.value as Resource.Success).data
                 LaunchedEffect(profile) {
-                    tempPhone = profile?.data?.phone ?: ""
-                    tempEmail = profile?.data?.email ?: ""
+                    tempPhone = profile?.data?.phone ?: updatedProfileState.value.data?.data?.phone ?: ""
+                    tempEmail = profile?.data?.email ?: updatedProfileState.value.data?.data?.email ?: ""
                     tempAddress =
-                        "${profile?.data?.state ?: ""} ${profile?.data?.address ?: ""} ${profile?.data?.pincode ?: ""}"
+                        "${profile?.data?.state ?: updatedProfileState.value.data?.data?.state ?: ""} " +
+                                (profile?.data?.address ?: updatedProfileState.value.data?.data?.address ?: "") +
+                                " ${profile?.data?.pincode ?:""}"
                 }
                 Column(
                     modifier = Modifier
@@ -154,7 +154,7 @@ fun ProfileScreen(
                     ProfileItem(
                         icon = Icons.Default.Info,
                         label = "Address",
-                        value = ((profile?.data?.state + " " + profile?.data?.address + " " + profile?.data?.pincode).toString()),
+                        value = ((profile?.data?.state + " " + profile?.data?.address + " " + profile?.data?.pincode)),
                         onValueChange = {
                             tempAddress = it
                             updateButtonEnabled = true
@@ -185,21 +185,6 @@ fun ProfileScreen(
                     ) {
                         Text(text = "Update Info")
                     }
-                    val context = LocalContext.current
-                    LaunchedEffect(key1 = profileState.value) {
-                        if (updatedInfo.value is Resource.Success) {
-                            // Show success message, update UI, etc.
-                            Toast.makeText(
-                                context,
-                                "Profile updated successfully!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.fetchUserProfile() // Refresh the user profile
-                        } else if (updatedInfo.value is Resource.Error) {
-                            // Show error message to the user
-                        }
-                    }
-
                 }
             }
 
@@ -272,19 +257,7 @@ fun ProfileScreen(
                     ) {
                         Text(text = "Update Info")
                     }
-                    val context = LocalContext.current
-                    LaunchedEffect(key1 = updatedInfo.value) {
-                        if (updatedInfo.value is Resource.Success) {
-                            Toast.makeText(
-                                context,
-                                "Profile updated successfully!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.fetchUserProfile()
-                        } else if (updatedInfo.value is Resource.Error) {
-                            // Show error message to the user
-                        }
-                    }
+
                 }
             }
         }

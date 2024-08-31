@@ -11,8 +11,8 @@ import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrde
 import com.zip_feast.data.remote.models.ordersModels.ordersResponse.CartOrderResponseModel
 import com.zip_feast.data.remote.models.serviceProviders.AllServiceProvidersResponseModel
 import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
+import com.zip_feast.data.remote.models.userUpdateModels.UserUpdateResModel
 import com.zip_feast.data.remote.models.userUpdateModels.UserInfoUpdate
-import com.zip_feast.presentation.dashboard.viewmodels.ServiceProvidersViewModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -37,11 +37,11 @@ interface UserApi {
         @Header("Authorization") token: String
     ): Response<UserProfileResponse>
 
-    @PUT("profile")
+    @PUT("user/profile/update")
     suspend fun updateUserProfile(
         @Header("Authorization") token: String,
         @Body userInfoUpdate: UserInfoUpdate
-    ): Response<UserProfileResponse>
+    ): Response<UserUpdateResModel>
 
     @PUT("profile")
     suspend fun updateUserAddress(
@@ -70,6 +70,12 @@ interface UserApi {
         @Header("serviceId") serviceId :Int,
         @Header("Authorization") token: String
     ):Response<ServiceProviderDetailResponse>
+
+//    @GET("user/order/{orderId}")
+//    suspend fun getOrderDetails(
+//        @Header("OrderId") orderId :Int,
+//        @Header("Authorization") token: String
+//    ):Response<OrderDetailsResponseModel>
 
 
 }

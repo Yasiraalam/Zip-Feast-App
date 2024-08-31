@@ -14,9 +14,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.zip_feast.data.remote.models.ProfileModel.UserAddress
 import com.zip_feast.data.remote.models.ordersModels.orderRequestModels.CartOrderRequestModel
+import com.zip_feast.data.remote.models.ordersModels.ordersResponse.OrderDetails
 import com.zip_feast.data.remote.models.productsModels.Data
-import com.zip_feast.data.remote.models.serviceProviders.ServiceProviderDetailResponse
-import com.zip_feast.data.remote.repository.AuthRepository
 import com.zip_feast.presentation.cart.Screens.CartScreen
 import com.zip_feast.presentation.dashboard.screens.ExploreScreen
 import com.zip_feast.presentation.dashboard.screens.HomeScreen
@@ -26,6 +25,7 @@ import com.zip_feast.presentation.dashboard.screens.ServiceProviderDetailScreen
 import com.zip_feast.presentation.orders.screens.OrderScreen
 import com.zip_feast.presentation.orders.screens.ShippingDetailsScreen
 import com.zip_feast.presentation.orders.screens.SuccessScreen
+import com.zip_feast.presentation.orders.screens.UserOrderDetailsScreen
 import com.zip_feast.presentation.profile.screens.EditAddressScreen
 import com.zip_feast.presentation.profile.screens.ProfileScreen
 import com.zip_feast.presentation.profile.screens.ShipToScreen
@@ -128,5 +128,16 @@ fun NavGraph(
             )
         }
 
+        composable(
+            route = Routes.OrderDetailScreen.routes,
+            arguments = listOf(navArgument("order") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderJson = backStackEntry.arguments?.getString("order")
+            val orderData = orderJson?.let { Json.decodeFromString<OrderDetails>(it) }
+
+            UserOrderDetailsScreen(orderData = orderData){
+                navController.navigateUp()
+            }
+        }
     }
 }
